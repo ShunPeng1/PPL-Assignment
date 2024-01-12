@@ -10,9 +10,9 @@ options {
 
 program			: (EXPRESSION NEWLINE)* ;
 
-EXPRESSION		: 
+EXPRESSION		: NUMBER;
 
-COMMENT			: '##'.* ;
+COMMENT			: '##'.*? ;
 NEWLINE 		: [\r\n]+ ;
 
 NUMBER     		: [0-9]+'.'?[0-9]*([eE][+-]?[0-9]+)? ;
@@ -20,14 +20,32 @@ BOOLEAN			: 'true'|'false' ;
 
 IDENTIFIER		: [a-z] [a-z0-9]*;
 
+LPAREN			: '(' ;
+RPAREN  	 	: ')' ;
+LBRACK  	 	: '[' ;
+RBRACK		   	: ']' ;
+COMMA   		: ',' ;
 
+PLUS     		: '+' ;
+MINUS    		: '-' ;
+MULTIPLY 		: '*' ;
+DIVIDE   		: '/' ;
+MOD      		: '%' ;
 
+NOT      		: 'not' ;
+AND      		: 'and' ;
+OR       		: 'or' ;
 
+EQUAL    		: '=' ;
+ASSIGN   		: '<-' ;
+NEQUAL   		: '!=' ;
+LT       		: '<' ;
+LE       		: '<=' ;
+GT       		: '>' ;
+GE       		: '>=' ;
 
-
-
-
-
+CONCATE    		: '...' ;
+STRING_EQUAL   	: '==' ;
 
 
 
