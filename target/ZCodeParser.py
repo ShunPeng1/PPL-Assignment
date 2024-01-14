@@ -11,9 +11,9 @@ else:
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3$")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3%")
         buf.write("\f\4\2\t\2\3\2\3\2\7\2\7\n\2\f\2\16\2\n\13\2\3\2\2\2\3")
-        buf.write("\2\2\2\2\13\2\b\3\2\2\2\4\5\7\3\2\2\5\7\7\5\2\2\6\4\3")
+        buf.write("\2\2\2\2\13\2\b\3\2\2\2\4\5\7\3\2\2\5\7\7\6\2\2\6\4\3")
         buf.write("\2\2\2\7\n\3\2\2\2\b\6\3\2\2\2\b\t\3\2\2\2\t\3\3\2\2\2")
         buf.write("\n\b\3\2\2\2\3\b")
         return buf.getvalue()
@@ -30,18 +30,18 @@ class ZCodeParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                     "<INVALID>", "<INVALID>", "<INVALID>", "'('", "')'", 
-                     "'['", "']'", "','", "'+'", "'-'", "'*'", "'/'", "'%'", 
-                     "'not'", "'and'", "'or'", "'='", "'<-'", "'!='", "'<'", 
-                     "'<='", "'>'", "'>='", "'...'", "'=='" ]
+                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "'('", "')'", "'['", "']'", "','", "'+'", "'-'", "'*'", 
+                     "'/'", "'%'", "'not'", "'and'", "'or'", "'='", "'<-'", 
+                     "'!='", "'<'", "'<='", "'>'", "'>='", "'...'", "'=='" ]
 
-    symbolicNames = [ "<INVALID>", "EXPRESSION", "COMMENT", "NEWLINE", "NUMBER", 
-                      "BOOLEAN", "IDENTIFIER", "LPAREN", "RPAREN", "LBRACK", 
-                      "RBRACK", "COMMA", "PLUS", "MINUS", "MULTIPLY", "DIVIDE", 
-                      "MOD", "NOT", "AND", "OR", "EQUAL", "ASSIGN", "NEQUAL", 
-                      "LT", "LE", "GT", "GE", "CONCATE", "STRING_EQUAL", 
-                      "STRING", "STRING_NEWLINE_ERROR", "WS", "ERROR_CHAR", 
-                      "UNCLOSE_STRING", "ILLEGAL_ESCAPE" ]
+    symbolicNames = [ "<INVALID>", "EXPRESSION", "FUNCTION", "COMMENT", 
+                      "NEWLINE", "IDENTIFIER", "NUMBER", "BOOLEAN", "LPAREN", 
+                      "RPAREN", "LBRACK", "RBRACK", "COMMA", "PLUS", "MINUS", 
+                      "MULTIPLY", "DIVIDE", "MOD", "NOT", "AND", "OR", "EQUAL", 
+                      "ASSIGN", "NEQUAL", "LT", "LE", "GT", "GE", "CONCATE", 
+                      "STRING_EQUAL", "STRING", "STRING_NEWLINE_ERROR", 
+                      "WS", "ERROR_CHAR", "UNCLOSE_STRING", "ILLEGAL_ESCAPE" ]
 
     RULE_program = 0
 
@@ -49,39 +49,40 @@ class ZCodeParser ( Parser ):
 
     EOF = Token.EOF
     EXPRESSION=1
-    COMMENT=2
-    NEWLINE=3
-    NUMBER=4
-    BOOLEAN=5
-    IDENTIFIER=6
-    LPAREN=7
-    RPAREN=8
-    LBRACK=9
-    RBRACK=10
-    COMMA=11
-    PLUS=12
-    MINUS=13
-    MULTIPLY=14
-    DIVIDE=15
-    MOD=16
-    NOT=17
-    AND=18
-    OR=19
-    EQUAL=20
-    ASSIGN=21
-    NEQUAL=22
-    LT=23
-    LE=24
-    GT=25
-    GE=26
-    CONCATE=27
-    STRING_EQUAL=28
-    STRING=29
-    STRING_NEWLINE_ERROR=30
-    WS=31
-    ERROR_CHAR=32
-    UNCLOSE_STRING=33
-    ILLEGAL_ESCAPE=34
+    FUNCTION=2
+    COMMENT=3
+    NEWLINE=4
+    IDENTIFIER=5
+    NUMBER=6
+    BOOLEAN=7
+    LPAREN=8
+    RPAREN=9
+    LBRACK=10
+    RBRACK=11
+    COMMA=12
+    PLUS=13
+    MINUS=14
+    MULTIPLY=15
+    DIVIDE=16
+    MOD=17
+    NOT=18
+    AND=19
+    OR=20
+    EQUAL=21
+    ASSIGN=22
+    NEQUAL=23
+    LT=24
+    LE=25
+    GT=26
+    GE=27
+    CONCATE=28
+    STRING_EQUAL=29
+    STRING=30
+    STRING_NEWLINE_ERROR=31
+    WS=32
+    ERROR_CHAR=33
+    UNCLOSE_STRING=34
+    ILLEGAL_ESCAPE=35
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)

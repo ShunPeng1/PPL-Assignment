@@ -5,10 +5,70 @@ null
 null
 null
 null
+null
+null
+'('
+')'
+'['
+']'
+','
+'+'
+'-'
+'*'
+'/'
+'%'
+'not'
+'and'
+'or'
+'='
+'<-'
+'!='
+'<'
+'<='
+'>'
+'>='
+'...'
+'=='
+null
+null
+null
+null
+null
+null
 
 token symbolic names:
 null
+EXPRESSION
+FUNCTION
+COMMENT
+NEWLINE
 IDENTIFIER
+NUMBER
+BOOLEAN
+LPAREN
+RPAREN
+LBRACK
+RBRACK
+COMMA
+PLUS
+MINUS
+MULTIPLY
+DIVIDE
+MOD
+NOT
+AND
+OR
+EQUAL
+ASSIGN
+NEQUAL
+LT
+LE
+GT
+GE
+CONCATE
+STRING_EQUAL
+STRING
+STRING_NEWLINE_ERROR
 WS
 ERROR_CHAR
 UNCLOSE_STRING
@@ -19,4 +79,4 @@ program
 
 
 atn:
-[3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 7, 7, 4, 2, 9, 2, 3, 2, 3, 2, 3, 2, 2, 2, 3, 2, 2, 2, 2, 5, 2, 4, 3, 2, 2, 2, 4, 5, 3, 2, 2, 2, 5, 3, 3, 2, 2, 2, 2]
+[3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 37, 12, 4, 2, 9, 2, 3, 2, 3, 2, 7, 2, 7, 10, 2, 12, 2, 14, 2, 10, 11, 2, 3, 2, 2, 2, 3, 2, 2, 2, 2, 11, 2, 8, 3, 2, 2, 2, 4, 5, 7, 3, 2, 2, 5, 7, 7, 6, 2, 2, 6, 4, 3, 2, 2, 2, 7, 10, 3, 2, 2, 2, 8, 6, 3, 2, 2, 2, 8, 9, 3, 2, 2, 2, 9, 3, 3, 2, 2, 2, 10, 8, 3, 2, 2, 2, 3, 8]
