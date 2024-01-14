@@ -58,7 +58,7 @@ TRUE      		: 'true' ;
 FALSE     		: 'false' ;
 
 //Normal regex:  "([^\'\"\r\n\\]|\\['\\nrtbf]|'")*"
-STRING : '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* '"' ;
+STRING 			: '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* '"' ;
 
 // Punctuation
 LPAREN			: '(' ;
@@ -96,5 +96,6 @@ STRING_EQUAL   	: '==' ;
 
 // Error
 ERROR_CHAR: . {raise ErrorToken(self.text)};
-UNCLOSE_STRING: .;
-ILLEGAL_ESCAPE: .;
+
+UNCLOSE_STRING  : '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* EOF ;
+ILLEGAL_ESCAPE  : '"' (~['"\r\n\\] | '\\' ~['\\nrtbf] | '\'"')* ;
