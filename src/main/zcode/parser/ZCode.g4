@@ -31,6 +31,7 @@ DYNAMIC			: 'dynamic' ;
 // Control Keywords
 COMMENT			: '##'.*? ;
 NEWLINE 		: [\r\n]+ ;
+WHITESPACE		: [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
 
 BEGIN			: 'begin' ;
 END				: 'end' ;
@@ -49,12 +50,15 @@ BREAK			: 'break' ;
 CONTINUE		: 'continue' ;
 
 
-
+// Literal
 IDENTIFIER		: [a-z] [a-z0-9]*;
 NUMBER     		: [0-9]+'.'?[0-9]*([eE][+-]?[0-9]+)? ;
 
 TRUE      		: 'true' ;
 FALSE     		: 'false' ;
+
+//Normal regex:  "([^\'\"\r\n\\]|\\['\\nrtbf]|'")*"
+STRING : '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* '"' ;
 
 // Punctuation
 LPAREN			: '(' ;
@@ -90,14 +94,7 @@ STRING_EQUAL   	: '==' ;
 
 
 
-
-
-STRING: '"' ( ~[\r\n"] | '\\' . )* '"' ;
-
-// Error rule for newline within a string
-STRING_NEWLINE_ERROR: '"' ( ~['"\r\n] | '\\' . )* '\r'? '\n' ;
-
-WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
+// Error
 ERROR_CHAR: . {raise ErrorToken(self.text)};
 UNCLOSE_STRING: .;
 ILLEGAL_ESCAPE: .;
