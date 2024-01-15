@@ -14,5 +14,35 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ZCodeParser#function.
+    def visitFunction(self, ctx:ZCodeParser.FunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#expression.
+    def visitExpression(self, ctx:ZCodeParser.ExpressionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#boolean_expression.
+    def visitBoolean_expression(self, ctx:ZCodeParser.Boolean_expressionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#if_statement.
+    def visitIf_statement(self, ctx:ZCodeParser.If_statementContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#relational_operator.
+    def visitRelational_operator(self, ctx:ZCodeParser.Relational_operatorContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#boolean_value.
+    def visitBoolean_value(self, ctx:ZCodeParser.Boolean_valueContext):
+        return self.visitChildren(ctx)
+
+
 
 del ZCodeParser
