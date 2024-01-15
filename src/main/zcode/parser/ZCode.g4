@@ -8,15 +8,22 @@ options {
 	language=Python3;
 }
 
-// parser rules
+// ============== parser rules ===================
 
-program			: (EXPRESSION NEWLINE)* ;
+program			: (expression NEWLINE)* ;
 
-EXPRESSION		: NUMBER
+function        : IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN ;
+
+expression		: NUMBER_LIT
 				| ERROR_CHAR;
 
+boolean_expression : expression relational_operator expression ;
 
-FUNCTION        : IDENTIFIER LPAREN (EXPRESSION (COMMA EXPRESSION)*)? RPAREN ;
+if_statement : IF expression relational_operator expression RETURN boolean_value ;
+
+relational_operator : LT | LE | GT | GE | EQUAL | NEQUAL ;
+
+boolean_value : TRUE | FALSE ;
 
 
 // ============== lexer rules ===================
@@ -29,7 +36,7 @@ VAR				: 'var' ;
 DYNAMIC			: 'dynamic' ;
 
 // Control Keywords
-COMMENT			: '##'.*? ;
+COMMENT			: '##' ~[\n\r\f]*? ;
 NEWLINE 		: [\r\n]+ ;
 WHITESPACE		: [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
 
@@ -52,13 +59,17 @@ CONTINUE		: 'continue' ;
 
 // Literal
 IDENTIFIER		: [a-z] [a-z0-9]*;
-NUMBER     		: [0-9]+'.'?[0-9]*([eE][+-]?[0-9]+)? ;
+NUMBER_LIT     		: [0-9]+'.'?[0-9]*([eE][+-]?[0-9]+)? ;
 
 TRUE      		: 'true' ;
 FALSE     		: 'false' ;
 
 //Normal regex:  "([^\'\"\r\n\\]|\\['\\nrtbf]|'")*"
-STRING 			: '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* '"' ;
+STRING_LIT 			: '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* '"' {self.text = self.text[1:-1];};
+
+// Assignment
+ASSIGNMENT		: '<-' ;
+
 
 // Punctuation
 LPAREN			: '(' ;
@@ -81,7 +92,6 @@ OR       		: 'or' ;
 
 // Relational Operators
 EQUAL    		: '=' ;
-ASSIGN   		: '<-' ;
 NEQUAL   		: '!=' ;
 LT       		: '<' ;
 LE       		: '<=' ;
@@ -97,5 +107,12 @@ STRING_EQUAL   	: '==' ;
 // Error
 ERROR_CHAR: . {raise ErrorToken(self.text)};
 
-UNCLOSE_STRING  : '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* EOF ;
-ILLEGAL_ESCAPE  : '"' (~['"\r\n\\] | '\\' ~['\\nrtbf] | '\'"')* ;
+UNCLOSE_STRING  : '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* (EOF | NEWLINE) 
+{
+	raise UncloseString(self.text[1:])
+};
+
+ILLEGAL_ESCAPE  : '"' (~['"\r\n\\] | '\\' ~['\\nrtbf] | '\'"')* 
+{
+	raise IllegalEscape(self.text[1:])
+};
