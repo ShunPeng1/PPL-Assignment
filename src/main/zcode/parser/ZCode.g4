@@ -15,7 +15,7 @@ program			: (expression NEWLINE)* ;
 function        : IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN ;
 
 expression		: NUMBER_LIT
-				| ERROR_CHAR;
+				| EOF;
 
 boolean_expression : expression relational_operator expression ;
 
@@ -36,7 +36,7 @@ VAR				: 'var' ;
 DYNAMIC			: 'dynamic' ;
 
 // Control Keywords
-COMMENT			: '##' ~[\n\r\f]*? ;
+COMMENT			: '##' ~[\n\r\f]* ;
 NEWLINE 		: [\r\n]+ ;
 WHITESPACE		: [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
 
@@ -58,11 +58,11 @@ CONTINUE		: 'continue' ;
 
 
 // Literal
-IDENTIFIER		: [a-z] [a-z0-9]*;
+IDENTIFIER		: [a-zA-Z_] [a-z0-9A-Z_]*;
 
 NUMBER_LIT     	: NUMBER_INTERGER NUMBER_DECIMAL? NUMBER_EXPONENT? ;
 fragment NUMBER_INTERGER 	: [0-9]+ ;
-fragment NUMBER_DECIMAL 	: '.'[0-9]+ ;
+fragment NUMBER_DECIMAL 	: '.'[0-9]* ;
 fragment NUMBER_EXPONENT 	: [eE][+-]?[0-9]+ ;
 
 TRUE      		: 'true' ;
