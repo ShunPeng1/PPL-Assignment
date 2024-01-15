@@ -59,7 +59,11 @@ CONTINUE		: 'continue' ;
 
 // Literal
 IDENTIFIER		: [a-z] [a-z0-9]*;
-NUMBER_LIT     		: [0-9]+'.'?[0-9]*([eE][+-]?[0-9]+)? ;
+
+NUMBER_LIT     	: NUMBER_INTERGER NUMBER_DECIMAL? NUMBER_EXPONENT? ;
+fragment NUMBER_INTERGER 	: [0-9]+ ;
+fragment NUMBER_DECIMAL 	: '.'[0-9]+ ;
+fragment NUMBER_EXPONENT 	: [eE][+-]?[0-9]+ ;
 
 TRUE      		: 'true' ;
 FALSE     		: 'false' ;
