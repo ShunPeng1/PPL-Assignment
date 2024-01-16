@@ -16,6 +16,24 @@ program			: (expression NEWLINE)* ;
 expression		: NUMBER_LIT
 				| EOF;
 
+// Statements
+statement					: declaration_statement
+							| assignment_statement 
+							| if_statement
+							//| for_statement
+							//| break_statement
+							//| continue_statement
+							//| return_statement
+							//| function_call_statement
+							| block_statement;
+
+
+declaration_statement		: variable_declaration 
+							| function_declaration;
+
+assignment_statement		: IDENTIFIER ASSIGN expression ;
+
+
 boolean_expression : expression relational_operator expression ;
 
 
