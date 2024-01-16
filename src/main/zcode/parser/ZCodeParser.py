@@ -19,7 +19,7 @@ def serializedATN():
         buf.write("\7\3\7\3\b\3\b\3\b\2\2\t\2\4\6\b\n\f\16\2\5\3\3\27\27")
         buf.write("\3\2).\3\2\30\31\2\63\2\25\3\2\2\2\4\30\3\2\2\2\6&\3\2")
         buf.write("\2\2\b(\3\2\2\2\n,\3\2\2\2\f\63\3\2\2\2\16\65\3\2\2\2")
-        buf.write("\20\21\5\6\4\2\21\22\7\n\2\2\22\24\3\2\2\2\23\20\3\2\2")
+        buf.write("\20\21\5\6\4\2\21\22\7\t\2\2\22\24\3\2\2\2\23\20\3\2\2")
         buf.write("\2\24\27\3\2\2\2\25\23\3\2\2\2\25\26\3\2\2\2\26\3\3\2")
         buf.write("\2\2\27\25\3\2\2\2\30\31\7\26\2\2\31\"\7\34\2\2\32\37")
         buf.write("\5\6\4\2\33\34\7 \2\2\34\36\5\6\4\2\35\33\3\2\2\2\36!")
@@ -53,7 +53,7 @@ class ZCodeParser ( Parser ):
                      "'!='", "'<'", "'<='", "'>'", "'>='", "'...'", "'=='" ]
 
     symbolicNames = [ "<INVALID>", "NUMBER_TYPE", "BOOLEAN_TYPE", "STRING_TYPE", 
-                      "VAR", "DYNAMIC", "COMMENT", "WHITESPACE", "NEWLINE", 
+                      "VAR", "DYNAMIC", "COMMENT", "NEWLINE", "WHITESPACE", 
                       "BEGIN", "END", "RETURN", "IF", "ELSE", "ELIF", "FOR", 
                       "UNTIL", "BY", "BREAK", "CONTINUE", "IDENTIFIER", 
                       "NUMBER_LIT", "TRUE", "FALSE", "STRING_LIT", "ASSIGNMENT", 
@@ -80,8 +80,8 @@ class ZCodeParser ( Parser ):
     VAR=4
     DYNAMIC=5
     COMMENT=6
-    WHITESPACE=7
-    NEWLINE=8
+    NEWLINE=7
+    WHITESPACE=8
     BEGIN=9
     END=10
     RETURN=11
