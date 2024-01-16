@@ -37,11 +37,20 @@ DYNAMIC			: 'dynamic' ;
 
 // Control Keywords
 COMMENT			: '##' ~[\n\r\f]* ;
+NEWLINE 		: ('\r''\n'|'\n''\r'|'\r'|'\n')+?
+{
+print("NEWLINE")
+self.text = self.text.replace('\r\n', '\n')
+};
 WHITESPACE		: [ \t\r\n\b\f]+ -> skip ; // skip spaces, tabs, newlines
 NEWLINE 		: ('\r''\n'|'\n''\r'|'\r'|'\n');
 
+// Scope
 BEGIN			: 'begin' ;
 END				: 'end' ;
+
+// Function
+FUNC			: 'func' ;
 RETURN			: 'return' ;
 
 // If-Else
