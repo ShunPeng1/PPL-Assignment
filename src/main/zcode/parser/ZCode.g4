@@ -12,14 +12,12 @@ options {
 
 program			: (expression NEWLINE)* ;
 
-function        : IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN ;
 
 expression		: NUMBER_LIT
 				| EOF;
 
 boolean_expression : expression relational_operator expression ;
 
-if_statement : IF expression relational_operator expression RETURN boolean_value ;
 
 relational_operator : LT | LE | GT | GE | EQUAL | NEQUAL ;
 
@@ -81,7 +79,7 @@ FALSE     		: 'false' ;
 STRING_LIT 			: '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* '"' {self.text = self.text[1:-1];};
 
 // Assignment
-ASSIGNMENT		: '<-' ;
+ASSIGN		: '<-' ;
 
 
 // Punctuation
@@ -105,7 +103,7 @@ OR       		: 'or' ;
 
 // Relational Operators
 EQUAL    		: '=' ;
-NEQUAL   		: '!=' ;
+NOT_EQUAL   		: '!=' ;
 LT       		: '<' ;
 LE       		: '<=' ;
 GT       		: '>' ;
@@ -118,7 +116,10 @@ STRING_EQUAL   	: '==' ;
 
 
 // Error
-ERROR_CHAR: . {raise ErrorToken(self.text)};
+ERROR_CHAR: . 
+{
+raise ErrorToken(self.text)
+};
 
 UNCLOSE_STRING  : '"' (~['"\\] | '\\' ['\\nrtbf] | '\'"' | [\r\n] )* ('"'|EOF)
 {
