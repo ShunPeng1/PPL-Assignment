@@ -72,16 +72,18 @@ relational_expression		: logical_expression relational_operator logical_expressi
 							| string_expression STRING_EQUAL string_expression // Binary Infix None Associative
 							| logical_expression;
 
-logical_expression			: logical_expression logic_operator adding_expression | adding_expression;
-
+logical_expression			: logical_expression logic_operator adding_expression 
+							| adding_expression;
 
 adding_expression			: adding_expression additive_operator multiplying_expression // Binary Infix Left Associative
 							| multiplying_expression;
+
 multiplying_expression		: multiplying_expression multiplicative_operator sign_expression // Binary Infix Left Associative
 							| sign_expression; 
 
+negation_expression			: NOT negation_expression // Unary Prefix Right Associative
+							| string_expression;
 
-negation_expression			: NOT negation_expression; // Unary Prefix Right Associative
 sign_expression				: additive_operator sign_expression; // Unary Prefix Right Associative
 							//| ;// Index??
 
