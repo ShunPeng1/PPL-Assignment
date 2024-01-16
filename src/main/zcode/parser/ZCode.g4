@@ -19,9 +19,7 @@ expression		: NUMBER_LIT
 boolean_expression : expression relational_operator expression ;
 
 
-relational_operator : LT | LE | GT | GE | EQUAL | NEQUAL ;
 
-boolean_value : TRUE | FALSE ;
 
 
 // ============== lexer rules ===================
@@ -41,7 +39,6 @@ print("NEWLINE")
 self.text = self.text.replace('\r\n', '\n')
 };
 WHITESPACE		: [ \t\r\n\b\f]+ -> skip ; // skip spaces, tabs, newlines
-NEWLINE 		: ('\r''\n'|'\n''\r'|'\r'|'\n');
 
 // Scope
 BEGIN			: 'begin' ;
