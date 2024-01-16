@@ -61,6 +61,40 @@ if_statement 				: IF expression relational_operator expression RETURN boolean_v
 
 boolean_value 				: TRUE | FALSE ;
 
+// Expression : based on the precedence and associativity
+
+
+
+string_expression 			: string_expression CONCATE string_expression // Binary Infix None Associative
+							| string_expression;
+
+relational_expression		: logical_expression relational_operator logical_expression // Binary Infix None Associative
+							| string_expression STRING_EQUAL string_expression // Binary Infix None Associative
+							| logical_expression;
+
+logical_expression			: logical_expression logic_operator adding_expression | adding_expression;
+
+
+adding_expression			: adding_expression additive_operator multiplying_expression // Binary Infix Left Associative
+							| multiplying_expression;
+multiplying_expression		: multiplying_expression multiplicative_operator sign_expression // Binary Infix Left Associative
+							| sign_expression; 
+
+
+negation_expression			: NOT negation_expression; // Unary Prefix Right Associative
+sign_expression				: additive_operator sign_expression; // Unary Prefix Right Associative
+							//| ;// Index??
+
+
+// TODO index operator
+index_expression			: ;
+
+// Expression operator
+relational_operator 		: LT | LE | GT | GE | EQUAL | NOT_EQUAL ;
+additive_operator 			: PLUS | MINUS ;
+multiplicative_operator		: MULTIPLY | DIVIDE | MOD ;
+logic_operator 				: AND | OR ;
+
 
 
 
