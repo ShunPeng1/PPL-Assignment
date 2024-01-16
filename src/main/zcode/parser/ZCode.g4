@@ -37,8 +37,8 @@ DYNAMIC			: 'dynamic' ;
 
 // Control Keywords
 COMMENT			: '##' ~[\n\r\f]* ;
-NEWLINE 		: [\r\n]+ ;
-WHITESPACE		: [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
+WHITESPACE		: [ \t\r\n\b\f]+ -> skip ; // skip spaces, tabs, newlines
+NEWLINE 		: ('\r''\n'|'\n''\r'|'\r'|'\n');
 
 BEGIN			: 'begin' ;
 END				: 'end' ;
@@ -111,12 +111,13 @@ STRING_EQUAL   	: '==' ;
 // Error
 ERROR_CHAR: . {raise ErrorToken(self.text)};
 
-UNCLOSE_STRING  : '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* (EOF | NEWLINE) 
+UNCLOSE_STRING  : '"' (~['"\\] | '\\' ['\\nrtbf] | '\'"' | [\r\n] )* ('"'|EOF)
 {
-	raise UncloseString(self.text[1:])
+newlineIndex = self.text.find('\r\n') 
+raise UncloseString(self.text[1:newlineIndex] if newlineIndex != -1 else self.text[1:]) # if end with \n else end with EOF
 };
 
-ILLEGAL_ESCAPE  : '"' (~['"\r\n\\] | '\\' ~['\\nrtbf] | '\'"')* 
+ILLEGAL_ESCAPE  : '"' (~['"\r\n] | '\\' ['\\nrtbf] | '\'"' )* '\\'~['\\nrtbf]
 {
-	raise IllegalEscape(self.text[1:])
+raise IllegalEscape(self.text[1:-1])
 };

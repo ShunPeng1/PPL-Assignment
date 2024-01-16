@@ -44,8 +44,10 @@ class TestLexer:
         dest = open(os.path.join(soldir,str(num) + ".txt"),"w")
         lexer = Lexer(inputfile)
         try:
+            print("Lexer test case ",num)
             TestLexer.printLexeme(dest,lexer)
         except (ErrorToken,UncloseString,IllegalEscape) as err:
+            print(err.message)
             dest.write(err.message)
         finally:
             dest.close() 
@@ -55,6 +57,9 @@ class TestLexer:
         tok = lexer.nextToken()
         if tok.type != Token.EOF:
             dest.write(tok.text+",")
+            
+            print(tok.text)
+
             TestLexer.printLexeme(dest,lexer)
         else:
             dest.write("<EOF>")

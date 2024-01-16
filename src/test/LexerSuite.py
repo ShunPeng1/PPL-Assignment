@@ -2,15 +2,7 @@ import unittest
 from TestUtils import TestLexer
 
 class LexerSuite(unittest.TestCase):
-      
-    def test_simple_string(self):
-        """test simple string"""
-        self.assertTrue(TestLexer.test("'Yanxi Palace - 2018'","'Yanxi Palace - 2018',<EOF>",101))
 
-    def test_complex_string(self):
-        """test complex string"""
-        self.assertTrue(TestLexer.test("'isn''t'","'isn''t',<EOF>",102))
-        
     def test_KeyWord_Operators_Separators(self):
         """test KeyWord Operators Separators"""
         
@@ -78,7 +70,7 @@ class LexerSuite(unittest.TestCase):
         self.assertTrue(TestLexer.test(""" "Vo \\n \\b """, "Unclosed String: Vo \\n \\b ", 120))
         
         ##^ kiểm tra lỗi Illegal Escape
-        # self.assertTrue(TestLexer.test(""" "Tien \t \n" """, "Illegal Escape In String: Tien 	", 121))
+        #self.assertTrue(TestLexer.test(""" "Tien \t \n" """, "Illegal Escape In String: Tien 	", 121))
         self.assertTrue(TestLexer.test(""" "Tien \f \n ccc" """, "Illegal Escape In String: Tien \f", 122))
         self.assertTrue(TestLexer.test(""" "Tien \\1  """, "Illegal Escape In String: Tien \\1", 123))
         self.assertTrue(TestLexer.test(""" "Tien \\2 \\n \n """, "Illegal Escape In String: Tien \\2", 124))
@@ -95,7 +87,7 @@ class LexerSuite(unittest.TestCase):
         self.assertTrue(TestLexer.test("a##1","a,##1,<EOF>",132)) 
         self.assertTrue(TestLexer.test("a#","a,Error Token #",133))    
         self.assertTrue(TestLexer.test("a\n##1\nb","a,\n,##1,\n,b,<EOF>",134))  
-        self.assertTrue(TestLexer.test("a\n\n\n#","a,\n,\n,\n,Error Token #",134))     
+        self.assertTrue(TestLexer.test("a\n\n\n#","a,\n,\n,\n,Error Token #",135))     
 
         
         

@@ -16,20 +16,20 @@ def serializedATN():
         buf.write("\t\b\3\2\3\2\3\2\7\2\24\n\2\f\2\16\2\27\13\2\3\3\3\3\3")
         buf.write("\3\3\3\3\3\7\3\36\n\3\f\3\16\3!\13\3\5\3#\n\3\3\3\3\3")
         buf.write("\3\4\3\4\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3")
-        buf.write("\7\3\7\3\b\3\b\3\b\2\2\t\2\4\6\b\n\f\16\2\5\4\2\27\27")
-        buf.write("\61\61\3\2).\3\2\30\31\2\63\2\25\3\2\2\2\4\30\3\2\2\2")
-        buf.write("\6&\3\2\2\2\b(\3\2\2\2\n,\3\2\2\2\f\63\3\2\2\2\16\65\3")
-        buf.write("\2\2\2\20\21\5\6\4\2\21\22\7\t\2\2\22\24\3\2\2\2\23\20")
-        buf.write("\3\2\2\2\24\27\3\2\2\2\25\23\3\2\2\2\25\26\3\2\2\2\26")
-        buf.write("\3\3\2\2\2\27\25\3\2\2\2\30\31\7\26\2\2\31\"\7\34\2\2")
-        buf.write("\32\37\5\6\4\2\33\34\7 \2\2\34\36\5\6\4\2\35\33\3\2\2")
-        buf.write("\2\36!\3\2\2\2\37\35\3\2\2\2\37 \3\2\2\2 #\3\2\2\2!\37")
-        buf.write("\3\2\2\2\"\32\3\2\2\2\"#\3\2\2\2#$\3\2\2\2$%\7\35\2\2")
-        buf.write("%\5\3\2\2\2&\'\t\2\2\2\'\7\3\2\2\2()\5\6\4\2)*\5\f\7\2")
-        buf.write("*+\5\6\4\2+\t\3\2\2\2,-\7\16\2\2-.\5\6\4\2./\5\f\7\2/")
-        buf.write("\60\5\6\4\2\60\61\7\r\2\2\61\62\5\16\b\2\62\13\3\2\2\2")
-        buf.write("\63\64\t\3\2\2\64\r\3\2\2\2\65\66\t\4\2\2\66\17\3\2\2")
-        buf.write("\2\5\25\37\"")
+        buf.write("\7\3\7\3\b\3\b\3\b\2\2\t\2\4\6\b\n\f\16\2\5\3\3\27\27")
+        buf.write("\3\2).\3\2\30\31\2\63\2\25\3\2\2\2\4\30\3\2\2\2\6&\3\2")
+        buf.write("\2\2\b(\3\2\2\2\n,\3\2\2\2\f\63\3\2\2\2\16\65\3\2\2\2")
+        buf.write("\20\21\5\6\4\2\21\22\7\n\2\2\22\24\3\2\2\2\23\20\3\2\2")
+        buf.write("\2\24\27\3\2\2\2\25\23\3\2\2\2\25\26\3\2\2\2\26\3\3\2")
+        buf.write("\2\2\27\25\3\2\2\2\30\31\7\26\2\2\31\"\7\34\2\2\32\37")
+        buf.write("\5\6\4\2\33\34\7 \2\2\34\36\5\6\4\2\35\33\3\2\2\2\36!")
+        buf.write("\3\2\2\2\37\35\3\2\2\2\37 \3\2\2\2 #\3\2\2\2!\37\3\2\2")
+        buf.write("\2\"\32\3\2\2\2\"#\3\2\2\2#$\3\2\2\2$%\7\35\2\2%\5\3\2")
+        buf.write("\2\2&\'\t\2\2\2\'\7\3\2\2\2()\5\6\4\2)*\5\f\7\2*+\5\6")
+        buf.write("\4\2+\t\3\2\2\2,-\7\16\2\2-.\5\6\4\2./\5\f\7\2/\60\5\6")
+        buf.write("\4\2\60\61\7\r\2\2\61\62\5\16\b\2\62\13\3\2\2\2\63\64")
+        buf.write("\t\3\2\2\64\r\3\2\2\2\65\66\t\4\2\2\66\17\3\2\2\2\5\25")
+        buf.write("\37\"")
         return buf.getvalue()
 
 
@@ -53,7 +53,7 @@ class ZCodeParser ( Parser ):
                      "'!='", "'<'", "'<='", "'>'", "'>='", "'...'", "'=='" ]
 
     symbolicNames = [ "<INVALID>", "NUMBER_TYPE", "BOOLEAN_TYPE", "STRING_TYPE", 
-                      "VAR", "DYNAMIC", "COMMENT", "NEWLINE", "WHITESPACE", 
+                      "VAR", "DYNAMIC", "COMMENT", "WHITESPACE", "NEWLINE", 
                       "BEGIN", "END", "RETURN", "IF", "ELSE", "ELIF", "FOR", 
                       "UNTIL", "BY", "BREAK", "CONTINUE", "IDENTIFIER", 
                       "NUMBER_LIT", "TRUE", "FALSE", "STRING_LIT", "ASSIGNMENT", 
@@ -80,8 +80,8 @@ class ZCodeParser ( Parser ):
     VAR=4
     DYNAMIC=5
     COMMENT=6
-    NEWLINE=7
-    WHITESPACE=8
+    WHITESPACE=7
+    NEWLINE=8
     BEGIN=9
     END=10
     RETURN=11
@@ -169,20 +169,20 @@ class ZCodeParser ( Parser ):
 
         localctx = ZCodeParser.ProgramContext(self, self._ctx, self.state)
         self.enterRule(localctx, 0, self.RULE_program)
-        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 19
             self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            while _la==ZCodeParser.NUMBER_LIT or _la==ZCodeParser.ERROR_CHAR:
-                self.state = 14
-                self.expression()
-                self.state = 15
-                self.match(ZCodeParser.NEWLINE)
+            _alt = self._interp.adaptivePredict(self._input,0,self._ctx)
+            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
+                if _alt==1:
+                    self.state = 14
+                    self.expression()
+                    self.state = 15
+                    self.match(ZCodeParser.NEWLINE) 
                 self.state = 21
                 self._errHandler.sync(self)
-                _la = self._input.LA(1)
+                _alt = self._interp.adaptivePredict(self._input,0,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -248,7 +248,7 @@ class ZCodeParser ( Parser ):
             self.state = 32
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==ZCodeParser.NUMBER_LIT or _la==ZCodeParser.ERROR_CHAR:
+            if _la==ZCodeParser.EOF or _la==ZCodeParser.NUMBER_LIT:
                 self.state = 24
                 self.expression()
                 self.state = 29
@@ -286,8 +286,8 @@ class ZCodeParser ( Parser ):
         def NUMBER_LIT(self):
             return self.getToken(ZCodeParser.NUMBER_LIT, 0)
 
-        def ERROR_CHAR(self):
-            return self.getToken(ZCodeParser.ERROR_CHAR, 0)
+        def EOF(self):
+            return self.getToken(ZCodeParser.EOF, 0)
 
         def getRuleIndex(self):
             return ZCodeParser.RULE_expression
@@ -310,7 +310,7 @@ class ZCodeParser ( Parser ):
             self.enterOuterAlt(localctx, 1)
             self.state = 36
             _la = self._input.LA(1)
-            if not(_la==ZCodeParser.NUMBER_LIT or _la==ZCodeParser.ERROR_CHAR):
+            if not(_la==ZCodeParser.EOF or _la==ZCodeParser.NUMBER_LIT):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
