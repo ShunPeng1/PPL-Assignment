@@ -45,8 +45,21 @@ number_variable_declaration	: VAR IDENTIFIER ASSIGN NUMBER_LIT ;
 string_variable_declaration	: VAR IDENTIFIER ASSIGN STRING_LIT ;
 dynamic_variable_declaration: DYNAMIC IDENTIFIER ASSIGN expression ; // TODO Check again
 
+// Expression
 boolean_expression : expression relational_operator expression ;
 
+// Function
+function_declaration        : FUNC IDENTIFIER LPAREN (variable_declaration (COMMA variable_declaration)*)? RPAREN ;
+
+
+// scope
+block_statement				: BEGIN (statement NEWLINE)* END ;
+
+
+if_statement 				: IF expression relational_operator expression RETURN boolean_value ;
+
+
+boolean_value 				: TRUE | FALSE ;
 
 
 
