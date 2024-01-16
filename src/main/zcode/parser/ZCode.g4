@@ -34,6 +34,17 @@ declaration_statement		: variable_declaration
 assignment_statement		: IDENTIFIER ASSIGN expression ;
 
 
+// Variable
+variable_declaration		: number_variable_declaration
+							| boolean_variable_declaration
+							| string_variable_declaration
+							| dynamic_variable_declaration;
+
+boolean_variable_declaration: VAR IDENTIFIER ASSIGN boolean_expression ;
+number_variable_declaration	: VAR IDENTIFIER ASSIGN NUMBER_LIT ;
+string_variable_declaration	: VAR IDENTIFIER ASSIGN STRING_LIT ;
+dynamic_variable_declaration: DYNAMIC IDENTIFIER ASSIGN expression ; // TODO Check again
+
 boolean_expression : expression relational_operator expression ;
 
 
