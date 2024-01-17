@@ -40,13 +40,12 @@ variable_declaration		: number_variable_declaration
 							| string_variable_declaration
 							| dynamic_variable_declaration;
 
-boolean_variable_declaration: VAR IDENTIFIER ASSIGN boolean_expression ;
+boolean_variable_declaration: VAR IDENTIFIER ASSIGN BOOLEAN_LIT ;
 number_variable_declaration	: VAR IDENTIFIER ASSIGN NUMBER_LIT ;
 string_variable_declaration	: VAR IDENTIFIER ASSIGN STRING_LIT ;
 dynamic_variable_declaration: DYNAMIC IDENTIFIER ASSIGN expression ; // TODO Check again
 
-// Expression
-boolean_expression : expression relational_operator expression ;
+
 
 // Function
 function_declaration        : FUNC IDENTIFIER LPAREN (variable_declaration (COMMA variable_declaration)*)? RPAREN ;
@@ -65,8 +64,9 @@ boolean_value 				: TRUE | FALSE ;
 
 
 
-string_expression 			: string_expression CONCATE string_expression // Binary Infix None Associative
-							| string_expression;
+string_expression 			: string_expression CONCATE string_literal // Binary Infix None Associative
+							| string_literal;
+
 
 relational_expression		: logical_expression relational_operator logical_expression // Binary Infix None Associative
 							| logical_expression;
@@ -78,10 +78,10 @@ adding_expression			: adding_expression additive_operator multiplying_expression
 							| multiplying_expression;
 
 multiplying_expression		: multiplying_expression multiplicative_operator sign_expression // Binary Infix Left Associative
-							| sign_expression; 
+							| negation_expression; 
 
 negation_expression			: NOT negation_expression // Unary Prefix Right Associative
-							| string_expression;
+							| sign_expression;
 
 sign_expression				: additive_operator sign_expression; // Unary Prefix Right Associative
 							//| ;// Index??
@@ -97,7 +97,10 @@ multiplicative_operator		: MULTIPLY | DIVIDE | MOD ;
 logic_operator 				: AND | OR ;
 
 
-
+// Literal
+string_literal 				: STRING_LIT ;
+number_literal 				: NUMBER_LIT ;
+boolean_literal 			: BOOLEAN_LIT ;
 
 // ============== lexer rules ===================
 
@@ -110,12 +113,12 @@ DYNAMIC			: 'dynamic' ;
 
 // Control Keywords
 COMMENT			: '##' ~[\n\r\f]* ;
-NEWLINE 		: ('\r''\n'|'\n''\r'|'\r'|'\n')+?
+NEWLINE 		: ('\r''\n'|'\n''\r'|'\r'|'\n')
 {
 print("NEWLINE")
 self.text = self.text.replace('\r\n', '\n')
 };
-WHITESPACE		: [ \t\r\n\b\f]+ -> skip ; // skip spaces, tabs, newlines
+WHITESPACE		: [ \t\r\b\f]+ -> skip ; // skip spaces, tabs, newlines
 
 // Scope
 BEGIN			: 'begin' ;
@@ -146,6 +149,7 @@ fragment NUMBER_INTERGER 	: [0-9]+ ;
 fragment NUMBER_DECIMAL 	: '.'[0-9]* ;
 fragment NUMBER_EXPONENT 	: [eE][+-]?[0-9]+ ;
 
+BOOLEAN_LIT    	: TRUE | FALSE ;
 TRUE      		: 'true' ;
 FALSE     		: 'false' ;
 
