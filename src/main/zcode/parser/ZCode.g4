@@ -69,10 +69,9 @@ string_expression 			: string_expression CONCATE string_expression // Binary Inf
 							| string_expression;
 
 relational_expression		: logical_expression relational_operator logical_expression // Binary Infix None Associative
-							| string_expression STRING_EQUAL string_expression // Binary Infix None Associative
 							| logical_expression;
 
-logical_expression			: logical_expression logic_operator adding_expression 
+logical_expression			: logical_expression logic_operator adding_expression // Binary Infix Left Associative
 							| adding_expression;
 
 adding_expression			: adding_expression additive_operator multiplying_expression // Binary Infix Left Associative
@@ -92,7 +91,7 @@ sign_expression				: additive_operator sign_expression; // Unary Prefix Right As
 index_expression			: ;
 
 // Expression operator
-relational_operator 		: LT | LE | GT | GE | EQUAL | NOT_EQUAL ;
+relational_operator 		: LT | LE | GT | GE | EQUAL | NOT_EQUAL | STRING_EQUAL;
 additive_operator 			: PLUS | MINUS ;
 multiplicative_operator		: MULTIPLY | DIVIDE | MOD ;
 logic_operator 				: AND | OR ;
