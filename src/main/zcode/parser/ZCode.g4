@@ -86,9 +86,7 @@ negation_expression			: NOT negation_expression // Unary Prefix Right Associativ
 sign_expression				: additive_operator sign_expression; // Unary Prefix Right Associative
 							//| ;// Index??
 
-
-// TODO index operator
-index_expression			: ;
+index_expression			: ; // TODO index operator
 
 // Expression operator
 relational_operator 		: LT | LE | GT | GE | EQUAL | NOT_EQUAL | STRING_EQUAL;
@@ -112,7 +110,7 @@ VAR				: 'var' ;
 DYNAMIC			: 'dynamic' ;
 
 // Control Keywords
-COMMENT			: '##' ~[\n\r\f]* ;
+COMMENT			: '##' ~[\n\r\f]* -> skip;
 NEWLINE 		: ('\r''\n'|'\n''\r'|'\r'|'\n')
 {
 print("NEWLINE")
