@@ -10,14 +10,15 @@ options {
 
 // ============== parser rules ===================
 
-program			: (expression NEWLINE)* ;
-
-
-expression		: NUMBER_LIT
-				| EOF;
-
+program						: (global_statement | empty_statement)* ;
+							
 // Statements
-statement					: declaration_statement
+global_statement			: variable_declaration_statement
+							| function_declaration_statement;
+
+empty_statement				: NEWLINE;
+
+local_statement				: variable_declaration_statement
 							| assignment_statement 
 							| if_statement
 							//| for_statement
@@ -28,17 +29,14 @@ statement					: declaration_statement
 							| block_statement;
 
 
-declaration_statement		: variable_declaration 
-							| function_declaration;
-
 assignment_statement		: IDENTIFIER ASSIGN expression ;
 
 
 // Variable
-variable_declaration		: number_variable_declaration
-							| boolean_variable_declaration
-							| string_variable_declaration
-							| dynamic_variable_declaration;
+variable_declaration_statement	: number_variable_declaration
+								| boolean_variable_declaration
+								| string_variable_declaration
+								| dynamic_variable_declaration;
 
 boolean_variable_declaration: VAR IDENTIFIER ASSIGN BOOLEAN_LIT ;
 number_variable_declaration	: VAR IDENTIFIER ASSIGN NUMBER_LIT ;
@@ -48,12 +46,18 @@ dynamic_variable_declaration: DYNAMIC IDENTIFIER ASSIGN expression ; // TODO Che
 
 
 // Function
-function_declaration        : FUNC IDENTIFIER LPAREN (variable_declaration (COMMA variable_declaration)*)? RPAREN ;
+function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_declaration? RPAREN NEWLINE // Declaration only
+								 (function_body NEWLINE)?; // body definition might be empty
+parameter_declaration       : variable_declaration_statement (COMMA variable_declaration_statement)* ;
+function_body			   	: local_statement  // Can it have empty_statement in front or not due to body definition only?
+							| return_statement
+							| block_statement;
+							
+return_statement			: RETURN expression;
 
-
-// scope
-block_statement				: BEGIN (statement NEWLINE)* END ;
-
+// Scope
+block_statement				: BEGIN NEWLINE (local_statement)* END NEWLINE;
+function_block_statement	: BEGIN NEWLINE (local_statement | return_statement)* END NEWLINE;
 
 if_statement 				: IF expression relational_operator expression RETURN boolean_value ;
 
@@ -62,7 +66,17 @@ boolean_value 				: TRUE | FALSE ;
 
 // Expression : based on the precedence and associativity
 
-
+expression 					: string_expression
+							| relational_expression
+							| logical_expression
+							| adding_expression
+							| multiplying_expression
+							| negation_expression
+							| index_expression
+							| number_literal
+							| boolean_literal
+							| string_literal
+							| LPAREN expression RPAREN; 
 
 string_expression 			: string_expression CONCATE string_literal // Binary Infix None Associative
 							| string_literal;
