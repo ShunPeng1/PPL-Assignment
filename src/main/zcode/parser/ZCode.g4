@@ -45,19 +45,13 @@ ignore_statement			: COMMENT | NEWLINE;
 
 
 
-assignment_statement		: IDENTIFIER ASSIGN expression ;
 
 
 // Variable
-variable_declaration_statement	: number_variable_declaration
-								| boolean_variable_declaration
-								| string_variable_declaration
-								| dynamic_variable_declaration;
+variable_declaration_statement	: simple_variable_declaration
+								| array_declaration;
 
-boolean_variable_declaration: VAR IDENTIFIER ASSIGN BOOLEAN_LIT ;
-number_variable_declaration	: VAR IDENTIFIER ASSIGN NUMBER_LIT ;
-string_variable_declaration	: VAR IDENTIFIER ASSIGN STRING_LIT ;
-dynamic_variable_declaration: DYNAMIC IDENTIFIER ASSIGN expression ; // TODO Check again
+simple_variable_declaration	: (VAR|DYNAMIC) IDENTIFIER ASSIGN expression;
 
 // Array
 
