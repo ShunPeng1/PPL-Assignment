@@ -47,16 +47,16 @@ block_statement				: BEGIN NEWLINE local_statement_list END NEWLINE;
 
 
 // Variable
-variable_declaration_statement	: simple_variable_declaration
+variable_declaration_statement	: basic_variable_declaration
 								| array_declaration;
 
-simple_variable_declaration	: (simple_type | VAR | DYNAMIC) IDENTIFIER ASSIGN expression;
+basic_variable_declaration	: (basic_type | VAR | DYNAMIC) IDENTIFIER ASSIGN expression;
 
-simple_type					: (NUMBER_TYPE | STRING_TYPE | BOOLEAN_TYPE) ;
+basic_type					: (NUMBER_TYPE | STRING_TYPE | BOOLEAN_TYPE) ;
 
 // Array
 
-array_declaration			: simple_type IDENTIFIER array_dimension ASSIGN array_value;
+array_declaration			: basic_type IDENTIFIER array_dimension ASSIGN array_value;
 
 array_dimension 			: LBRACK array_dimension_list RBRACK;
 array_dimension_list 		: number_literal COMMA array_dimension_list // Recursive
@@ -72,8 +72,8 @@ array_value_expression_list	: expression COMMA array_value_expression_list // Re
 
 
 // Assignment
-assignment_statement		: simple_variable_assignment | array_assignment ;
-simple_variable_assignment	: IDENTIFIER ASSIGN expression ;
+assignment_statement		: basic_variable_assignment | array_assignment ;
+basic_variable_assignment	: IDENTIFIER ASSIGN expression ;
 array_assignment 			: array_access ASSIGN expression ;
 
 
