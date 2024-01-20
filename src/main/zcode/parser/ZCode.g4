@@ -24,17 +24,16 @@ declaration					: function_declaration_statement
 // Local statement
 local_statement_list		: local_statement local_statement_list // Recursive
 							| local_statement;
+
 local_statement				: if_statement
 							| function_call_statement
 							| for_statement
-							| while_statement
+							| break_statement
+							| continue_statement
 							| block_statement
 							| assignment_statement
 							| return_statement
 							| ignore_statement_list;
-
-// Scope
-block_statement				: BEGIN NEWLINE (local_statement_list)* END NEWLINE;
 
 
 // Ignore statement
@@ -43,8 +42,8 @@ ignore_statement_list		: ignore_statement ignore_statement_list // Recursive
 							
 ignore_statement			: COMMENT | NEWLINE;
 
-
-
+// Scope
+block_statement				: BEGIN NEWLINE (local_statement_list)* END NEWLINE;
 
 
 // Variable
@@ -113,6 +112,13 @@ function_call_statement		: IDENTIFIER LPAREN argument_part? RPAREN ;
 argument_part				: expression COMMA argument_part // Recursive
 							| expression;
 
+// Loop
+for_statement				: FOR IDENTIFIER UNTIL expression BY expression loop_body;
+loop_body					: NEWLINE* block_statement
+							| NEWLINE* local_statement;
+
+break_statement				: BREAK;
+continue_statement			: CONTINUE;
 
 // Expression : based on the precedence and associativity
 
