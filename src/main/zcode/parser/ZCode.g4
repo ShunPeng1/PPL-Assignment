@@ -74,14 +74,17 @@ parameter					: IDENTIFIER;
 function_body			   	: local_statement  // Can it have empty_statement in front or not due to body definition only?
 							| return_statement
 							| function_block_statement;
-							
-return_statement			: RETURN expression;
 
+return_statement			: RETURN expression;
 
 
 
 if_statement 				: IF expression relational_operator expression RETURN boolean_value ;
 
+// Function call
+function_call_statement		: IDENTIFIER LPAREN argument_part? RPAREN ;
+argument_part				: expression COMMA argument_part // Recursive
+							| expression;
 
 
 // Expression : based on the precedence and associativity
