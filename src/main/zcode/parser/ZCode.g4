@@ -276,13 +276,13 @@ ERROR_CHAR: .
 raise ErrorToken(self.text)
 };
 
-UNCLOSE_STRING  : '"' (~['"\\] | '\\' ['\\nrtbf] | '\'"' | [\r\n] )* ('"'|EOF)
+UNCLOSE_STRING  : '"' (~['"\\\t\b\f] | '\\' ['\\nrtbf] | '\'"' | [\r\n] )* ('"'|EOF)
 {
 newlineIndex = self.text.find('\r\n') 
 raise UncloseString(self.text[1:newlineIndex] if newlineIndex != -1 else self.text[1:]) # if end with \n else end with EOF
 };
 
-ILLEGAL_ESCAPE  : '"' (~['"\r\n] | '\\' ['\\nrtbf] | '\'"' )* '\\'~['\\nrtbf]
+ILLEGAL_ESCAPE  : '"' (~['"\\] | '\\' ['\\nrtbf] | '\'"' )* ('\\' ~['\\nrtbf] | [\t\b\f] | '\'' ~["])
 {
-raise IllegalEscape(self.text[1:-1])
+raise IllegalEscape(self.text[1:])
 };
