@@ -72,7 +72,6 @@ array_value_expression_list	: expression COMMA array_value_expression_list // Re
 
 
 
-
 // Assignment
 assignment_statement		: simple_variable_assignment | array_assignment ;
 simple_variable_assignment	: IDENTIFIER ASSIGN expression ;
@@ -90,14 +89,24 @@ parameter_list				: parameter parameter_list // Recursive
 parameter					: IDENTIFIER;
 
 function_body			   	: local_statement  // Can it have empty_statement in front or not due to body definition only?
-							| return_statement
-							| function_block_statement;
+							| NEWLINE* block_statement;
 
 return_statement			: RETURN expression;
 
 
+// If-Else
+if_statement				: IF expression block_statement 
+								(elif_recursive_statement)?
+								(else_statement)? ;
 
-if_statement 				: IF expression relational_operator expression RETURN boolean_value ;
+elif_recursive_statement	: elif_statement elif_recursive_statement // Recursive
+							| elif_statement;
+
+elif_statement				: ELIF expression branch_body;
+else_statement				: ELSE branch_body;
+branch_body					: NEWLINE* block_statement
+							| NEWLINE* local_statement;
+
 
 // Function call
 function_call_statement		: IDENTIFIER LPAREN argument_part? RPAREN ;
