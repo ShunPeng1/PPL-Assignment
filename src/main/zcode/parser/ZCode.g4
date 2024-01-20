@@ -25,16 +25,16 @@ declaration					: function_declaration_statement
 local_statement_list		: local_statement local_statement_list // Recursive
 							| local_statement;
 local_statement				: if_statement
+							| function_call_statement
 							| for_statement
 							| while_statement
 							| block_statement
-							| expression_statement
+							| assignment_statement
+							| return_statement
 							| ignore_statement_list;
 
 // Scope
 block_statement				: BEGIN NEWLINE (local_statement_list)* END NEWLINE;
-function_block_statement	: BEGIN NEWLINE (local_statement_list | return_statement)* END NEWLINE;
-
 
 
 // Ignore statement
@@ -74,8 +74,9 @@ array_value_expression_list	: expression COMMA array_value_expression_list // Re
 
 
 // Assignment
-assignment_statement		: IDENTIFIER ASSIGN expression ;
-array_assignment 				: IDENTIFIER LBRACK expression RBRACK ASSIGN expression ;
+assignment_statement		: simple_variable_assignment | array_assignment ;
+simple_variable_assignment	: IDENTIFIER ASSIGN expression ;
+array_assignment 			: array_access ASSIGN expression ;
 
 
 // Function 
