@@ -10,23 +10,39 @@ options {
 
 // ============== parser rules ===================
 
-program						: (global_statement | empty_statement)* ;
+
+program						: declaration_list EOF;
+
+
+declaration_list			: declaration declaration_list // Recursive
+							| declaration; // Only one declaration
+
+declaration					: function_declaration_statement 
+							| variable_declaration_statement
+							| ignore_statement_list; 
+
+// Local statement
+local_statement_list		: local_statement local_statement_list // Recursive
+							| local_statement;
+local_statement				: if_statement
+							| for_statement
+							| while_statement
+							| block_statement
+							| expression_statement
+							| ignore_statement_list;
+
+// Scope
+block_statement				: BEGIN NEWLINE (local_statement_list)* END NEWLINE;
+function_block_statement	: BEGIN NEWLINE (local_statement_list | return_statement)* END NEWLINE;
+
+
+
+// Ignore statement
+ignore_statement_list		: ignore_statement ignore_statement_list // Recursive
+							| ignore_statement;
 							
-// Statements
-global_statement			: variable_declaration_statement
-							| function_declaration_statement;
+ignore_statement			: COMMENT | NEWLINE;
 
-empty_statement				: NEWLINE;
-
-local_statement				: variable_declaration_statement
-							| assignment_statement 
-							| if_statement
-							//| for_statement
-							//| break_statement
-							//| continue_statement
-							//| return_statement
-							//| function_call_statement
-							| block_statement;
 
 
 assignment_statement		: IDENTIFIER ASSIGN expression ;
@@ -46,18 +62,23 @@ dynamic_variable_declaration: DYNAMIC IDENTIFIER ASSIGN expression ; // TODO Che
 
 
 // Function
-function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_declaration? RPAREN NEWLINE // Declaration only
+function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part? RPAREN NEWLINE // Declaration only
 								 (function_body NEWLINE)?; // body definition might be empty
-parameter_declaration       : variable_declaration_statement (COMMA variable_declaration_statement)* ;
+
+parameter_part       		: variable_declaration_statement (COMMA variable_declaration_statement)* ;
+
+parameter_list				: parameter parameter_list // Recursive
+							| parameter;
+parameter					: IDENTIFIER;
+
 function_body			   	: local_statement  // Can it have empty_statement in front or not due to body definition only?
 							| return_statement
-							| block_statement;
+							| function_block_statement;
 							
 return_statement			: RETURN expression;
 
-// Scope
-block_statement				: BEGIN NEWLINE (local_statement)* END NEWLINE;
-function_block_statement	: BEGIN NEWLINE (local_statement | return_statement)* END NEWLINE;
+
+
 
 if_statement 				: IF expression relational_operator expression RETURN boolean_value ;
 
