@@ -187,7 +187,7 @@ VAR				: 'var' ;
 DYNAMIC			: 'dynamic' ;
 
 // Control Keywords
-COMMENT			: '##' ~[\n\r\f]* -> skip;
+COMMENT			: '##' ~[\n\r\f]* ;
 NEWLINE 		: ('\r''\n'|'\n''\r'|'\r'|'\n')
 {
 print("NEWLINE")
