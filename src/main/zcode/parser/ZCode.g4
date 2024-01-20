@@ -162,11 +162,13 @@ fragment NUMBER_DECIMAL 	: '.'[0-9]* ;
 fragment NUMBER_EXPONENT 	: [eE][+-]?[0-9]+ ;
 
 BOOLEAN_LIT    	: TRUE | FALSE ;
-TRUE      		: 'true' ;
-FALSE     		: 'false' ;
+fragment TRUE      		: 'true' ;
+fragment FALSE     		: 'false' ;
 
 //Normal regex:  "([^\'\"\r\n\\]|\\['\\nrtbf]|'")*"
-STRING_LIT 			: '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* '"' {self.text = self.text[1:-1];};
+STRING_LIT 			: '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* '"' {
+self.text = self.text[1:-1]
+};
 
 // Assignment
 ASSIGN		: '<-' ;
