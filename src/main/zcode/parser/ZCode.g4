@@ -59,9 +59,32 @@ number_variable_declaration	: VAR IDENTIFIER ASSIGN NUMBER_LIT ;
 string_variable_declaration	: VAR IDENTIFIER ASSIGN STRING_LIT ;
 dynamic_variable_declaration: DYNAMIC IDENTIFIER ASSIGN expression ; // TODO Check again
 
+// Array
+
+array_declaration			: array_type IDENTIFIER array_dimension ASSIGN array_value;
+array_type 					: (NUMBER_TYPE | STRING_TYPE | BOOLEAN_TYPE) ;
 
 
-// Function
+array_dimension 			: LBRACK array_dimension_list RBRACK;
+array_dimension_list 		: number_literal COMMA array_dimension_list // Recursive
+							| number_literal;
+
+
+array_value					: LBRACK array_value_expression_list RBRACK;
+array_value_expression_list	: expression COMMA array_value_expression_list // Recursive
+							| array_value COMMA array_value
+							| array_value
+							| expression;
+
+
+
+
+// Assignment
+assignment_statement		: IDENTIFIER ASSIGN expression ;
+array_assignment 				: IDENTIFIER LBRACK expression RBRACK ASSIGN expression ;
+
+
+// Function 
 function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part? RPAREN NEWLINE // Declaration only
 								 (function_body NEWLINE)?; // body definition might be empty
 
