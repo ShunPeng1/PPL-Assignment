@@ -83,45 +83,46 @@ return_statement			: RETURN expression;
 if_statement 				: IF expression relational_operator expression RETURN boolean_value ;
 
 
-boolean_value 				: TRUE | FALSE ;
 
 // Expression : based on the precedence and associativity
 
-expression 					: string_expression
-							| relational_expression
-							| logical_expression
-							| adding_expression
-							| multiplying_expression
-							| negation_expression
-							| index_expression
-							| number_literal
-							| boolean_literal
-							| string_literal
-							| LPAREN expression RPAREN; 
+expression 					: string_expression; // Highest precedence
+							
 
 string_expression 			: string_expression CONCATE string_literal // Binary Infix None Associative
-							| string_literal;
+							| relational_expression; // Next precedence
 
 
 relational_expression		: logical_expression relational_operator logical_expression // Binary Infix None Associative
-							| logical_expression;
+							| logical_expression; // Next precedence
 
 logical_expression			: logical_expression logic_operator adding_expression // Binary Infix Left Associative
-							| adding_expression;
+							| adding_expression; // Next precedence
 
 adding_expression			: adding_expression additive_operator multiplying_expression // Binary Infix Left Associative
-							| multiplying_expression;
+							| multiplying_expression; // Next precedence
 
 multiplying_expression		: multiplying_expression multiplicative_operator sign_expression // Binary Infix Left Associative
-							| negation_expression; 
+							| negation_expression; // Next precedence
 
 negation_expression			: NOT negation_expression // Unary Prefix Right Associative
-							| sign_expression;
+							| sign_expression; // Next precedence
 
-sign_expression				: additive_operator sign_expression; // Unary Prefix Right Associative
-							//| ;// Index??
+sign_expression				: additive_operator sign_expression // Unary Prefix Right Associative
+							| parenthesis_expression; // Next precedence
 
-index_expression			: ; // TODO index operator
+parenthesis_expression		: LPAREN expression RPAREN // Parenthesis
+							| operand; // Next precedence
+
+operand						: literal 
+							| function_call_statement 
+							| IDENTIFIER ;
+
+index_expression 			: expression COMMA index_expression // Recursive
+							| expression;
+
+	
+
 
 // Expression operator
 relational_operator 		: LT | LE | GT | GE | EQUAL | NOT_EQUAL | STRING_EQUAL;
@@ -131,9 +132,14 @@ logic_operator 				: AND | OR ;
 
 
 // Literal
+literal						: NUMBER_LIT | BOOLEAN_LIT | STRING_LIT | array_access;
 string_literal 				: STRING_LIT ;
 number_literal 				: NUMBER_LIT ;
 boolean_literal 			: BOOLEAN_LIT ;
+
+// Array access
+array_access 				: IDENTIFIER LBRACK index_expression RBRACK;
+
 
 // ============== lexer rules ===================
 
