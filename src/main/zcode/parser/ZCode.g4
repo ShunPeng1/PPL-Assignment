@@ -48,8 +48,8 @@ block_statement				: BEGIN NEWLINE local_statement_list END NEWLINE;
 
 
 // Variable
-variable_declaration_statement	: basic_variable_declaration
-								| array_declaration;
+variable_declaration_statement	: basic_variable_declaration NEWLINE
+								| array_declaration NEWLINE;
 
 basic_variable_declaration	: VAR IDENTIFIER ASSIGN expression
 							| (basic_type | DYNAMIC) IDENTIFIER (ASSIGN expression)?;
@@ -57,14 +57,17 @@ basic_type					: (NUMBER_TYPE | STRING_TYPE | BOOLEAN_TYPE) ;
 
 // Array
 
-array_declaration			: basic_type IDENTIFIER array_dimension ASSIGN array_value;
+array_declaration			: basic_type IDENTIFIER array_dimension (ASSIGN array_value)?;
 
 array_dimension 			: LBRACK array_dimension_list RBRACK;
 array_dimension_list 		: number_literal COMMA array_dimension_list // Recursive
 							| number_literal;
 
 
-array_value					: LBRACK array_value_expression_list RBRACK;
+array_value					: LBRACK array_value_expression_list RBRACK
+							| LBRACK RBRACK // Empty array
+							| expression;
+
 array_value_expression_list	: expression COMMA array_value_expression_list // Recursive
 							| array_value COMMA array_value
 							| array_value
@@ -73,7 +76,8 @@ array_value_expression_list	: expression COMMA array_value_expression_list // Re
 
 
 // Assignment
-assignment_statement		: basic_variable_assignment | array_assignment ;
+assignment_statement		: basic_variable_assignment NEWLINE
+							| array_assignment NEWLINE;
 basic_variable_assignment	: IDENTIFIER ASSIGN expression ;
 array_assignment 			: element_force_expression ASSIGN expression ;
 
@@ -89,11 +93,11 @@ parameter_part_recursive    : variable_declaration_statement COMMA parameter_par
 function_body			   	: local_statement  // Can it have empty_statement in front or not due to body definition only?
 							| ignore_statement_list block_statement;
 
-return_statement			: RETURN expression;
+return_statement			: RETURN expression NEWLINE;
 
 
 // If-Else
-if_statement				: IF expression block_statement 
+if_statement				: IF expression branch_body 
 								(elif_recursive_statement)?
 								(else_statement)? ;
 
@@ -116,8 +120,8 @@ for_statement				: FOR IDENTIFIER UNTIL expression BY expression loop_body;
 loop_body					: ignore_statement_list block_statement
 							| ignore_statement_list local_statement;
 
-break_statement				: BREAK;
-continue_statement			: CONTINUE;
+break_statement				: BREAK NEWLINE;
+continue_statement			: CONTINUE NEWLINE;
 
 // Expression : based on the precedence and associativity
 
@@ -194,7 +198,6 @@ DYNAMIC			: 'dynamic' ;
 COMMENT			: '##' ~[\n\r\f]* ;
 NEWLINE 		: ('\r''\n'|'\n''\r'|'\r'|'\n')
 {
-print("NEWLINE")
 self.text = self.text.replace('\r\n', '\n')
 };
 WHITESPACE		: [ \t\r\b\f]+ -> skip ; // skip spaces, tabs, newlines

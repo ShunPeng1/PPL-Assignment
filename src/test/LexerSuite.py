@@ -89,5 +89,19 @@ class LexerSuite(unittest.TestCase):
         self.assertTrue(TestLexer.test("a\n##1\nb","a,\n,##1,\n,b,<EOF>",134))  
         self.assertTrue(TestLexer.test("a\n\n\n#","a,\n,\n,\n,Error Token #",135))     
 
+    def test_shun(self):
+        input = " var ShunPeng <- true and \"true\" or 1"
+        expect = "var,ShunPeng,<-,true,and,true,or,1,<EOF>"
+        self.assertTrue(TestLexer.test(input, expect, 199))
         
+        input = """var VoTien <- a()()
+        """
+        expect = """var,VoTien,<-,a,(,),(,),\n,<EOF>"""
+        self.assertTrue(TestLexer.test(input, expect, 198))  
         
+
+        input = """ 
+            var VoTien
+        """
+        expect = "\n,var,VoTien,\n,<EOF>"
+        self.assertTrue(TestLexer.test(input, expect, 197))   
