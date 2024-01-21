@@ -11,7 +11,7 @@ options {
 // ============== parser rules ===================
 
 
-program						: declaration_list EOF;
+program						: declaration_list? EOF;
 
 
 declaration_list			: declaration declaration_list // Recursive
@@ -213,24 +213,6 @@ BY				: 'by' ;
 BREAK			: 'break' ;
 CONTINUE		: 'continue' ;
 
-
-// Literal
-IDENTIFIER		: [a-zA-Z_] [a-z0-9A-Z_]*;
-
-NUMBER_LIT     	: NUMBER_INTERGER NUMBER_DECIMAL? NUMBER_EXPONENT? ;
-fragment NUMBER_INTERGER 	: [0-9]+ ;
-fragment NUMBER_DECIMAL 	: '.'[0-9]* ;
-fragment NUMBER_EXPONENT 	: [eE][+-]?[0-9]+ ;
-
-BOOLEAN_LIT    	: TRUE | FALSE ;
-fragment TRUE      		: 'true' ;
-fragment FALSE     		: 'false' ;
-
-//Normal regex:  "([^\'\"\r\n\\]|\\['\\nrtbf]|'")*"
-STRING_LIT 			: '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* '"' {
-self.text = self.text[1:-1]
-};
-
 // Assignment
 ASSIGN		: '<-' ;
 
@@ -256,7 +238,7 @@ OR       		: 'or' ;
 
 // Relational Operators
 EQUAL    		: '=' ;
-NOT_EQUAL   		: '!=' ;
+NOT_EQUAL   	: '!=' ;
 LT       		: '<' ;
 LE       		: '<=' ;
 GT       		: '>' ;
@@ -265,6 +247,23 @@ GE       		: '>=' ;
 // String Operators
 CONCATE    		: '...' ;
 STRING_EQUAL   	: '==' ;
+
+// Literal
+IDENTIFIER		: [a-zA-Z_] [a-z0-9A-Z_]*;
+
+NUMBER_LIT     	: NUMBER_INTERGER NUMBER_DECIMAL? NUMBER_EXPONENT? ;
+fragment NUMBER_INTERGER 	: [0-9]+ ;
+fragment NUMBER_DECIMAL 	: '.'[0-9]* ;
+fragment NUMBER_EXPONENT 	: [eE][+-]?[0-9]+ ;
+
+BOOLEAN_LIT    	: TRUE | FALSE ;
+fragment TRUE      		: 'true' ;
+fragment FALSE     		: 'false' ;
+
+//Normal regex:  "([^\'\"\r\n\\]|\\['\\nrtbf]|'")*"
+STRING_LIT 			: '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* '"' {
+self.text = self.text[1:-1]
+};
 
 
 
