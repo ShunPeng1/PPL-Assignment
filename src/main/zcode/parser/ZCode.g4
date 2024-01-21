@@ -25,7 +25,8 @@ declaration					: function_declaration_statement
 local_statement_list		: local_statement local_statement_list // Recursive
 							| local_statement;
 
-local_statement				: if_statement
+local_statement				: variable_declaration_statement
+							| if_statement
 							| function_call_statement
 							| for_statement
 							| break_statement
@@ -74,7 +75,7 @@ array_value_expression_list	: expression COMMA array_value_expression_list // Re
 // Assignment
 assignment_statement		: basic_variable_assignment | array_assignment ;
 basic_variable_assignment	: IDENTIFIER ASSIGN expression ;
-array_assignment 			: array_access ASSIGN expression ;
+array_assignment 			: element_expression ASSIGN expression ;
 
 
 // Function 
@@ -143,7 +144,14 @@ negation_expression			: NOT negation_expression // Unary Prefix Right Associativ
 							| sign_expression; // Next precedence
 
 sign_expression				: additive_operator sign_expression // Unary Prefix Right Associative
+							| element_expression; // Next precedence
+
+element_expression 			: operand index_expression
 							| parenthesis_expression; // Next precedence
+
+index_expression			: index_expression LBRACK array_index_access RBRACK // Unary Postfix Left Associative
+							| LBRACK array_index_access RBRACK
+							| parenthesis_expression ;
 
 parenthesis_expression		: LPAREN expression RPAREN // Parenthesis
 							| operand; // Next precedence
@@ -152,14 +160,9 @@ operand						: literal
 							| function_call_statement 
 							| IDENTIFIER ;
 
-index_expression			: LBRACK index_body RBRACK index_expression // Recursive
-							| LBRACK index_body RBRACK;
-
 // Array access
-index_body 					: expression COMMA index_body // Recursive
+array_index_access			: expression COMMA array_index_access // Recursive
 							| expression;
-	
-array_access 				: IDENTIFIER index_expression;
 
 // Expression operator
 relational_operator 		: LT | LE | GT | GE | EQUAL | NOT_EQUAL | STRING_EQUAL;
@@ -169,7 +172,7 @@ logic_operator 				: AND | OR ;
 
 
 // Literal
-literal						: NUMBER_LIT | BOOLEAN_LIT | STRING_LIT | array_access;
+literal						: NUMBER_LIT | BOOLEAN_LIT | STRING_LIT;
 string_literal 				: STRING_LIT ;
 number_literal 				: NUMBER_LIT ;
 boolean_literal 			: BOOLEAN_LIT ;
