@@ -48,10 +48,9 @@ block_statement				: BEGIN NEWLINE local_statement_list END NEWLINE;
 
 
 // Variable
-variable_declaration_statement	: basic_variable_declaration NEWLINE
-								| array_declaration NEWLINE;
+variable_declaration_statement	: basic_variable_declaration | array_declaration ;
 
-basic_variable_declaration	: VAR IDENTIFIER ASSIGN expression
+basic_variable_declaration	: VAR IDENTIFIER ASSIGN expression NEWLINE // Must have initial value
 							| (basic_type | DYNAMIC) IDENTIFIER (ASSIGN expression)?;
 basic_type					: (NUMBER_TYPE | STRING_TYPE | BOOLEAN_TYPE) ;
 
@@ -84,17 +83,21 @@ array_assignment 			: element_force_expression ASSIGN expression ;
 
 // Function 
 function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN NEWLINE // Declaration only
-								 (function_body NEWLINE)?; // body definition might be empty
-
-parameter_part_recursive    : variable_declaration_statement COMMA parameter_part_recursive // Recursive
-							| variable_declaration_statement;
-
+								 (function_body NEWLINE?)?; // body definition might be empty
 
 function_body			   	: local_statement  // Can it have empty_statement in front or not due to body definition only?
 							| ignore_statement_list block_statement;
 
 return_statement			: RETURN expression NEWLINE;
 
+// Parameter
+parameter_part_recursive    : parameter_declaration_statement COMMA parameter_part_recursive // Recursive
+							| parameter_declaration_statement;
+							
+parameter_declaration_statement	: basic_parameter_declaration
+								| array_parameter_declaration;
+basic_parameter_declaration	: (DYNAMIC|basic_type) IDENTIFIER;
+array_parameter_declaration	: basic_type IDENTIFIER array_dimension;
 
 // If-Else
 if_statement				: IF expression branch_body 
