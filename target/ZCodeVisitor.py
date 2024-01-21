@@ -54,18 +54,18 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#simple_variable_declaration.
-    def visitSimple_variable_declaration(self, ctx:ZCodeParser.Simple_variable_declarationContext):
+    # Visit a parse tree produced by ZCodeParser#basic_variable_declaration.
+    def visitBasic_variable_declaration(self, ctx:ZCodeParser.Basic_variable_declarationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#basic_type.
+    def visitBasic_type(self, ctx:ZCodeParser.Basic_typeContext):
         return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by ZCodeParser#array_declaration.
     def visitArray_declaration(self, ctx:ZCodeParser.Array_declarationContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ZCodeParser#array_type.
-    def visitArray_type(self, ctx:ZCodeParser.Array_typeContext):
         return self.visitChildren(ctx)
 
 
@@ -94,8 +94,8 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#simple_variable_assignment.
-    def visitSimple_variable_assignment(self, ctx:ZCodeParser.Simple_variable_assignmentContext):
+    # Visit a parse tree produced by ZCodeParser#basic_variable_assignment.
+    def visitBasic_variable_assignment(self, ctx:ZCodeParser.Basic_variable_assignmentContext):
         return self.visitChildren(ctx)
 
 
@@ -109,21 +109,6 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#parameter_part.
-    def visitParameter_part(self, ctx:ZCodeParser.Parameter_partContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ZCodeParser#parameter_list.
-    def visitParameter_list(self, ctx:ZCodeParser.Parameter_listContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ZCodeParser#parameter.
-    def visitParameter(self, ctx:ZCodeParser.ParameterContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by ZCodeParser#function_body.
     def visitFunction_body(self, ctx:ZCodeParser.Function_bodyContext):
         return self.visitChildren(ctx)
@@ -131,6 +116,26 @@ class ZCodeVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by ZCodeParser#return_statement.
     def visitReturn_statement(self, ctx:ZCodeParser.Return_statementContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#parameter_part_recursive.
+    def visitParameter_part_recursive(self, ctx:ZCodeParser.Parameter_part_recursiveContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#parameter_declaration_statement.
+    def visitParameter_declaration_statement(self, ctx:ZCodeParser.Parameter_declaration_statementContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#basic_parameter_declaration.
+    def visitBasic_parameter_declaration(self, ctx:ZCodeParser.Basic_parameter_declarationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#array_parameter_declaration.
+    def visitArray_parameter_declaration(self, ctx:ZCodeParser.Array_parameter_declarationContext):
         return self.visitChildren(ctx)
 
 
@@ -229,6 +234,21 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ZCodeParser#element_expression.
+    def visitElement_expression(self, ctx:ZCodeParser.Element_expressionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#element_force_expression.
+    def visitElement_force_expression(self, ctx:ZCodeParser.Element_force_expressionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#index_expression.
+    def visitIndex_expression(self, ctx:ZCodeParser.Index_expressionContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ZCodeParser#parenthesis_expression.
     def visitParenthesis_expression(self, ctx:ZCodeParser.Parenthesis_expressionContext):
         return self.visitChildren(ctx)
@@ -239,8 +259,8 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#index_expression.
-    def visitIndex_expression(self, ctx:ZCodeParser.Index_expressionContext):
+    # Visit a parse tree produced by ZCodeParser#array_index_access.
+    def visitArray_index_access(self, ctx:ZCodeParser.Array_index_accessContext):
         return self.visitChildren(ctx)
 
 
@@ -281,11 +301,6 @@ class ZCodeVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by ZCodeParser#boolean_literal.
     def visitBoolean_literal(self, ctx:ZCodeParser.Boolean_literalContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ZCodeParser#array_access.
-    def visitArray_access(self, ctx:ZCodeParser.Array_accessContext):
         return self.visitChildren(ctx)
 
 

@@ -85,6 +85,8 @@ class TestParser:
         TestParser.check(SOL_DIR,inputfile,num)
         dest = open(SOL_DIR + str(num) + ".txt","r")
         line = dest.read()
+
+        print(line)
         return line == expect
 
     @staticmethod
@@ -97,6 +99,9 @@ class TestParser:
         parser.removeErrorListeners()
         parser.addErrorListener(listener)
         try:
+            
+            print("Parser test case ",num)
+
             parser.program()
             dest.write("successful")
         except SyntaxException as f:

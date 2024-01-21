@@ -1,0 +1,1 @@
+ var ShunPeng <- true and "true" or 1

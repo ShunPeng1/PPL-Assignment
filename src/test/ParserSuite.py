@@ -596,3 +596,53 @@ class ParserSuite(unittest.TestCase):
         """
         expect = "Error on line 7 col 12: ## comment"
         self.assertTrue(TestParser.test(input, expect, 277))  
+
+
+    def test_example(self): 
+        input = """
+        func areDivisors(number num1, number num2)
+            return (num1 % num2 = 0 or num2 % num1 = 0)
+        func main()
+            begin
+                var num1 <- readNumber()
+                var num2 <- readNumber()
+                if areDivisors(num1, num2) printString("Yes")
+                else printString("No")
+            end
+        """
+
+        expect = "successful"
+        self.assertTrue(TestParser.test(input, expect, 299))
+
+
+        input = """
+        func isPrime(number x)
+
+        func main()
+            begin
+                number x <- readNumber()
+                if isPrime(x) printString("Yes")
+                else printString("No")
+            end
+
+        func isPrime(number x)
+            begin
+                if x <= 1 return false
+                var i <- 2
+                for i until i > x / 2 by 1
+                begin
+                    if x % i = 0 return false
+                end
+                return true
+            end
+
+        """
+
+        expect = "successful"
+
+        self.assertTrue(TestParser.test(input, expect, 298))
+
+
+
+
+        
