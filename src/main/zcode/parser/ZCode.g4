@@ -152,11 +152,14 @@ operand						: literal
 							| function_call_statement 
 							| IDENTIFIER ;
 
-index_expression 			: expression COMMA index_expression // Recursive
+index_expression			: LBRACK index_body RBRACK index_expression // Recursive
+							| LBRACK index_body RBRACK;
+
+// Array access
+index_body 					: expression COMMA index_body // Recursive
 							| expression;
-
 	
-
+array_access 				: IDENTIFIER index_expression;
 
 // Expression operator
 relational_operator 		: LT | LE | GT | GE | EQUAL | NOT_EQUAL | STRING_EQUAL;
@@ -171,8 +174,6 @@ string_literal 				: STRING_LIT ;
 number_literal 				: NUMBER_LIT ;
 boolean_literal 			: BOOLEAN_LIT ;
 
-// Array access
-array_access 				: IDENTIFIER LBRACK index_expression RBRACK;
 
 
 // ============== lexer rules ===================
