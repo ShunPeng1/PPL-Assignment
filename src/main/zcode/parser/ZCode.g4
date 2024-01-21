@@ -75,7 +75,7 @@ array_value_expression_list	: expression COMMA array_value_expression_list // Re
 // Assignment
 assignment_statement		: basic_variable_assignment | array_assignment ;
 basic_variable_assignment	: IDENTIFIER ASSIGN expression ;
-array_assignment 			: element_expression ASSIGN expression ;
+array_assignment 			: element_force_expression ASSIGN expression ;
 
 
 // Function 
@@ -146,7 +146,10 @@ negation_expression			: NOT negation_expression // Unary Prefix Right Associativ
 sign_expression				: additive_operator sign_expression // Unary Prefix Right Associative
 							| element_expression; // Next precedence
 
-element_expression 			: operand? index_expression
+element_expression 			: expression? index_expression  // Unary Postfix Left Associative
+							| parenthesis_expression; // Next precedence
+
+element_force_expression	: expression index_expression // Unary Postfix Left Associative
 							| parenthesis_expression; // Next precedence
 
 index_expression			: index_expression LBRACK array_index_access RBRACK // Unary Postfix Left Associative
