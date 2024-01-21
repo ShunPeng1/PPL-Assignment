@@ -50,8 +50,8 @@ block_statement				: BEGIN NEWLINE local_statement_list END NEWLINE;
 variable_declaration_statement	: basic_variable_declaration
 								| array_declaration;
 
-basic_variable_declaration	: (basic_type | VAR | DYNAMIC) IDENTIFIER ASSIGN expression;
-
+basic_variable_declaration	: VAR IDENTIFIER ASSIGN expression
+							| (basic_type | DYNAMIC) IDENTIFIER (ASSIGN expression)?;
 basic_type					: (NUMBER_TYPE | STRING_TYPE | BOOLEAN_TYPE) ;
 
 // Array
@@ -123,7 +123,7 @@ continue_statement			: CONTINUE;
 expression 					: string_expression; // Highest precedence
 							
 
-string_expression 			: string_expression CONCATE string_literal // Binary Infix None Associative
+string_expression 			: relational_expression CONCATE relational_expression // Binary Infix None Associative
 							| relational_expression; // Next precedence
 
 
@@ -136,7 +136,7 @@ logical_expression			: logical_expression logic_operator adding_expression // Bi
 adding_expression			: adding_expression additive_operator multiplying_expression // Binary Infix Left Associative
 							| multiplying_expression; // Next precedence
 
-multiplying_expression		: multiplying_expression multiplicative_operator sign_expression // Binary Infix Left Associative
+multiplying_expression		: multiplying_expression multiplicative_operator negation_expression // Binary Infix Left Associative
 							| negation_expression; // Next precedence
 
 negation_expression			: NOT negation_expression // Unary Prefix Right Associative
