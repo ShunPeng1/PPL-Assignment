@@ -146,10 +146,10 @@ negation_expression			: NOT negation_expression // Unary Prefix Right Associativ
 sign_expression				: additive_operator sign_expression // Unary Prefix Right Associative
 							| element_expression; // Next precedence
 
-element_expression 			: expression? index_expression  // Unary Postfix Left Associative
+element_expression 			: operand? index_expression  // Unary Postfix Left Associative
 							| parenthesis_expression; // Next precedence
 
-element_force_expression	: expression index_expression // Unary Postfix Left Associative
+element_force_expression	: operand index_expression // Unary Postfix Left Associative
 							| parenthesis_expression; // Next precedence
 
 index_expression			: index_expression LBRACK array_index_access RBRACK // Unary Postfix Left Associative
