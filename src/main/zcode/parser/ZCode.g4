@@ -27,16 +27,15 @@ local_statement_single		: ignore_statement_list_inline? local_statement ignore_s
 local_statement_list		: (ignore_statement_list_inline | local_statement) local_statement_list // Recursive
 							| (ignore_statement_list_inline | local_statement);
 
-local_statement				: variable_declaration_statement NEWLINE
-							| if_statement NEWLINE
-							| function_call_statement NEWLINE
-							| for_statement NEWLINE
-							| break_statement NEWLINE
-							| continue_statement NEWLINE
-							| block_statement NEWLINE
-							| assignment_statement NEWLINE
-							| return_statement NEWLINE
-							| newline_statement;
+local_statement				: variable_declaration_statement
+							| if_statement
+							| function_call_statement
+							| for_statement
+							| break_statement
+							| continue_statement
+							| block_statement
+							| assignment_statement
+							| return_statement;
 
 
 // Ignore statement
@@ -47,8 +46,6 @@ ignore_statement_list		: ignore_statement ignore_statement_list // Recursive
 							| ignore_statement;
 
 ignore_statement			: COMMENT | NEWLINE;
-
-newline_statement			: NEWLINE;
 
 // Scope
 block_statement				: BEGIN local_statement_list? END ;
