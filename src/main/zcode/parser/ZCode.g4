@@ -14,16 +14,18 @@ options {
 program						: declaration_list? EOF;
 
 
-declaration_list			: declaration declaration_list // Recursive
-							| declaration; // Only one declaration
+declaration_list			: (ignore_statement_list | declaration) declaration_list // Recursive
+							| (ignore_statement_list | declaration); // Only one declaration
 
 declaration					: function_declaration_statement 
-							| variable_declaration_statement
-							| ignore_statement_list; 
+							| variable_declaration_statement; 
 
 // Local statement
-local_statement_list		: local_statement local_statement_list // Recursive
-							| local_statement;
+
+single_local_statement		: ignore_statement_list? local_statement ignore_statement_list?;
+
+local_statement_list		: (ignore_statement_list | local_statement) local_statement_list // Recursive
+							| (ignore_statement_list | local_statement);
 
 local_statement				: variable_declaration_statement
 							| if_statement
@@ -33,8 +35,7 @@ local_statement				: variable_declaration_statement
 							| continue_statement
 							| block_statement
 							| assignment_statement
-							| return_statement
-							| ignore_statement_list;
+							| return_statement;
 
 
 // Ignore statement
@@ -44,7 +45,7 @@ ignore_statement_list		: ignore_statement ignore_statement_list // Recursive
 ignore_statement			: COMMENT | NEWLINE;
 
 // Scope
-block_statement				: BEGIN NEWLINE local_statement_list END NEWLINE;
+block_statement				: BEGIN NEWLINE? local_statement_list? END NEWLINE?;
 
 
 // Variable
@@ -75,18 +76,19 @@ array_value_expression_list	: expression COMMA array_value_expression_list // Re
 
 
 // Assignment
+
 assignment_statement		: basic_variable_assignment NEWLINE
+							//| function_call_statement NEWLINE
 							| array_assignment NEWLINE;
 basic_variable_assignment	: IDENTIFIER ASSIGN expression ;
-array_assignment 			: element_force_expression ASSIGN expression ;
+array_assignment 			: array_access ASSIGN expression ;
 
 
 // Function 
-function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN NEWLINE // Declaration only
+function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN NEWLINE? // Declaration only
 								 (function_body NEWLINE?)?; // body definition might be empty
 
-function_body			   	: local_statement  // Can it have empty_statement in front or not due to body definition only?
-							| ignore_statement_list block_statement;
+function_body			   	: single_local_statement;
 
 return_statement			: RETURN expression NEWLINE;
 
@@ -109,8 +111,7 @@ elif_recursive_statement	: elif_statement elif_recursive_statement // Recursive
 
 elif_statement				: ELIF expression branch_body;
 else_statement				: ELSE branch_body;
-branch_body					: ignore_statement_list block_statement
-							| ignore_statement_list local_statement;
+branch_body					: single_local_statement;
 
 
 // Function call
@@ -120,8 +121,7 @@ argument_part				: expression COMMA argument_part // Recursive
 
 // Loop
 for_statement				: FOR IDENTIFIER UNTIL expression BY expression loop_body;
-loop_body					: ignore_statement_list block_statement
-							| ignore_statement_list local_statement;
+loop_body					: single_local_statement;
 
 break_statement				: BREAK NEWLINE;
 continue_statement			: CONTINUE NEWLINE;
@@ -156,8 +156,7 @@ sign_expression				: additive_operator sign_expression // Unary Prefix Right Ass
 element_expression 			: operand? index_expression  // Unary Postfix Left Associative
 							| parenthesis_expression; // Next precedence
 
-element_force_expression	: operand index_expression // Unary Postfix Left Associative
-							| parenthesis_expression; // Next precedence
+					
 
 index_expression			: index_expression LBRACK array_index_access RBRACK // Unary Postfix Left Associative
 							| LBRACK array_index_access RBRACK;
@@ -170,6 +169,8 @@ operand						: literal
 							| IDENTIFIER ;
 
 // Array access
+array_access				: IDENTIFIER index_expression; // Unary Postfix Left Associative
+		
 array_index_access			: expression COMMA array_index_access // Recursive
 							| expression;
 
