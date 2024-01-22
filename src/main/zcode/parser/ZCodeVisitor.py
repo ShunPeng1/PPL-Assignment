@@ -24,8 +24,8 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#single_local_statement.
-    def visitSingle_local_statement(self, ctx:ZCodeParser.Single_local_statementContext):
+    # Visit a parse tree produced by ZCodeParser#local_statement_single.
+    def visitLocal_statement_single(self, ctx:ZCodeParser.Local_statement_singleContext):
         return self.visitChildren(ctx)
 
 
@@ -36,6 +36,11 @@ class ZCodeVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by ZCodeParser#local_statement.
     def visitLocal_statement(self, ctx:ZCodeParser.Local_statementContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#ignore_statement_list_inline.
+    def visitIgnore_statement_list_inline(self, ctx:ZCodeParser.Ignore_statement_list_inlineContext):
         return self.visitChildren(ctx)
 
 

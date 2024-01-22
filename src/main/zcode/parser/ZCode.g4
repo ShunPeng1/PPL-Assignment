@@ -11,47 +11,53 @@ options {
 // ============== parser rules ===================
 
 
-program						: declaration_list? EOF;
+program						: ignore_statement_list? declaration_list? EOF;
 
 
-declaration_list			: (ignore_statement_list | declaration) declaration_list // Recursive
-							| (ignore_statement_list | declaration); // Only one declaration
+declaration_list			: (ignore_statement_list_inline | declaration) declaration_list // Recursive
+							| (ignore_statement_list_inline | declaration); // Only one declaration
 
 declaration					: function_declaration_statement 
 							| variable_declaration_statement; 
 
 // Local statement
 
-single_local_statement		: ignore_statement_list? local_statement ignore_statement_list?;
+local_statement_single		: ignore_statement_list_inline? local_statement ignore_statement_list_inline?;
 
-local_statement_list		: (ignore_statement_list | local_statement) local_statement_list // Recursive
-							| (ignore_statement_list | local_statement);
+local_statement_list		: (ignore_statement_list_inline | local_statement) local_statement_list // Recursive
+							| (ignore_statement_list_inline | local_statement);
 
-local_statement				: variable_declaration_statement
-							| if_statement
-							| function_call_statement
-							| for_statement
-							| break_statement
-							| continue_statement
-							| block_statement
-							| assignment_statement
-							| return_statement;
+local_statement				: variable_declaration_statement NEWLINE
+							| if_statement NEWLINE
+							| function_call_statement NEWLINE
+							| for_statement NEWLINE
+							| break_statement NEWLINE
+							| continue_statement NEWLINE
+							| block_statement NEWLINE
+							| assignment_statement NEWLINE
+							| return_statement NEWLINE
+							| newline_statement;
 
 
 // Ignore statement
+ignore_statement_list_inline: NEWLINE ignore_statement_list
+							| NEWLINE;
+							
 ignore_statement_list		: ignore_statement ignore_statement_list // Recursive
 							| ignore_statement;
-							
+
 ignore_statement			: COMMENT | NEWLINE;
 
+newline_statement			: NEWLINE;
+
 // Scope
-block_statement				: BEGIN NEWLINE? local_statement_list? END NEWLINE?;
+block_statement				: BEGIN local_statement_list? END ;
 
 
 // Variable
 variable_declaration_statement	: basic_variable_declaration | array_declaration ;
 
-basic_variable_declaration	: VAR IDENTIFIER ASSIGN expression NEWLINE // Must have initial value
+basic_variable_declaration	: VAR IDENTIFIER ASSIGN expression // Must have initial value
 							| (basic_type | DYNAMIC) IDENTIFIER (ASSIGN expression)?;
 basic_type					: (NUMBER_TYPE | STRING_TYPE | BOOLEAN_TYPE) ;
 
@@ -77,20 +83,19 @@ array_value_expression_list	: expression COMMA array_value_expression_list // Re
 
 // Assignment
 
-assignment_statement		: basic_variable_assignment NEWLINE
-							//| function_call_statement NEWLINE
-							| array_assignment NEWLINE;
+assignment_statement		: basic_variable_assignment
+							| array_assignment;
 basic_variable_assignment	: IDENTIFIER ASSIGN expression ;
 array_assignment 			: array_access ASSIGN expression ;
 
 
 // Function 
 function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN NEWLINE? // Declaration only
-								 (function_body NEWLINE?)?; // body definition might be empty
+								 (function_body )? ; // body definition might be empty
 
-function_body			   	: single_local_statement;
+function_body			   	: local_statement_single;
 
-return_statement			: RETURN expression NEWLINE;
+return_statement			: RETURN expression;
 
 // Parameter
 parameter_part_recursive    : parameter_declaration_statement COMMA parameter_part_recursive // Recursive
@@ -111,7 +116,7 @@ elif_recursive_statement	: elif_statement elif_recursive_statement // Recursive
 
 elif_statement				: ELIF expression branch_body;
 else_statement				: ELSE branch_body;
-branch_body					: single_local_statement;
+branch_body					: local_statement_single;
 
 
 // Function call
@@ -121,10 +126,10 @@ argument_part				: expression COMMA argument_part // Recursive
 
 // Loop
 for_statement				: FOR IDENTIFIER UNTIL expression BY expression loop_body;
-loop_body					: single_local_statement;
+loop_body					: local_statement_single;
 
-break_statement				: BREAK NEWLINE;
-continue_statement			: CONTINUE NEWLINE;
+break_statement				: BREAK;
+continue_statement			: CONTINUE;
 
 // Expression : based on the precedence and associativity
 

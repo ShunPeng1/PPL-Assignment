@@ -645,4 +645,22 @@ class ParserSuite(unittest.TestCase):
 
 
 
+    def test_shun(self):
+
+        input = """ 
+            func main(dynamic a) ## ShunPeng
+        """
+        expect = "Error on line 2 col 33: ## ShunPeng"
+        self.assertTrue(TestParser.test(input, expect, 21530110001))  
+
         
+        input = """ 
+            number aaaaaaaa <- 2 ## ShunPeng
+        """
+        expect = "Error on line 2 col 33: ## ShunPeng"
+        self.assertTrue(TestParser.test(input, expect, 21530110002))  
+        
+        
+        input = """var a <- 1"""
+        expect = "Error on line 1 col 10: <EOF>"
+        self.assertTrue(TestParser.test(input, expect, 21530110003))  
