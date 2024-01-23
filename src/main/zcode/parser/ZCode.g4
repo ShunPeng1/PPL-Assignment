@@ -14,25 +14,26 @@ options {
 program						: ignore_statement_list? declaration_list? EOF;
 
 
-declaration_list			: declaration declaration_list // Recursive
-							| declaration // Only one declaration
-							;
+declaration_list			: (ignore_statement_list|declaration) declaration_list // Recursive
+							| (ignore_statement_list|declaration); // Only one declaration
+							
 
 declaration					: function_declaration_statement 
-							| variable_declaration_statement NEWLINE ignore_statement_list?; 
+							| variable_declaration_statement NEWLINE; 
 
 // Local statement
 
-local_statement_single		: ignore_statement_list_inline? local_statement ;
+local_statement_single		: ignore_statement_list_inline? local_statement ignore_statement_list?;
 
-local_statement_list		: local_statement local_statement_list // Recursive
-							| local_statement
-							| ignore_statement_list;
+local_statement_multiple	: ignore_statement_list_inline? (local_statement local_statement_list? ignore_statement_list?)? ;
+
+local_statement_list		: (ignore_statement_list|local_statement) local_statement_list // Recursive
+							| (ignore_statement_list|local_statement);
 
 local_statement				: variable_declaration_statement NEWLINE
-							| if_statement NEWLINE
+							| if_statement 
 							| function_call_statement NEWLINE
-							| for_statement NEWLINE
+							| for_statement 
 							| break_statement NEWLINE
 							| continue_statement NEWLINE
 							| block_statement NEWLINE
@@ -54,7 +55,7 @@ ignore_statement			: NEWLINE
 comment_statement			: COMMENT NEWLINE;
 
 // Scope
-block_statement				: BEGIN local_statement_list? END ;
+block_statement				: BEGIN local_statement_multiple END ;
 
 
 // Variable
