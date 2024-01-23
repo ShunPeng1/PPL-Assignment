@@ -663,4 +663,7 @@ class ParserSuite(unittest.TestCase):
         
         input = """var a <- 1"""
         expect = "Error on line 1 col 10: <EOF>"
-        self.assertTrue(TestParser.test(input, expect, 21530110003))  
+        self.assertTrue(TestParser.test(input, expect, 21530110003)) 
+
+
+        

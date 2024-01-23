@@ -1,0 +1,6 @@
+>,not,not,not,%,<,...,
+,-,),>=,for,!=,true,string,/,99,string,%,end,a1,
+,or,
+,return,/,=,begin,a1,[,!=,return,and,),end,dynamic,
+,==,
+,<EOF>

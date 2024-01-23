@@ -1,1 +1,11 @@
-1Tienc
+	and	, 
+ for	break	or until >=	break	number	% dynamic ,	<= for ...	func a1 , string
+until
+-	true
+not 52 number !=	( break else	[ true <-
+)	by - + for
++ -
+or
+return	%	< begin	"abcd" dynamic
+continue "abcd" or func = else for true
+    

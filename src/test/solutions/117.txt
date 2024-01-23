@@ -1,1 +1,10 @@
-Unclosed String: Vo 
+
+,
+,func,main,(,),
+,begin,
+,## comment ##hello,
+,## "hello",
+,var,a,<-,## comment in string,
+,end,
+,
+,<EOF>

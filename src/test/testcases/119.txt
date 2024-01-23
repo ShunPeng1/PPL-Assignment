@@ -1,2 +1,10 @@
- "Vo \n 
- 
+
+
+func main()
+begin 
+              ##hello
+## "hello"
+var a <- "## comment in string"    
+end
+## comment
+    

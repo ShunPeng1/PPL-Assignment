@@ -1,1 +1,5 @@
-A,_,a,az,AZ,aZ,_a,a_,a1,_1,A1,<EOF>
+
+,dynamic,-,/,<=,
+,var,end,
+,],string,/,<-,
+,<EOF>

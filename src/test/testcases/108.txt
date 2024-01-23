@@ -1,1 +1,8 @@
-11Tienc
+ ) / begin and string	*	string	continue	return <-	var elif	elif	for	"abcd"	] (
+!=	*	else if 86.83E-256 or	break	/ +
+)	var !=
+!=	dynamic	false true	var false var
+, ] >=
+<= =
+...
+    

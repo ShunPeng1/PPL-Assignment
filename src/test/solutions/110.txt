@@ -1,1 +1,2 @@
-Error Token .
+dynamic,abc123,
+,<EOF>

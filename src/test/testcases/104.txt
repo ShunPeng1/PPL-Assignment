@@ -1,1 +1,16 @@
-&
+	, a1
+"abcd" until return begin
+for and continue %
+%
+<
+% if
+not break != number return 
+
+end else (	continue	=
+- == elif -	a1 <-	99E-6561
+else elif bool
+)	>
+
+ != if = false	or func
+func
+    

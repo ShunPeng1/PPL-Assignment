@@ -1,1 +1,8 @@
-[(,,)]
+	end ... return	<-	until break	break 117.39 return	or )
+... *	== <	"abcd" /	begin == false	<
+break	begin	< / %
+>	var
+return
+false
+number a1	==	"abcd"	true
+    

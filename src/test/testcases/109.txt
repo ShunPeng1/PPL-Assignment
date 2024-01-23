@@ -1,1 +1,17 @@
-0 -0 199 001 012. 12. 0. 12.3 12.3e3 12.3e-30 2.e3 0.e-30 31e+3 31e-3 0e+3 0e-3
+ ] <=
+"abcd" by if a1 or
+<- <-
++	func	!= false begin	break	
+	func
+[	var continue /	until
+until	] - string ) by	break -	== - not or func
+dynamic not	bool ) elif >=
+var	(	var "abcd"
+return	<-	elif	- <- <=	begin and ) == <= elif !=
+]	by	and
+[	by
+%	<- end a1 , else "abcd"	+	==	return !=	and
+/	<- ,	a1
+=	>
+var	else
+    

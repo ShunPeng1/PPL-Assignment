@@ -1,3 +1,5 @@
- 
-            var VoTien
-        
+func foJki3t(puiEk1b,paiCdMm) 
+ begin 
+voL6H8P <-2292
+ end
+    
