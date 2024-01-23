@@ -14,28 +14,31 @@ options {
 program						: ignore_statement_list? declaration_list? EOF;
 
 
-declaration_list			: (ignore_statement_list_inline | declaration) declaration_list // Recursive
-							| (ignore_statement_list_inline | declaration); // Only one declaration
+declaration_list			: declaration declaration_list // Recursive
+							| declaration // Only one declaration
+							;
 
 declaration					: function_declaration_statement 
-							| variable_declaration_statement; 
+							| variable_declaration_statement NEWLINE ignore_statement_list?; 
 
 // Local statement
 
-local_statement_single		: ignore_statement_list_inline? local_statement ignore_statement_list_inline?;
+local_statement_single		: ignore_statement_list_inline? local_statement ;
 
-local_statement_list		: (ignore_statement_list_inline | local_statement) local_statement_list // Recursive
-							| (ignore_statement_list_inline | local_statement);
+local_statement_list		: local_statement local_statement_list // Recursive
+							| local_statement
+							| ignore_statement_list;
 
-local_statement				: variable_declaration_statement
-							| if_statement
-							| function_call_statement
-							| for_statement
-							| break_statement
-							| continue_statement
-							| block_statement
-							| assignment_statement
-							| return_statement;
+local_statement				: variable_declaration_statement NEWLINE
+							| if_statement NEWLINE
+							| function_call_statement NEWLINE
+							| for_statement NEWLINE
+							| break_statement NEWLINE
+							| continue_statement NEWLINE
+							| block_statement NEWLINE
+							| assignment_statement NEWLINE
+							| return_statement NEWLINE
+							;
 
 
 // Ignore statement
@@ -45,7 +48,10 @@ ignore_statement_list_inline: NEWLINE ignore_statement_list
 ignore_statement_list		: ignore_statement ignore_statement_list // Recursive
 							| ignore_statement;
 
-ignore_statement			: COMMENT | NEWLINE;
+ignore_statement			: NEWLINE 
+							| comment_statement;
+
+comment_statement			: COMMENT NEWLINE;
 
 // Scope
 block_statement				: BEGIN local_statement_list? END ;
@@ -87,8 +93,8 @@ array_assignment 			: array_access ASSIGN expression ;
 
 
 // Function 
-function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN NEWLINE? // Declaration only
-								 (function_body )? ; // body definition might be empty
+function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN 
+								 (function_body | NEWLINE ) ; // Declaration onlu or body definition might be empty
 
 function_body			   	: local_statement_single;
 
@@ -284,17 +290,23 @@ self.text = self.text[1:-1]
 
 // Error
 ERROR_CHAR: . 
-{
+/*!!*/{
 raise ErrorToken(self.text)
-};
+}
+//*/
+;
 
 UNCLOSE_STRING  : '"' (~['"\\\t\b\f] | '\\' ['\\nrtbf] | '\'"' | [\r\n] )* ('"'|EOF)
-{
+/*!!*/{
 newlineIndex = self.text.find('\r\n') 
 raise UncloseString(self.text[1:newlineIndex] if newlineIndex != -1 else self.text[1:]) # if end with \n else end with EOF
-};
+}
+//*/
+;
 
 ILLEGAL_ESCAPE  : '"' (~['"\\] | '\\' ['\\nrtbf] | '\'"' )* ('\\' ~['\\nrtbf] | [\t\b\f] | '\'' ~["])
-{
+/*!!*/{
 raise IllegalEscape(self.text[1:])
-};
+}
+//*/
+;
