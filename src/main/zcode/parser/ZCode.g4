@@ -99,7 +99,7 @@ function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part_recursive
 
 function_body			   	: local_statement_single;
 
-return_statement			: RETURN expression;
+return_statement			: RETURN (NEWLINE | expression);
 
 // Parameter
 parameter_part_recursive    : parameter_declaration_statement COMMA parameter_part_recursive // Recursive
