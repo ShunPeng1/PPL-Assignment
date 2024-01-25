@@ -1,3 +1,1 @@
-string a<-"uOZV'"s
-"a
-    
+628.436E76

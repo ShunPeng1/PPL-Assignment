@@ -1,5 +1,8 @@
- 
-            bool a["string"]
-            bool a[[1,2]]
-            bool a[1+1]
-        
+
+## P=6
+## 3qO=(yB
+func kwDh ()
+	return
+
+func DsU (dynamic Nm0e, var Z7v)	return
+

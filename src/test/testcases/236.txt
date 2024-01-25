@@ -1,6 +1,2 @@
 
-        func main()
-            begin   
-                if api <- 1
-            end
-        
+func YjjI (var pe, string Blb)	return false

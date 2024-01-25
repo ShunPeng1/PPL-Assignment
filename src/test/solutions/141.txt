@@ -1,1 +1,1 @@
-IDENTIFIER,<=,Error Token |
+L%'"=,<EOF>

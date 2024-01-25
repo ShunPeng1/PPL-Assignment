@@ -1,6 +1,10 @@
- 
-            ## 12
-            
-            var a <- 1 ## 12
-            ## 12
-        
+
+func bn (string Ao0, dynamic x25i, bool o2)	begin
+	end
+var aw[56.114] <- "'"," ## Kpj&+POis&1
+## ;8QwGkuT"a
+## M{9V ,wWKG<_
+func nhJ (number irRC, var dl[7E22])
+	begin
+	end
+

@@ -1,1 +1,1 @@
-string,s,<-,Illegal Escape In String:  HtLmTM \=
+34.338,<EOF>

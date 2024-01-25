@@ -1,11 +1,3 @@
- 
-            ##12
-            func main(number a) 
-                ##12
-                
-                break
-                ##12
-                ##12
-            func main(number a)
-            ##12        
-        
+
+func yz (dynamic SF[499,336E-63])	return
+dynamic hB[878.187E-06] ## <mA&X>m

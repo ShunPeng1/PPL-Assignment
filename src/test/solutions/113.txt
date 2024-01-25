@@ -1,1 +1,1 @@
-dynamic,abC1,Error Token #
+438.032,<EOF>

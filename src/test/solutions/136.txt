@@ -1,1 +1,1 @@
-false,continue,!=,Error Token }
+'"^'",<EOF>

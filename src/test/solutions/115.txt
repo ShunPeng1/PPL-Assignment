@@ -1,10 +1,1 @@
-
-,## comment,
-,func,main,(,),
-,begin,
-,##hello,
-,## "hello",
-,var,a,<-,## comment in string,
-,end,
-,
-,<EOF>
+67.963E42,<EOF>

@@ -105,9 +105,3 @@ class LexerSuite(unittest.TestCase):
         """
         expect = "\n,var,VoTien,\n,<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 197))   
-
-    def test_khang(self):
-          
-        input = '''"\f'"\n\t"'''
-        expected = "UnclosedString: \f'"
-        self.assertTrue(TestLexer.test(input, expected, 21530111001))

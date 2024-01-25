@@ -1,1 +1,1 @@
-break,not,number,by,true,by,if,Error Token {
+550.500E64,<EOF>

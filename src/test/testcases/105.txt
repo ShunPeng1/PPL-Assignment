@@ -1,15 +1,1 @@
-
-(
-)
-"abcd"
-and	true else	string func	>=	% var
-] 
-
-%
-false	( ]	not <-
-/	
-	*
-a1	)	by	< return
-+ 
- >= false	var ( return )
-    
+9.791E+24

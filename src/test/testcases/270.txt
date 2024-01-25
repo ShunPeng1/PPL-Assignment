@@ -1,11 +1,10 @@
 
-        func areDivisors(number num1, number num2)
-            return (num1 % num2 = 0 ... num2 % num1 = 0)
-        func main()
-            begin
-                var num1 <- readNumber()
-                var num2 <- readNumber()
-                if areDivisors(num1, num2) printString("Yes")
-                else printString("No")
-            end
-        
+func V8 (string Md, number MU[19e60,91.759,828], string yT0[539,1.291E91])
+	begin
+		## XP
+	end
+
+## c[n*oDG_uYj}Z /r-!
+## 3PF(FzrhI)"uE
+func gI (dynamic Mf, number ZyL, bool O6[8.542e73,602.688e+64])	return
+number gVd <- "W'"ECL"

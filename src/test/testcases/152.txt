@@ -1,2 +1,1 @@
-string s <- " ct8Odwgm \= "
-    
+869.532

@@ -1,11 +1,4 @@
 
-        ## comment
-        func main()
-        
-            ## comment
-            aPI <- 3.14
-            ## comment
-            
-        ## comment
-        
-        
+## _9`
+func hlaj ()
+	return "'"a'"'"'""

@@ -1,1 +1,1 @@
-string,s,<-,Illegal Escape In String:  ofwd \1
+## S#?0x>2PX$<n~=ym,<EOF>

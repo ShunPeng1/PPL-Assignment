@@ -1,1 +1,1 @@
-string,s,<-,Illegal Escape In String:  Cg \=
+21.811,<EOF>

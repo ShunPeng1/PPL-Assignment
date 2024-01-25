@@ -1,3 +1,1 @@
-string a<-"FDCn"s
-"a
-    
+72.067

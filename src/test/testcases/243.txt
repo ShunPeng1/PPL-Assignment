@@ -1,4 +1,7 @@
 
-        func main()
-            main()
-        
+func Ff ()	return
+func m88 ()
+	begin
+	end
+
+var K8

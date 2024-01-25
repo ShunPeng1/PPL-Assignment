@@ -1,5 +1,1 @@
-func,fnOkPoK,(,),
-,begin,
-,string,vqa7cdc,<-,-,2138,
-,end,
-,<EOF>
+Error Token #

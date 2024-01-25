@@ -1,20 +1,9 @@
 
-        func main()
-            begin
-                begin
-                    begin
-                        x <- 1
-                    end
-                    
-                    begin
-                        return true
-                    end
-                    
-                    return false
-                end
-                
-                begin
-                end
-                return true
-            end
-        
+dynamic F0hg ## iu=S
+## 8-M
+func pGJ (string iml[45.721,8.955E-04], bool vKqz[99], number HqRj[18.878E+25,119.935])	return true
+
+func pIw ()
+	begin
+	end
+func jI3 (bool lbUi, var dQ[909.725e-40,6.590,29.677E-86])	return

@@ -1,1 +1,1 @@
-string,s,<-,Illegal Escape In String:  ct8Odwgm \=
+869.532,<EOF>

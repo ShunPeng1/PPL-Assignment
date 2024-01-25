@@ -1,3 +1,7 @@
- 
-            bool a[1,]
-        
+
+func wQ_ (number yXV, string elok, number kAHB)	return false
+
+func pw (var jc4)
+	return
+string kQY[290.309e-77]
+string UI

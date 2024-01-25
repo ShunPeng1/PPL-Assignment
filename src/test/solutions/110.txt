@@ -1,2 +1,1 @@
-dynamic,abc123,
-,<EOF>
+JM25,<EOF>

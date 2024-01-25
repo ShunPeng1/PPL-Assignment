@@ -1,2 +1,1 @@
-string s <- " IdnGrpgns \c "
-    
+58E+89

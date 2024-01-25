@@ -1,10 +1,1 @@
-
-,
-,func,main,(,),
-,begin,## comment,
-,##hello,
-,## "hello",
-,var,a,<-,## comment in string,
-,end,
-,
-,<EOF>
+Illegal Escape In String: \g

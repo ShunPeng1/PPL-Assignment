@@ -1,1 +1,1 @@
-STRINGLIT,and,Error Token !
+g1xF,<EOF>

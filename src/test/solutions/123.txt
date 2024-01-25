@@ -1,2 +1,1 @@
-string,a,<-,Ue1v'"s,
-,<EOF>
+5.835E66,<EOF>

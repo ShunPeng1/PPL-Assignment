@@ -1,16 +1,1 @@
-/,/,
-,<=,...,
-,end,%,not,or,
-,%,<=,
-,begin,continue,return,for,),for,or,+,>,36.54,,,
-,return,-,abcd,elif,],var,
-,else,for,true,until,true,=,bool,a1,
-,continue,
-,else,==,,,
-,95,until,==,%,break,break,false,
-,(,<,return,until,by,%,!=,%,end,),
-,begin,for,
-,/,func,
-,%,if,-,<,dynamic,if,
-,>=,break,end,>=,),
-,<EOF>
+8,hUuNaO,<EOF>

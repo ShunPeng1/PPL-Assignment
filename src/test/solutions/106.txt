@@ -1,5 +1,1 @@
-
-,dynamic,-,/,<=,
-,var,end,
-,],string,/,<-,
-,<EOF>
+## O#7,<EOF>

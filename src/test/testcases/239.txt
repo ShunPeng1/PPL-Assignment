@@ -1,5 +1,10 @@
 
-        func main()
-            for i+1 until i >= 10 by 1 + 1
-                a <- 1
-        
+func C95 (var npo, bool nF, string n_3)	return "'"Ce"
+func js ()	begin
+		return bUV
+		continue
+		if "=@'"J" MN5z(844e-84, true)
+		elif "a'"'"" break
+		else GD <- HPR
+	end
+

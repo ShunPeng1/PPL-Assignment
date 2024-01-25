@@ -1,1 +1,1 @@
-string,<=,+,break,Error Token $
+A,Error Token ^

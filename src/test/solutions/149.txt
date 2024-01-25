@@ -1,1 +1,1 @@
-begin,>,<-,=,elif,false,Error Token {
+Illegal Escape In String: zm\o

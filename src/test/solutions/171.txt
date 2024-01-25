@@ -1,2 +1,1 @@
-continueb2,
-,<EOF>
+19.655E77,<EOF>
