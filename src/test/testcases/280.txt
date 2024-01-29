@@ -1,9 +1,4 @@
-
-dynamic xfr4[22.251] <- FfDg ## m9[XMod
-number CIEu[6.302] <- true
-func P_tQ ()	begin
-		## 71q-
-		## 8e/b[dnEv
-		## F%QN!vE~<M< @H
-	end
-
+    
+        func a()
+            return if x <= 1 return false
+        

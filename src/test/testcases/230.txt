@@ -1,4 +1,13 @@
 
-## _9`
-func hlaj ()
-	return "'"a'"'"'""
+        ## comment
+        func main()
+
+            ## comment
+            begin
+            aPI <- 3.14
+            end
+            ## comment
+            
+        ## comment
+        
+        

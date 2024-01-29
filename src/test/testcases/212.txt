@@ -1,14 +1,2 @@
-
-func dEH (bool P9f[50,33.851e42], dynamic j7ub[91,42.580,99.126], bool uw)	return
-func yT (var gGUB[88e-93,27], var dgq[63.617e+66], dynamic mum8)	begin
-		## ^fh"!e6}sn *Q&Xv
-		begin
-			return "'"|P"
-		end
-		## X-}K1(um9dNX
-	end
-
-## M.??rnHFOH"}yb oN*
-## mS7By!GQ/^{Buatuf59
-func wYc (var VN, bool xR[1e38,46.270,790.902], string LK0[3.309e13,6.177E61])	return true
-
+ var VoTien <- "Vo" ... 1 ... "Tien" 
+        

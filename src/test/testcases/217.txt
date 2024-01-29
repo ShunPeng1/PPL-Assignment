@@ -1,7 +1,4 @@
-
-dynamic Le
-func LHL9 (number TcXg, number rU[8e97,58E-16,5.209e-86], string JAt[3E-69,10.782e-65,96.841])	begin
-		## F0)$*1*a.$EY8VtY/
-	end
-
-func cTq ()	return
+ 
+            var VoTien <- -1 * not 1
+            var VoTien <- not not not----C
+        

@@ -1,6 +1,7 @@
-
-var GIF[622.405] <- PsNg
-dynamic QIkl
-## #ZT=6=%/J+f
-## AqAt(>#V/U7L{zC
-dynamic QTRP[51E+09,8e-09] <- true ## 8$%.%xUTHeIJX
+ 
+            var VoTien <- true and "true" or 1 
+            var VoTien <- 1 and 2 and 3 or 4 or 4
+            var VoTien <- 1 + 2 - 2 + 3 and 3
+            var VoTien <- 1 / 2 * 3 % 4
+            var VoTien <- 1 / 2 / 2 * 3 % 4
+        

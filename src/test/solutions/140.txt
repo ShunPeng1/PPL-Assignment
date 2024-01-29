@@ -1,1 +1,1 @@
-55E31,<EOF>
+Error Token .

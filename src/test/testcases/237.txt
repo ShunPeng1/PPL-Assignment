@@ -1,3 +1,11 @@
 
-string lx7B
-string CrA ## MGs4^@K#c9Fbl&
+        func main()
+            begin
+            for i until i >= 10 by 1 + 1
+                ## comment
+                
+                a <- 1
+            ## comment
+            end
+            
+        

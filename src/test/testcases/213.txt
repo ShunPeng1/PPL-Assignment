@@ -1,3 +1,9 @@
-
-func yz (dynamic SF[499,336E-63])	return
-dynamic hB[878.187E-06] ## <mA&X>m
+ 
+            var VoTien <- true > "true" 
+            var VoTien <- true >= "true"
+            var VoTien <- true = "true"
+            var VoTien <- true == "true"
+            var VoTien <- true < "true"
+            var VoTien <- true <= "true"
+            var VoTien <- true >= "true" ... 1 > 2
+        

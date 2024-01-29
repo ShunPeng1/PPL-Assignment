@@ -1,12 +1,23 @@
 
-string lcpS[133] <- false
-func bG ()
-	begin
-		for sj65 until true by 49E+55
-			break
-		## S.K_l
-	end
-
-string s0Y <- "C3" ## C
-func nu ()	return
-var QO[960.962,64.378E-94]
+        func main() begin 
+        end
+        func main() 
+            begin 
+                ## comment0
+            end
+        func main()
+            ## comment1
+            begin
+                ## comment2
+                
+                ## comment3
+                VoTien <- 1 + 2 + fun()
+                VoTien[1+a] <- 1
+                
+                ## comment4
+                VoTien[3+4,2,4] <- 1
+                
+                ## comment5
+            end
+            ## comment
+        

@@ -1,10 +1,12 @@
 
-## 29+M6
-func en_e (bool w3GU[91.409E69], dynamic yFK[191], string Yiv[92.835e56,90e+61])	begin
-		bJrZ <- true
-		begin
-		end
-		## SRT#^{{~%
-	end
-var ZI[39.024,0.472E-65,790] <- true
-## Z%]
+        func main()
+        begin 
+            break
+            continue
+            for i until i >= 10 by 1 + 1
+                begin
+                    break
+                    continue
+                end
+        end
+        

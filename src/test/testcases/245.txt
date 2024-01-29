@@ -1,3 +1,4 @@
 
-dynamic pL <- true ## 3`H
-bool anyb[963.430E-80,4E99] <- 413.242E-28 ## !C%y==&:eB
+        func main()
+            return func()
+        

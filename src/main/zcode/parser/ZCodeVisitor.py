@@ -29,11 +29,6 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#local_statement_multiple.
-    def visitLocal_statement_multiple(self, ctx:ZCodeParser.Local_statement_multipleContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by ZCodeParser#local_statement_list.
     def visitLocal_statement_list(self, ctx:ZCodeParser.Local_statement_listContext):
         return self.visitChildren(ctx)
@@ -44,23 +39,13 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#ignore_statement_list_inline.
-    def visitIgnore_statement_list_inline(self, ctx:ZCodeParser.Ignore_statement_list_inlineContext):
+    # Visit a parse tree produced by ZCodeParser#newline_list.
+    def visitNewline_list(self, ctx:ZCodeParser.Newline_listContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#ignore_statement_list.
-    def visitIgnore_statement_list(self, ctx:ZCodeParser.Ignore_statement_listContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ZCodeParser#ignore_statement.
-    def visitIgnore_statement(self, ctx:ZCodeParser.Ignore_statementContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ZCodeParser#comment_statement.
-    def visitComment_statement(self, ctx:ZCodeParser.Comment_statementContext):
+    # Visit a parse tree produced by ZCodeParser#newline.
+    def visitNewline(self, ctx:ZCodeParser.NewlineContext):
         return self.visitChildren(ctx)
 
 

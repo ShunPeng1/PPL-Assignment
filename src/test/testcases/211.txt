@@ -1,7 +1,1 @@
-
-bool OXo ## I
-func L70 (var jyhx, var Fqby)
-	begin
-		## #{_l
-	end
-## x.m=^zpOr{zkG<}
+ var VoTien <- "Vo" ... "Tien" 

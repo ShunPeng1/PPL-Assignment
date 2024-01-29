@@ -155,3 +155,8 @@ class LexerSuite(unittest.TestCase):
         self.assertTrue(TestLexer.test(
 """ "'a" """,
 """Illegal Escape In String: 'a""", 155))
+        
+    def test_thuan(self):
+        
+        self.assertTrue(TestLexer.test(""" "Tien \t \n" """, "Unclosed String: Tien 	 ", 144))
+            

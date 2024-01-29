@@ -1,4 +1,5 @@
-
-func Ao ()
-	return
-
+    
+        func a()
+            return 
+        var a <- []
+        

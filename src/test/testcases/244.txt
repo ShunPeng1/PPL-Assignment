@@ -1,5 +1,10 @@
 
-func cG7 (bool MS, number wqD3, bool a8g)
-	return 65.619e+40
-
-var UHDp
+        func main()
+        begin 
+            return ([1,2,3]) + 1
+            return main()
+            main(1,2)
+            fun()
+            main([1,2,3], 1+2, a, c ... e)
+        end
+        

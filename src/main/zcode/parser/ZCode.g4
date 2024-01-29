@@ -11,11 +11,11 @@ options {
 // ============== parser rules ===================
 
 
-program						: ignore_statement_list? declaration_list? EOF;
+program						: newline_list? declaration_list? EOF;
 
 
-declaration_list			: (ignore_statement_list|declaration) declaration_list // Recursive
-							| (ignore_statement_list|declaration); // Only one declaration
+declaration_list			: (newline_list|declaration) declaration_list // Recursive
+							| (newline_list|declaration); // Only one declaration
 							
 
 declaration					: function_declaration_statement 
@@ -23,12 +23,11 @@ declaration					: function_declaration_statement
 
 // Local statement
 
-local_statement_single		: ignore_statement_list_inline? local_statement ignore_statement_list?;
+local_statement_single		: newline_list? local_statement newline_list?;
 
-local_statement_multiple	: ignore_statement_list_inline? (local_statement local_statement_list? ignore_statement_list?)? ;
+local_statement_list		: (newline_list|local_statement) local_statement_list // Recursive
+							| ; // Empty statement list
 
-local_statement_list		: (ignore_statement_list|local_statement) local_statement_list // Recursive
-							| (ignore_statement_list|local_statement);
 
 local_statement				: variable_declaration_statement NEWLINE
 							| if_statement 
@@ -36,26 +35,21 @@ local_statement				: variable_declaration_statement NEWLINE
 							| for_statement 
 							| break_statement NEWLINE
 							| continue_statement NEWLINE
-							| block_statement NEWLINE
+							| block_statement
 							| assignment_statement NEWLINE
-							| return_statement NEWLINE
-							;
+							| return_statement NEWLINE;
 
 
 // Ignore statement
-ignore_statement_list_inline: NEWLINE ignore_statement_list
-							| NEWLINE;
 							
-ignore_statement_list		: ignore_statement ignore_statement_list // Recursive
-							| ignore_statement;
+newline_list		: newline newline_list // Recursive
+							| newline;
 
-ignore_statement			: NEWLINE 
-							| comment_statement;
+newline			: NEWLINE;
 
-comment_statement			: COMMENT NEWLINE;
 
 // Scope
-block_statement				: BEGIN local_statement_multiple END ;
+block_statement				: BEGIN newline_list local_statement_list END newline_list ;
 
 
 // Variable
@@ -95,10 +89,12 @@ array_assignment 			: array_access ASSIGN expression ;
 
 // Function 
 function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN 
-								 (function_body | NEWLINE ) ; // Declaration onlu or body definition might be empty
+								  newline_list? function_body? ; // Declaration onlu or body definition might be empty
 
-function_body			   	: local_statement_single;
-
+function_body			   	: return_statement NEWLINE
+							| block_statement
+							| newline_list;
+							
 return_statement			: RETURN expression?;
 
 // Parameter
@@ -107,7 +103,7 @@ parameter_part_recursive    : parameter_declaration_statement COMMA parameter_pa
 							
 parameter_declaration_statement	: basic_parameter_declaration
 								| array_parameter_declaration;
-basic_parameter_declaration	: (DYNAMIC|basic_type) IDENTIFIER;
+basic_parameter_declaration	: basic_type IDENTIFIER;
 array_parameter_declaration	: basic_type IDENTIFIER array_dimension;
 
 // If-Else
@@ -208,7 +204,7 @@ VAR				: 'var' ;
 DYNAMIC			: 'dynamic' ;
 
 // Control Keywords
-COMMENT			: '##' ~[\n\r\f]* ;
+COMMENT			: '##' ~[\n\r\f]* -> skip;
 NEWLINE 		: ('\r''\n'|'\n''\r'|'\r'|'\n')
 {
 self.text = self.text.replace('\r\n', '\n')

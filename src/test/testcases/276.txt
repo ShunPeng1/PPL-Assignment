@@ -1,6 +1,6 @@
-
-func jH (string exP5)
-	return "Lhy"
-
-var lE[625e+02] ## s1,Rc
-func JtQ (var js[8.333E+06,35E+23], var RZG, bool GQ3)	return 772.019e-77
+    
+        func a()
+        begin
+            return 1 break
+        end
+        

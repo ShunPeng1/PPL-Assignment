@@ -1,10 +1,7 @@
-
-func gb (bool NG[5,258.493e47,456.639e+90])	begin
-		vE <- "'""
-		## L@_^<G1
-	end
-
-number LM_5 ## ]4jBO(W.rh@
-## o
-dynamic BLo
-var z8qR[247.354,28,3]
+ 
+            var VoTien <- a[1] + 1
+            var VoTien <- array[1,1+2][1][2,3]
+            var VoTien <- array[1,(1)...2,array[ar[(1*2) and 1]],array[2]]
+            var VoTien <- a[1] + fun()[1,fun()] 
+            var VoTien <- 1[1]
+        

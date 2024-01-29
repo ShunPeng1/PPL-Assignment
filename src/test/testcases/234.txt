@@ -1,3 +1,6 @@
 
-## >V~TPC
-## u6h6#zTO7(cQLb
+        func main()
+            begin
+            (aPI)[2]<- 3.14
+            end
+        
