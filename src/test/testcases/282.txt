@@ -1,4 +1,3 @@
-
-## />D?pUa
-## oK+L|L/M,;2zCTE
-number MlhX
+    
+        func a(number a[1+1])
+        

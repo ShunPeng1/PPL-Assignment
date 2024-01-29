@@ -69,11 +69,12 @@ array_dimension_list 		: number_literal COMMA array_dimension_list // Recursive
 
 
 array_value					: LBRACK array_value_expression_list RBRACK
-							| LBRACK RBRACK // Empty array
-							| expression;
+							//| LBRACK RBRACK // Empty array
+							| expression
+							;
 
 array_value_expression_list	: expression COMMA array_value_expression_list // Recursive
-							| array_value COMMA array_value
+							//| array_value COMMA array_value
 							| array_value
 							| expression;
 
@@ -88,12 +89,11 @@ array_assignment 			: array_access ASSIGN expression ;
 
 
 // Function 
-function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN 
-								  newline_list? function_body? ; // Declaration onlu or body definition might be empty
+function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN function_body ; // Declaration onlu or body definition might be empty
 
-function_body			   	: return_statement NEWLINE
-							| block_statement
-							| newline_list;
+function_body			   	: newline_list? return_statement NEWLINE
+							| newline_list? block_statement
+							| newline;
 							
 return_statement			: RETURN expression?;
 
@@ -158,14 +158,11 @@ negation_expression			: NOT negation_expression // Unary Prefix Right Associativ
 sign_expression				: additive_operator sign_expression // Unary Prefix Right Associative
 							| element_expression; // Next precedence
 
-element_expression 			: operand? index_expression  // Unary Postfix Left Associative
+element_expression 			: operand LBRACK array_index_access RBRACK  // Unary Postfix Left Associative
+							| LBRACK array_index_access? RBRACK
 							| parenthesis_expression; // Next precedence
 
 					
-
-index_expression			: index_expression LBRACK array_index_access RBRACK // Unary Postfix Left Associative
-							| LBRACK array_index_access RBRACK;
-
 parenthesis_expression		: LPAREN expression RPAREN // Parenthesis
 							| operand; // Next precedence
 
@@ -174,7 +171,7 @@ operand						: literal
 							| IDENTIFIER ;
 
 // Array access
-array_access				: IDENTIFIER index_expression; // Unary Postfix Left Associative
+array_access				: IDENTIFIER LBRACK array_index_access RBRACK; // Unary Postfix Left Associative
 		
 array_index_access			: expression COMMA array_index_access // Recursive
 							| expression;
@@ -205,11 +202,18 @@ DYNAMIC			: 'dynamic' ;
 
 // Control Keywords
 COMMENT			: '##' ~[\n\r\f]* -> skip;
+/* 
 NEWLINE 		: ('\r''\n'|'\n''\r'|'\r'|'\n')
 {
 self.text = self.text.replace('\r\n', '\n')
 };
-WHITESPACE		: [ \t\r\b\f]+ -> skip ; // skip spaces, tabs, newlines
+*/
+NEWLINE 		: ('\r''\n'|'\n''\r'|'\n')
+{
+self.text = self.text.replace('\r', '')
+};
+
+WHITESPACE		: [ \t\b\f]+ -> skip ; // skip spaces, tabs, newlines
 
 // Scope
 BEGIN			: 'begin' ;

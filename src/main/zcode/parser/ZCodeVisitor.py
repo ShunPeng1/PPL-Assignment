@@ -244,11 +244,6 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#index_expression.
-    def visitIndex_expression(self, ctx:ZCodeParser.Index_expressionContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by ZCodeParser#parenthesis_expression.
     def visitParenthesis_expression(self, ctx:ZCodeParser.Parenthesis_expressionContext):
         return self.visitChildren(ctx)

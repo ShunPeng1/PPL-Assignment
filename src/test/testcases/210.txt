@@ -1,11 +1,6 @@
-
-## 8]w}d
-func bzX ()
-	begin
-	end
-
-func oeQ (number tSi)
-	return 596E+70
-func XI (bool JEU[590.231e+67,1.604,9.182])
-	return k_Ox
-bool SL <- PW ## ,)|Dw{dsE9}W_/
+ 
+            ##12
+            ##12
+            
+            func main(number a) var c <- 1
+        

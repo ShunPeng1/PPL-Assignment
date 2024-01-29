@@ -1,6 +1,3 @@
-
-func f42Z (number jkHf)	begin
-		## &c-`bb)}U9>
-	end
-
-dynamic pvA
+    
+            var a <- a[1][1]
+        
