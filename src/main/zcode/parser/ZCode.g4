@@ -283,7 +283,7 @@ fragment TRUE      		: 'true' ;
 fragment FALSE     		: 'false' ;
 
 //Normal regex:  "([^\'\"\r\n\\]|\\['\\nrtbf]|'")*"
-STRING_LIT 			: '"' (~['"\r\n\\] | [\\] ['\\nrtbf] | [']~[\r\n\\]?)* '"' {
+STRING_LIT 			: '"' (~['"\r\n\\] | [\\] ['\\nrtbf] | ['](~[\r\n\\])?)* '"' {
 self.text = self.text[1:-1]
 };
 
@@ -298,7 +298,7 @@ raise ErrorToken(self.text)
 ;
 
 
-UNCLOSE_STRING  : '"' (~['"\\\f\b] | [\\] ['\\nrtbf] | [']~[\\\f\b]? | [\r\n] )* ('"'| EOF)
+UNCLOSE_STRING  : '"' (~['"\\\f\b] | [\\] ['\\nrtbf] | ['](~[\\\f\b])? | [\r\n] )* ('"' | EOF)
 {
 newlineIndex = self.text.find('\r\n') 
 raise UncloseString(self.text[1:newlineIndex] if newlineIndex != -1 else self.text[1:]) # if end with \n else end with EOF
@@ -307,7 +307,7 @@ raise UncloseString(self.text[1:newlineIndex] if newlineIndex != -1 else self.te
 
 
 //ILLEGAL_ESCAPE  : '"' (~['"\\] | '\\' ['\\nrtbf] | '\'"' )* ('\\' ~['\\nrtbf] | [\t\b\f] | '\'' ~["])
-ILLEGAL_ESCAPE  : '"'  (~['"\\] | [\f\b] | [\\]. | [']~[\\\f\b]? )* ('"' | EOF)
+ILLEGAL_ESCAPE  : '"'  (~['"\\] | [\f\b] | [\\]. | ['](~[\\\f\b])? )* ('"' | EOF)
 {
 import re
 import math

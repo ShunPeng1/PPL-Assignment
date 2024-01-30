@@ -175,5 +175,7 @@ class LexerSuite(unittest.TestCase):
         self.assertTrue(TestLexer.test(input,expect,21530110003))
 
         
-        self.assertTrue(TestLexer.test(""" "Tien \\\'" " """, "Tien \\',Unclosed String:  ", 149))
+        self.assertTrue(TestLexer.test(""" "Tien \\\'" " """, "Tien \\',Unclosed String:  ", 21530110004))
         
+
+        self.assertTrue(TestLexer.test('''"'"''', '''Unclosed String: '"''', 21530110005))
