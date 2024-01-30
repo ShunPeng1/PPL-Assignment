@@ -1,0 +1,11 @@
+
+func otR (var vYCO, bool FWw)	return
+
+dynamic ThJm[1.394E+98] <- true
+var lQ[621.285e+63,916E+34,5E+23]
+func piy7 (var vSXg)	begin
+		## y/T3Qs7grj
+		if false break
+		elif fZ5 return 90
+	end
+

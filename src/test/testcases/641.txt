@@ -1,0 +1,3 @@
+
+func FCF (string lFM)
+	return false

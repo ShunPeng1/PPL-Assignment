@@ -1,0 +1,5 @@
+
+func uho (var MqmF[845.767,7.666], var tny, var dZ2[562E-12])	begin
+		break
+		mpU[false] <- 1
+	end

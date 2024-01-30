@@ -1,0 +1,6 @@
+
+string YX
+var QQ
+func KSDe ()
+	return
+

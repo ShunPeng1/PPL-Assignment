@@ -1,3 +1,1 @@
-
-number d3[485] <- "r'"'"'"P"
-func kjn (string LaLi[28.946e+52,49.271], bool Szm)	return BLa4
+328

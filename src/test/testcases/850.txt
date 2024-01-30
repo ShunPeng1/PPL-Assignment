@@ -1,0 +1,9 @@
+
+func bs (dynamic PFdE[3,992e-74])
+	return 2
+
+func Kr (string sc[46E-48,29])	return
+func gJP8 (number u7, bool Thi_[27,50], var Vd)
+	return
+var YTJ <- true
+number O6 <- 504.081

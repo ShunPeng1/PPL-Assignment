@@ -1,1 +1,1 @@
-1.927E-26,<EOF>
+P,Error Token ^

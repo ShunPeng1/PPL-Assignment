@@ -1,1 +1,1 @@
-Illegal Escape In String: \c
+40e-55,<EOF>

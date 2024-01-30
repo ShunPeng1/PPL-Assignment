@@ -1,0 +1,7 @@
+
+func Rsh ()
+	return
+func Jwn (var dFB, number EhDb[24,6.040E+95,493], bool ZQO[904E83,603.802,18.936])
+	begin
+		## 5ByL N
+	end

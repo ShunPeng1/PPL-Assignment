@@ -1,0 +1,3 @@
+
+number BKk[8.491e+78,9E-50] <- iso7 ## UJ0UkhEG*^Q
+func rF8 ()	return 4e+26

@@ -1,0 +1,7 @@
+
+## X/YDoS
+bool RYP[1e79] <- 550
+number X5[7.436E-96] ## 8Ml"[(F^"d>.f
+func m2 (var aqSJ)
+	return
+

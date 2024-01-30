@@ -1,0 +1,5 @@
+
+number AuoG <- rd ## e
+func uiR (number kybv, var DX4B, string itG)	begin
+	end
+

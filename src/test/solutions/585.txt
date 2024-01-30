@@ -1,1 +1,1 @@
-B,Error Token $
+61e61,<EOF>

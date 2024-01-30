@@ -1,0 +1,7 @@
+
+number ldM
+bool CRv <- "_='"K"
+func ur (number gy[70,204E+91,95], string r2[4.115E-38], bool rNB)	begin
+		## =gptl
+	end
+

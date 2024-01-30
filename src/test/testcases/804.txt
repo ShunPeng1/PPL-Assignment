@@ -1,0 +1,5 @@
+
+number Eq[134,2E+99,45e-39] <- ";"
+func bT (dynamic TKy[167,8.137,4e-10])	return 5.830e-34
+## 4^&
+func KCUw (number H7[29.713])	return PlB

@@ -1,14 +1,1 @@
-
-func dYe (var su9, number SaK)
-	begin
-		## QtS(ELALwA
-		## 6
-	end
-func Yv0l (bool oD)
-	begin
-	end
-
-var PFh[8E+99] <- true ## YLnO$(gA<]V@~e;$:P~v
-func khM (var qgY)	return 0
-
-## c/P`lPq$2| EGYp
+HUPQQW

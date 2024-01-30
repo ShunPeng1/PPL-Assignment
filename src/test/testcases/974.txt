@@ -1,0 +1,5 @@
+
+func O7uS ()
+	return
+number N4[8.021,17E30,555] <- "'"'"" ## eB
+func N7 (string Pbe, var tz, number KHZ4)	return

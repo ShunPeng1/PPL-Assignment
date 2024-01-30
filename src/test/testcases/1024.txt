@@ -1,0 +1,5 @@
+
+func Gi (var ri9T[7.836], number Hj[944], bool nt[129.195e92,5.405])
+	return
+
+## i]e

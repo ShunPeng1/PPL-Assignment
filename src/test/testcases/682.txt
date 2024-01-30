@@ -1,0 +1,9 @@
+
+string Tfl
+string GPv <- 7E38
+bool rA
+func aNCH ()	begin
+		begin
+			## X6m{g>8PjUV
+		end
+	end

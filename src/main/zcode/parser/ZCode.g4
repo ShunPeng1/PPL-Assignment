@@ -11,15 +11,15 @@ options {
 // ============== parser rules ===================
 
 
-program						: declaration_list EOF;
+program						: newline_list? declaration_list newline_list? EOF;
 
 
-declaration_list			: (newline_list|declaration) declaration_list // Recursive
-							| (newline_list|declaration); // Only one declaration
+declaration_list			: declaration declaration_list // Recursive
+							| declaration; // At least one declaration
 							
 
-declaration					: function_declaration_statement 
-							| variable_declaration_statement NEWLINE; 
+declaration					: function_declaration_statement newline_list?
+							| variable_declaration_statement newline_list; 
 
 // Local statement
 
@@ -203,15 +203,10 @@ DYNAMIC			: 'dynamic' ;
 
 // Control Keywords
 COMMENT			: '##' ~[\n\r\f]* -> skip;
-/* 
-NEWLINE 		: ('\r''\n'|'\n''\r'|'\r'|'\n')
+
+NEWLINE 		: ('\r\n'|'\n')
 {
-self.text = self.text.replace('\r\n', '\n')
-};
-*/
-NEWLINE 		: ('\r''\n'|'\n''\r'|'\n')
-{
-self.text = self.text.replace('\r', '')
+self.text = self.text.replace('\r', '\n')
 };
 
 WHITESPACE		: [ \t\b\f]+ -> skip ; // skip spaces, tabs, newlines

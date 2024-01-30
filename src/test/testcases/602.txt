@@ -1,0 +1,7 @@
+
+bool Gb ## RA J?VT=IAa Qu
+func fzuG (var mWG)	return true
+
+func RNfJ (number DQi[73,938.665], dynamic oJ[7], var R0[0E21,73.561e-03])
+	return
+dynamic W4T[431.357e-48] <- 6.127e14

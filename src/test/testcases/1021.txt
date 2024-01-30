@@ -1,0 +1,5 @@
+
+func ZLns (dynamic zm8[14E+84,425.862E44,4e-64], dynamic sN, bool vGUb[920.450e-25,882E45])
+	begin
+	end
+

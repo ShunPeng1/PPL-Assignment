@@ -1,0 +1,5 @@
+
+bool F4tZ
+func vI (string CIRh[25,35,9])
+	return
+

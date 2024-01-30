@@ -1,0 +1,3 @@
+
+string naz7 <- "l'"S" ## <7
+bool kQf[4,29e09] ## F/fHiJOT

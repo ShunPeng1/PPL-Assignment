@@ -1,0 +1,3 @@
+
+dynamic u3[7.336,953e+02,58.079e-46]
+number bVd[1E-57,6.069,75e22] <- false

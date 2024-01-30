@@ -1,0 +1,7 @@
+
+func CBOg (string Rh)
+	begin
+		## .>~<-yTs<gabj
+		return
+		## Nb<O
+	end

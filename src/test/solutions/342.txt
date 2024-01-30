@@ -1,1 +1,1 @@
-VqU,Error Token $
+345,<EOF>

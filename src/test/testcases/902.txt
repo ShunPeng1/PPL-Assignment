@@ -1,0 +1,8 @@
+
+dynamic o0[71.791E-49,85e+64,66.192e+90] <- z0m
+var e7W5[545.391E+33] <- false ## g
+## K>=x.p`/xP4^f
+func Y_g ()
+	begin
+	end
+func UiT9 (dynamic NBz)	return 63.591e22

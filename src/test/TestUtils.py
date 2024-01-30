@@ -86,7 +86,12 @@ class TestParser:
         dest = open(SOL_DIR + str(num) + ".txt","r")
         line = dest.read()
 
-        print(line)
+        if (line != expect):
+            print("Parser test case ",num)
+            print("Expected:")
+            print(expect)
+            print("Found:")
+            print(line)
         return line == expect
 
     @staticmethod
@@ -100,7 +105,6 @@ class TestParser:
         parser.addErrorListener(listener)
         try:
             
-            print("Parser test case ",num)
 
             parser.program()
             dest.write("successful")

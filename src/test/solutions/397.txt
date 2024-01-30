@@ -1,1 +1,1 @@
-508,<EOF>
+L,Error Token @

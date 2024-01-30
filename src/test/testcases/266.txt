@@ -1,15 +1,1 @@
-
-func WDgb (var wY)
-	begin
-		## C(E(#_
-		yPl(PhTE, 640.832, false)
-	end
-
-func R0m (var bOwu)
-	return true
-
-dynamic to <- L3
-func GR (number Bbrk, var Cv_[31e07,0e42], bool rVr)
-	return
-
-## yf>Lc+|
+411e45

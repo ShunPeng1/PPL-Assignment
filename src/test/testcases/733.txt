@@ -1,0 +1,2 @@
+
+func b43s ()	return 7e+72

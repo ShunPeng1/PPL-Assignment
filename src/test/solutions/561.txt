@@ -1,1 +1,2 @@
-Illegal Escape In String: >\p
+Illegal Escape In String: '"
+'"'"\q

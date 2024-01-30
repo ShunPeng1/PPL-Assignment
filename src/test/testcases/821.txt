@@ -1,0 +1,5 @@
+
+number EpYn ## <I^PcYiAqt|
+func l0 (number Dt[598.190e-28])
+	return "'"'"F!"
+

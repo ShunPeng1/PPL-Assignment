@@ -1,1 +1,1 @@
-U,<EOF>
+Illegal Escape In String: '"\q

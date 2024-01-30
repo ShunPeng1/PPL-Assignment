@@ -1,0 +1,8 @@
+
+func dBd (bool dRTz[5])
+	return 76.456E83
+string zNA[391.980,29] <- "'"'"?"
+bool GUjx[644.872E+65] <- false
+func eIJr ()	begin
+	end
+

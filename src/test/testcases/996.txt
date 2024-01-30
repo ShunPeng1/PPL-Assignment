@@ -1,0 +1,5 @@
+
+dynamic sI[617E+20] <- MQ ## xjk$&0|3!
+func xQ9a (var UT[45.071])
+	return
+

@@ -1,0 +1,13 @@
+
+## f@f6
+func oaZd (number vKd[1,2E-07,4], string H_x3[2,9e-65,34])
+	return
+
+number kTQg ## @P[&n/xxcQ
+func HXE (number UO, number WDB5)	begin
+		bool BQA <- 80.098 ## )I3M
+		for Gn_j until "'"g" by false
+			N2("H'"", false)
+		break
+	end
+

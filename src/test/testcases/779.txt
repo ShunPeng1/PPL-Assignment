@@ -1,0 +1,7 @@
+
+func iEgK (dynamic Tw)
+	return
+
+number gc[2,0.950E-45,156] <- y1
+var JA[28,920e64,701.803] <- 58.318e09 ## 0
+dynamic yuug[188.570E-97,11.178e-39,48.304]

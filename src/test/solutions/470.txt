@@ -1,1 +1,1 @@
-sSzp,Error Token $
+<EOF>

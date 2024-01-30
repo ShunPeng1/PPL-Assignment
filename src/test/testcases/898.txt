@@ -1,0 +1,7 @@
+
+## #<4+
+## )@amX_8
+func RCm7 ()
+	begin
+		number Gg <- oFy
+	end

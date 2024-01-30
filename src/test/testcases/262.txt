@@ -1,8 +1,1 @@
-
-string fA[0e+48,0.490] <- true
-func nU7 (string O_, string T41H, number u9h_[634])	begin
-	end
-func mVcU (number F7, bool iXtT[5e+97,7e+92])	return true
-
-## *oxF
-## :+9E%_k$I6|)+[@OFml
+## 0VCd?J

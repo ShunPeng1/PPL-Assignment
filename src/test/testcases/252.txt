@@ -1,2 +1,1 @@
-
-func Iah (var WOr6)	return
+## }

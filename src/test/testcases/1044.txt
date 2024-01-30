@@ -1,0 +1,6 @@
+
+bool bFf[64,46.284e-99,6.414E-74] <- c8_ ## H&
+bool jd
+func MMW (dynamic LGha[4e25,1.672,7.225], number A3)
+	return
+

@@ -1,0 +1,4 @@
+
+## JK
+string Bgw[4.282e-30,49.011]
+var WM5z[9.799E59] <- false

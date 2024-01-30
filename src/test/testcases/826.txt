@@ -1,0 +1,10 @@
+
+## D96ZM:AIF/?8
+func HP ()	return 539.583
+func lL ()	return 1.308
+func Rd ()
+	begin
+		VYJZ[54.019E-22] <- false
+	end
+
+## %]fV$lv=;nPR
