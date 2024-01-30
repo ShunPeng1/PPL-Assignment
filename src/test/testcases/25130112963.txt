@@ -1,0 +1,8 @@
+
+dynamic d3p[882,0.967,8] ## 1L"~w{8
+func tPEs ()
+	return
+
+string Su[283,4,771.405] <- 57.032
+func GlIm (var Oac[1,581e-13,306.162], string hU[119,0.918], number ToBx[17.789E+20])	return 44.864
+bool FU3 <- true ## +sRo:oepx+

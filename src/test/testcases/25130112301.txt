@@ -1,0 +1,4 @@
+
+number w6i <- true
+## e(
+func m0 (number TM8)	return

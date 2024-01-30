@@ -1,0 +1,7 @@
+
+func XSE3 (var rSl)	return
+
+dynamic luH[5.035e34] <- 6.213E+36 ## >#j
+func j0 (string Cw[9e00,162])
+	return "'"'"'"'""
+

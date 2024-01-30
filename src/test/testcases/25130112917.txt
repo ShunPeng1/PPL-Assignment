@@ -1,0 +1,4 @@
+
+string Hvv[204e+21] <- true
+dynamic p7W[384.228,66.961,0.359E+24] ## %[1%
+func amou (dynamic r7J[93,5], bool xr, var Z_e[7,99])	return true

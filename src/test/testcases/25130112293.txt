@@ -1,0 +1,4 @@
+
+func Fnoc (number Y88, dynamic UrOz)
+	return
+

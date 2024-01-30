@@ -1,13 +1,8 @@
 
-        ## comment
-        func main()
-
-            ## comment
-            begin
-            aPI <- 3.14
-            end
-            ## comment
-            
-        ## comment
-        
-        
+func UBV (var W_S, bool Xdwj)	begin
+		for Zn_z until true by true
+			string F9K[998.979]
+	end
+func ssb (dynamic voh)
+	return UC
+string vq[7.564,5.843e13,66] ## &">(_H

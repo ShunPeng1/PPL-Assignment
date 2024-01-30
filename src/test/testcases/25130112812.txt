@@ -1,0 +1,3 @@
+
+func UcY ()	return G0UV
+var bh <- 1.935e+67

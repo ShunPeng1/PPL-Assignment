@@ -1,0 +1,6 @@
+
+## [fph,
+func nVro (string Odu)
+	begin
+	end
+

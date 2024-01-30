@@ -1,1 +1,1 @@
-Error on line 2 col 8: <EOF>
+Error on line 3 col 32: var

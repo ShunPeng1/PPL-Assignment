@@ -1,0 +1,5 @@
+
+dynamic qV[5,20,3E04] <- false ## ]//@&&."$Y"B^_k
+func bWd (dynamic spaO[8e+98], dynamic UO8[554.737,82.594,12.995])	begin
+	end
+

@@ -1,0 +1,12 @@
+
+func rau (dynamic eg_7, number hS3T[9.983,79E51])
+	begin
+		if (false)
+		continue
+		elif ("K0")
+		for eg until 739.686E-65 by true
+			break
+		elif (rHT)
+		return
+		else return Xn
+	end

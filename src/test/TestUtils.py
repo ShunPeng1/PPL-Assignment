@@ -37,6 +37,15 @@ class TestLexer:
         TestLexer.check(SOL_DIR,inputfile,num)
         dest = open(SOL_DIR + str(num) + ".txt","r")
         line = dest.read()
+
+        if (line != expect):
+            
+            print("Lexer test case ",num)
+            print("Expected:")
+            print(expect)
+            print("Found:")
+            print(line)
+
         return line == expect
     
     @staticmethod
@@ -44,7 +53,6 @@ class TestLexer:
         dest = open(os.path.join(soldir,str(num) + ".txt"),"w")
         lexer = Lexer(inputfile)
         try:
-            print("Lexer test case ",num)
             TestLexer.printLexeme(dest,lexer)
         except (ErrorToken,UncloseString,IllegalEscape) as err:
             print(err.message)
@@ -57,8 +65,6 @@ class TestLexer:
         tok = lexer.nextToken()
         if tok.type != Token.EOF:
             dest.write(tok.text+",")
-            
-            print(tok.text)
 
             TestLexer.printLexeme(dest,lexer)
         else:

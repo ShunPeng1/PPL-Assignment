@@ -1,0 +1,5 @@
+
+number jE92 <- 56.339 ## d
+var uh <- tq3
+var gx
+## T

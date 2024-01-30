@@ -1,0 +1,6 @@
+
+dynamic F_TP[3.931,82e+68]
+## Iq
+func xwOE (bool IG, string ml)
+	return "'"j]'"'""
+

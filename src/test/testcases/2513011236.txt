@@ -1,0 +1,8 @@
+
+## zPkyjp$?)%=j
+## /?2~di6py/
+func dgs ()	begin
+	end
+
+func SK (dynamic ql)
+	return true

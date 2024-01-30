@@ -1,0 +1,3 @@
+
+func GxDc (string KP3[36,488], bool ED[55.335e-82,73.729], number PLO[4,944,29.636])
+	return

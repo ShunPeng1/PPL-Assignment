@@ -1,0 +1,5 @@
+
+func hq4 (number midZ[91.457e-23,1e07,8], number Pp, bool xka)
+	return
+
+## Oe$>Qgo>e7:m8M56F

@@ -1,0 +1,3 @@
+
+func gT (bool cLr)	return
+

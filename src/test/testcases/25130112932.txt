@@ -1,0 +1,14 @@
+
+number vHC <- true
+## -|
+## ;PHW
+func CLgt (number KZsY[2.171])
+	return
+func r6V (dynamic ysk[286.443,70.896], bool Esc[5.293,2.262E54])	begin
+		continue
+		if (true) continue
+		elif (true)
+		return 67
+		elif (32.832e-73) return "z'""
+		elif (etR) break
+	end

@@ -1,4 +1,6 @@
-    
-        func a()
-            if x <= 1 return false
-        
+
+bool pJT[2,2e+15] <- X9a_
+dynamic D6i <- s57R
+number U_ ## A
+number f6so[28E25,811.920E62] <- 2.377e-24 ## (8(59HL@=w*ye4@XC
+func sQ ()	return "'""

@@ -1,0 +1,3 @@
+
+func w6P ()	return 60E72
+

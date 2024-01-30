@@ -1,0 +1,10 @@
+
+string JUGI[454E+57]
+bool bX <- 7 ## 0;=D:*Qx
+func YOlK ()	begin
+		dynamic bEw[54,22E74]
+		return 7
+	end
+func xr66 (var hN6[8E21,8,81])
+	return
+func Irm (string ee3y, dynamic aRrX, string HQVV[58E+36,8.856e+59])	return bBht

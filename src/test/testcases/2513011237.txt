@@ -1,0 +1,7 @@
+
+func GKN ()	begin
+		return tWQ
+		## e#Vd#RtfR
+		xLUj <- false
+	end
+var kkut[21E-23,91E+26]

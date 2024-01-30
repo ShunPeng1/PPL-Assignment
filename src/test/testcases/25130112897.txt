@@ -1,0 +1,6 @@
+
+func Nl (bool y65[65,60.878])	return
+func V1dR (bool Nz8[504,8.021e43], string jN[3,6])	begin
+		YkRR(Ye, 8.913, 2.262E+73)
+	end
+

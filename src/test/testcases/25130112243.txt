@@ -1,0 +1,4 @@
+
+func Qwwf (var bFcN[54.572e-03,238.781e+27,5.729], var dK[573.167,86.136E51], number K5Bd)
+	begin
+	end

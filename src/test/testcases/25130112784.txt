@@ -1,0 +1,4 @@
+
+func Dm2l (var rugF[605])
+	return true
+

@@ -1,0 +1,9 @@
+
+number IK4[7,7e-77] <- 307.788 ## -4hKZ=<A#7(@sD12
+var Guri[0.338] <- false ## a!
+## <ehxVJ6NkPo>!@k,s
+func Wx (string OYBM)	return "'"'""
+func mUyv (var HiIO[3])	begin
+		IKOw["'"", HaWO, false] <- 5e64
+		continue
+	end

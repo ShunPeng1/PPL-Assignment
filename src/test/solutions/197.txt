@@ -1,1 +1,1 @@
-lmC,Error Token $
+,<EOF>

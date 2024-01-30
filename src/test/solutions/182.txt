@@ -1,1 +1,1 @@
-Illegal Escape In String: \q
+4.412,<EOF>

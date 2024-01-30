@@ -1,0 +1,5 @@
+
+func ct (dynamic sXI)
+	return 1.403
+
+## $qGnYAo0lETGG(.=$P

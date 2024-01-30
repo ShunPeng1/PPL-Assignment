@@ -1,20 +1,4 @@
 
-        func main()
-            begin
-                begin
-                    begin
-                        x <- 1
-                    end
-                    
-                    begin
-                        return true
-                    end
-                    
-                    return false
-                end
-                
-                begin
-                end
-                return true
-            end
-        
+var S3bu[7.474E02,28E10] ## rX"E]DQ+
+string ZJqD ## &ik@
+##  Vl

@@ -1,0 +1,10 @@
+
+## STu>~38h
+func wI8 (number F0Xw)	return true
+
+func HEL9 (string E7O[76.770e+35,14E-26,849.498], var cis, var AzzR)
+	begin
+	end
+
+var o6[7E+35,9.636e+39] <- false
+bool Tq[777.629] <- "*M"

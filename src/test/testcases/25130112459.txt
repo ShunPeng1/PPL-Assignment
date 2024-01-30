@@ -1,0 +1,7 @@
+
+var E_TA[370] ## q
+func AH2 (var qKR, var OR, number RUd[0.983,662.786,52])
+	return 45.098E-52
+var Tc <- "'"" ## Z
+dynamic udJ[53e+97,1]
+var DK ## K%9_ajo8x

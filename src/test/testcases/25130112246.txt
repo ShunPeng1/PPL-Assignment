@@ -1,0 +1,2 @@
+
+func vgF (dynamic BJym, string P8[281,12.366,0.936e11])	return

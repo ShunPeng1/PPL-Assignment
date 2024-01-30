@@ -1,0 +1,5 @@
+
+## #d=rM~70
+func FeQ (string O_ck, string cqf[6])
+	return true
+

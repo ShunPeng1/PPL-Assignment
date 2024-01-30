@@ -1,6 +1,2 @@
-    
-        func a()
-            begin
-                c <- (1)[1]
-            end
-        
+
+## `t+_Tluw@;

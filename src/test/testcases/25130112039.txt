@@ -1,0 +1,5 @@
+
+func k_3 (dynamic Ap, dynamic Xk)
+	return
+
+bool hy ## aV|FKJ

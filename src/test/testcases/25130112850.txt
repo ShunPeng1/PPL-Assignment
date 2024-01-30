@@ -1,0 +1,7 @@
+
+func Wp6b (dynamic Fhm, string SF[79.932e14,70])	begin
+		string Kc <- bAf ## cHH!
+	end
+func b69D (number t8, string EN[84.216,9.450E+68,193.504])
+	return
+

@@ -1,1 +1,1 @@
-Y,Error Token $
+Error on line 5 col 10: [

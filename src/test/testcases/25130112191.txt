@@ -1,0 +1,3 @@
+
+func ltz7 (bool ZqRK[9.654E06,71.782,0E-62], number TOx)	return
+

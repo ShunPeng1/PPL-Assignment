@@ -1,0 +1,7 @@
+
+dynamic B7[73.530e-33,8.588,27E-44]
+string sSf
+func Dl (var cHF4)	begin
+		D0xL()
+		whGN(24.454e+39, 6)
+	end

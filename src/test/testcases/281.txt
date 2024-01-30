@@ -1,5 +1,2 @@
-    
-        func a()
-            return 
-        var a <- []
-        
+
+## N(5fH/rAt8kYBkW@d9

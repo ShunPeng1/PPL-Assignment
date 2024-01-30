@@ -1,0 +1,3 @@
+
+func m7 (string onaB)
+	return "'"'"S'""

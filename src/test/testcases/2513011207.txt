@@ -1,0 +1,8 @@
+
+func Mlg (number ZkYn[837e-96,320.546E84,4.637], dynamic Ab, string D5Q_)
+	begin
+	end
+
+func IYzv ()	begin
+		lk("|", true)
+	end

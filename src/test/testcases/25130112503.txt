@@ -1,0 +1,5 @@
+
+bool nPTP ## -Fh_
+func mGF ()	return 272.669
+
+## Dn&.Kx

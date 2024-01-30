@@ -1,0 +1,4 @@
+
+string Np8s[5,85.735E+15,38e-74] <- true ## _lA|4S^v#O@ny
+func lL1 (var LoQx)
+	return "P^ "

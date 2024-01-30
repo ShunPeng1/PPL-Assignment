@@ -1,6 +1,4 @@
-    
-        func a()
-            begin
-                c()[1] <- 1
-            end
-        
+
+number FYE[0e-27,72.640E09,972.226E-54]
+var Qgfi ## c*kvuE0g
+## n3ITigo>O

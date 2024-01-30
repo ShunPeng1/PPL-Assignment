@@ -1,0 +1,3 @@
+
+dynamic RipZ ## ZLc
+func Ub (dynamic Km, dynamic TqR[124,825E09])	return

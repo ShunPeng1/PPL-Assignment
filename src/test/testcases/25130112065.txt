@@ -1,0 +1,14 @@
+
+number yElN
+func HW5A (var t07G[372.838e10,897,43e+65], var Exz)	begin
+		## ?
+		dynamic ytkD[9.068E-97,9.164]
+		## W7Xj,i`>{* 
+	end
+func YiY ()	return false
+
+func vN (string xl[209], number cEQi)
+	begin
+	end
+
+number Hd[326,739.561] <- "c'"=a'"" ## 7C-Z

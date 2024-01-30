@@ -1,0 +1,3 @@
+
+func YyJZ (var LP[81,503.137E27], dynamic sXD[98E+94,4e60], bool Y7[602.568E+86,3.087,300E+18])
+	return IdQ8

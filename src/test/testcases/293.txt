@@ -1,6 +1,8 @@
-    
-        func a()
-            begin
-                var c <- 1 var c <- 1
-            end
-        
+
+## M7]-*
+## arj<&gv
+func Lq (var kFzO)
+	begin
+		## K~F2
+	end
+

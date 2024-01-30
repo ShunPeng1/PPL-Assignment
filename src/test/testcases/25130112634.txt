@@ -1,0 +1,3 @@
+
+func DS (number ld[599e+07,4,0.469E-03], dynamic at, var Ga)	return
+var lvTG[4.469E-95] <- "! j'"" ## bb~V

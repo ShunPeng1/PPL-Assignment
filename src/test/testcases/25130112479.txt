@@ -1,0 +1,3 @@
+
+func etc (string cVc, number Du7K)	return "'"'"fr"
+

@@ -1,0 +1,3 @@
+
+func qTSE (var by)
+	return "'"'" '"'""

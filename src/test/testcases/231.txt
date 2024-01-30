@@ -1,23 +1,6 @@
 
-        func main() begin 
-        end
-        func main() 
-            begin 
-                ## comment0
-            end
-        func main()
-            ## comment1
-            begin
-                ## comment2
-                
-                ## comment3
-                VoTien <- 1 + 2 + fun()
-                VoTien[1+a] <- 1
-                
-                ## comment4
-                VoTien[3+4,2,4] <- 1
-                
-                ## comment5
-            end
-            ## comment
-        
+number NU9 <- 19.796e+43 ## 5Oi<@5LBad|u&EUC_
+## =$LaZ"
+## Z Tfsh
+func cC (number PLC8, var Mo6[6.361,0.255E-63])	return "'""
+number e4

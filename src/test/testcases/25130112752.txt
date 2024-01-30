@@ -1,0 +1,11 @@
+
+func Jc (var QIe[8.751e68,75.565,308], number qo20, dynamic G7YJ[188e-76,608])
+	return false
+
+func zhI ()
+	begin
+		return true
+		## z`%
+	end
+
+var WS8[955.351,498E-01,253] ## $v~5BHB#=[C/,VkW:Sl

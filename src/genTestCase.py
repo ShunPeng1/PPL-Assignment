@@ -211,7 +211,7 @@ class ParserGenerator(TestCaseGenerator):
     def __init__ (self, inputFile = './test/ParserSuite.py'):
         self.inputFile = inputFile
         self.importLib()
-        self.prog = Program('parser')
+        self.prog = ZCodeProgram('parser')
     
     def importLib(self):
         with open(self.inputFile, 'w') as f:
@@ -254,12 +254,14 @@ class ParserGenerator(TestCaseGenerator):
 def main(argv):
     if argv[0] == 'LexerSuite':
         lexer = LexerGenerator()
-        for test in range(100, 200):
+        #for test in range(25130111000, 25130112000):
+        for test in range(2513011100, 2513011200):
+        
             lexer.gen(test)
     
     else:
         parser = ParserGenerator()
-        for test in range(200, 300):
+        for test in range(2513011300, 2513011400):
             parser.gen(test)
 
 if __name__ == '__main__':

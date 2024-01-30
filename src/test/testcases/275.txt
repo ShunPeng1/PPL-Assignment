@@ -1,6 +1,12 @@
-    
-        func a()
-        begin
-            break continue
-        end
-        
+
+## ;=MI)XzeP4HgTe~4Y(c@
+func Iv ()
+	return 2.087e84
+
+## e,PQZno>LG@rZ:b0w,=
+func UQA ()
+	begin
+		return "('"o"
+		## 42
+	end
+

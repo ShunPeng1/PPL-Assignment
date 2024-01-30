@@ -1,0 +1,3 @@
+
+func Yp9 (dynamic Omam, dynamic DK)
+	return

@@ -1,6 +1,2 @@
 
-        func main()
-            begin
-            main()
-            end
-        
+number kMS[73.332,80e-95]

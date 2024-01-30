@@ -1,0 +1,5 @@
+
+## Q
+func MU (bool pybA, var p2w, string DWmz[37e-50,551.728e+73])
+	return
+var Vl[9.187e+50,746.904E+36,2]

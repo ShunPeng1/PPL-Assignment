@@ -1,0 +1,5 @@
+
+func q2p ()	begin
+		## .H
+	end
+string jSA <- 2.721 ## N:15`,LD4bA

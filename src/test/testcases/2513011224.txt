@@ -1,0 +1,5 @@
+
+bool TDB <- false
+dynamic i1w2[66.809,28.254E69,5.642e54]
+func GSC ()
+	return false

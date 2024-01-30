@@ -1,0 +1,10 @@
+
+number Xz2j <- 6.283
+## X
+## >AJ*j~y|b
+func GsV (string gsxN[3])	begin
+		## GFT{g)D"j#H0M:30|m;
+		qY(true, "$", true)
+		## &F5
+	end
+

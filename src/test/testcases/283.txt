@@ -1,3 +1,5 @@
-    
-            var a <- a[1][1]
-        
+
+func CBLK ()
+	return PTog
+
+dynamic R_Zf[708.947e+03] <- 99e52 ## Tbo*1bw

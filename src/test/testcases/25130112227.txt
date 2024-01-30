@@ -1,0 +1,8 @@
+
+dynamic Hz[4.636e-39,29.207] <- 339e22 ## ^o&
+var uG8
+## v
+func jD (dynamic M1M[96E+82,6.182], number JK)
+	return MZ
+
+##  

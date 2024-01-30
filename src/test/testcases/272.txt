@@ -1,3 +1,2 @@
 
-        func a() return 1 ## 12
-        
+var NG

@@ -1,0 +1,9 @@
+
+func LLm (string wrr)
+	begin
+		Wh2C <- slir
+		ce(53E-82)
+		zj5J("x'"{mb", "'"= '"'"")
+	end
+
+string nF[44.509E-71,804,62] <- "p'"_'"" ## )

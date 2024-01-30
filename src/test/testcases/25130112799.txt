@@ -1,0 +1,4 @@
+
+## *_$6E
+func LS (string VV[77e+08,889], bool b2mk[7E50,464,1.817])
+	return

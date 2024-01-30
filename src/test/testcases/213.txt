@@ -1,14 +1,3 @@
- 
-            ##12
-            func main(number a) 
-                ##12
-                
-                begin 
-                    break
-                end
-                
-                ##12
-                ##12
-            func main(number a)
-            ##12        
-        
+
+func STfG (dynamic EQ[86.261])
+	return Z_CY

@@ -1,7 +1,4 @@
- 
-            var VoTien <- a[1] + 1
-            var VoTien <- array[1,1+2][1][2,3]
-            var VoTien <- array[1,(1)...2,array[ar[(1*2) and 1]],array[2]]
-            var VoTien <- a[1] + fun()[1,fun()] 
-            var VoTien <- 1[1]
-        
+
+var cwd[77,238.110E54,970E-67] <- false
+## v
+string OBQ <- 6.160 ## |5+z%Coa|]

@@ -1,2 +1,4 @@
-var VoTien <- a[]
-        
+
+string Nu <- "s'"I"
+var NFh <- dP_3
+bool Zm <- true

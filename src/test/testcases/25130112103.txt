@@ -1,0 +1,8 @@
+
+func n7y (dynamic Qw, var okC1[6,7])
+	begin
+	end
+
+bool j_ <- 954.204
+## z@yx|
+number C9y <- true

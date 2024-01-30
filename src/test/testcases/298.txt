@@ -1,6 +1,2 @@
-    
-            func a()
-            begin
-                fun() fun()
-            end
-        
+
+string Qh[718.184,36E+37] ## VgVK[?s

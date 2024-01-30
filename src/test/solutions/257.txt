@@ -1,1 +1,1 @@
-Illegal Escape In String: '"a/\i
+Error on line 4 col 0: <EOF>

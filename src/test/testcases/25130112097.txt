@@ -1,0 +1,5 @@
+
+dynamic ivaT[5.610,3e-88,186]
+func JsMy (number zNoa[389e56], bool YK8E[99])
+	return
+bool bpH[67.997e01,5,62.226e45]

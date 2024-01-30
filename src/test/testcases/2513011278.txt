@@ -1,0 +1,5 @@
+
+func lPf (dynamic wgxr[5.099e-52], bool iT_[219E+47,21,3])	return "*'"'""
+func CR ()
+	return false
+

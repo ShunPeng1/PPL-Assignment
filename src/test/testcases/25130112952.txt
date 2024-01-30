@@ -1,0 +1,9 @@
+
+func DCTk (bool wX, var Yz55[797e+19,40,2e31], number IX8[33e+92])	begin
+		break
+		lY()
+		LU <- 8
+	end
+
+string dLB ## D=dnqyc<_z&TIx6npEm
+## wVE}Gu

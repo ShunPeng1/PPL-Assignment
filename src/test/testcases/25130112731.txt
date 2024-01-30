@@ -1,0 +1,12 @@
+
+func Sh (bool eR, dynamic RP[0.041,80.094E30], bool XKBD)
+	begin
+		begin
+			axaK[true, true, 76] <- "'"'""
+			## $F]i.3
+			## /Q:V2,NSc/BJ#
+		end
+		for TV79 until true by 2.045E04
+			string gy <- "g" ## %D[rE
+		## ?>h,B.kv
+	end

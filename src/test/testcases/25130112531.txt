@@ -1,0 +1,7 @@
+
+number Ko2[25E+36,1.317E29] <- 774 ## -".M_I
+string nm[771.200,69e41,0e+44] <- 49.388 ## lH`?2o 
+func cRJ ()
+	return false
+## Z}RJ@8qE,B-eITX
+number aJNG[0e22] <- RU ## |@dVUn|B((.BB

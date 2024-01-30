@@ -1,7 +1,4 @@
- 
-            func main(string a) 
-                begin 
-                    break ## 12
-                end
-            func main(dynamic a) 
-        
+
+func CMeP ()
+	return "'"Sj'""
+

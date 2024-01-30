@@ -1,0 +1,6 @@
+
+func nDOK (dynamic mq)
+	return
+func bO ()
+	return false
+## Lgmj"`m

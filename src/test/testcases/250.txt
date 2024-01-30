@@ -1,1 +1,6 @@
-var aPI <- 3.14
+
+bool RT <- true
+## nC<DTbXxn_=R
+func C8 (bool SFs[76e83,181.586e+72], number F9h)
+	return true
+

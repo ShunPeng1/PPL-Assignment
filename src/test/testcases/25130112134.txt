@@ -1,0 +1,4 @@
+
+dynamic Mj[593,45.022] <- false
+func Pc (string Ktt[77.493e54,615,8.199e-03], number yQ3)	begin
+	end

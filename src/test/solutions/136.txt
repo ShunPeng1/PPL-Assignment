@@ -1,1 +1,1 @@
-mA,Error Token #
+10,<EOF>

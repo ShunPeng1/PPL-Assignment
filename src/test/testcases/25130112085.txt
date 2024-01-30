@@ -1,0 +1,6 @@
+
+func tQ2M (string nx[1e78], number j4)
+	return false
+
+number FN <- 331E-12
+## in"kF{-e7

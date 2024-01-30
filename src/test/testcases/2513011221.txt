@@ -1,0 +1,6 @@
+
+func p3WG ()	begin
+		bool ZeED ## 3_
+		number Mf <- "'"`'"'""
+	end
+var gX <- ".'"1N'""

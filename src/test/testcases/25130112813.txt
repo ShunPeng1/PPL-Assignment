@@ -1,0 +1,2 @@
+
+func JQ (number K14, bool Yh[57E00])	return

@@ -1,0 +1,6 @@
+
+func qeBD (bool SX, bool a76)
+	return true
+
+func XJz ()
+	return

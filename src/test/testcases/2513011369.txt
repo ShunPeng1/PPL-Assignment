@@ -1,0 +1,4 @@
+
+func mNi (number Ahn, bool ww, number cRpd)
+	return
+

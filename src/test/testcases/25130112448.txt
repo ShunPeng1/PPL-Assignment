@@ -1,0 +1,6 @@
+
+bool kSk[6.624,79.681E32,797] <- 918E-23
+string rXEe[90,810.254e53,107E-78] ## F
+var es4[8.613E+68,8] <- qt ## +8/+AdR
+func ba (bool cQpQ)	return
+

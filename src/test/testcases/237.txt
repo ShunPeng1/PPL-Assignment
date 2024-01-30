@@ -1,11 +1,5 @@
 
-        func main()
-            begin
-            for i until i >= 10 by 1 + 1
-                ## comment
-                
-                a <- 1
-            ## comment
-            end
-            
-        
+number XW[0.491,6] ## k
+bool yiai ## oJ{5i*&PSf{$4.
+bool eUUh ## OF]VY5LzsCJWSJ>
+string Vy ## *uy)N%s

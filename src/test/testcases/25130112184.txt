@@ -1,0 +1,14 @@
+
+func C1jF ()	begin
+		Ge <- 0e+59
+	end
+
+func FiID (string iV[19e+79,86e44,148e-63], number qSc, var jL8r)
+	begin
+	end
+
+func HBC (var PY8[7E08])
+	return
+string m00
+func Fc (var dPR, dynamic y1Gb)	begin
+	end

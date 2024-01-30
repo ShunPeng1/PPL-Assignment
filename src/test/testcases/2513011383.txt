@@ -1,0 +1,2 @@
+
+func olJa (string es, var GJO, dynamic Jgnl[0e-33,1.485,320])	return

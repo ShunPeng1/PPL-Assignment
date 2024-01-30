@@ -1,0 +1,20 @@
+
+## _CTFwZhW_:"CyS/Yv%7W
+## NdA
+func fO5 ()	begin
+		string v2XC[50,88.693E+24] ## ?
+		## >YT ^aaL89b6/*
+		if ("R'". ")
+		begin
+			## "}@"wo:
+			cveQ <- false
+		end
+		elif (327.151) if (3)
+		return
+		elif ("F")
+		dynamic oZw[871E+33] <- false ## n)A3V28Fel(7Sl
+		else break
+	end
+number rC_4[57.191] <- true ## h$+rZQO
+func uMs (string GKS[4,635,883.399e+39], dynamic V50y[5])	begin
+	end

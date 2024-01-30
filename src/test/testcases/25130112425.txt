@@ -1,0 +1,4 @@
+
+string mo <- GrC
+func gmt1 (number AMI[36.341,75.034,360.796], var AGx[5,0,567.394])	return false
+## (?LLom

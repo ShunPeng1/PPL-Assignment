@@ -1,0 +1,7 @@
+
+func AmWh ()	begin
+		kP <- nuN2
+		string YR[9.825E98,693] <- false
+	end
+## g
+## @.(Ef{=3

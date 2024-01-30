@@ -1,0 +1,7 @@
+
+func XDu (var XZ)
+	begin
+		for Bs until 965E-90 by o1
+			ArO("q'"d'"")
+	end
+

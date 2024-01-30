@@ -1,0 +1,8 @@
+
+func D20v (var nuQ[247,79E+18,1.201e+20], string FTB[217.976,13.164,14.850E26])
+	return
+func kq4W (var pwqP[66.445,9,18.239E+07], bool D7mS[23E-09,83e73])	return
+func jYX (string wJa[65e-50])	begin
+		return true
+		## 2Z~F*Q
+	end
