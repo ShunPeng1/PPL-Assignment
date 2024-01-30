@@ -1,11 +1,15 @@
-from ZCodeVisitor import ZCodeVisitor
-from ZCodeParser import ZCodeParser
-from AST import *
+# Generated from main/zcode/parser/ZCode.g4 by ANTLR 4.9.2
+from antlr4 import *
+if __name__ is not None and "." in __name__:
+    from .ZCodeParser import ZCodeParser
+else:
+    from ZCodeParser import ZCodeParser
 
-class ASTGeneration(ZCodeVisitor):
+# This class defines a complete generic visitor for a parse tree produced by ZCodeParser.
 
-        
-        # Visit a parse tree produced by ZCodeParser#program.
+class ZCodeVisitor(ParseTreeVisitor):
+
+    # Visit a parse tree produced by ZCodeParser#program.
     def visitProgram(self, ctx:ZCodeParser.ProgramContext):
         return self.visitChildren(ctx)
 
@@ -303,4 +307,7 @@ class ASTGeneration(ZCodeVisitor):
     # Visit a parse tree produced by ZCodeParser#boolean_literal.
     def visitBoolean_literal(self, ctx:ZCodeParser.Boolean_literalContext):
         return self.visitChildren(ctx)
-    
+
+
+
+del ZCodeParser
