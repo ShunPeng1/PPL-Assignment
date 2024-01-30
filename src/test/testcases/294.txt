@@ -1,2 +1,6 @@
-
-var vRL <- true
+    
+        func a()
+            begin
+                VoTien[] <- 1
+            end
+        

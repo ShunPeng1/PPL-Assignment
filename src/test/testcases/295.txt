@@ -1,6 +1,6 @@
-
-## C}rxj*.RjV2FiMPn
-func uN ()
-	return
-## w+#;B22
-number I25Y[9] <- "'"" ## HA34&rvDEYn$Bx$y!73%
+    
+        func a()
+            begin
+                1 <- 2
+            end
+        

@@ -1,7 +1,5 @@
-
-## Hrr
-bool H_08 <- true ## X,mZ"8SX$"wE&eFX.j
-## mnBR39[Pe-^Y$)y*
-func Luo (number Em, var uPGM)	return "]'","
-func ZES (dynamic fpa6[672.488E-00,0.281e-43], string BE, number F8)
-	return 1
+    
+        func a()
+            begin a <- 1
+            end
+        

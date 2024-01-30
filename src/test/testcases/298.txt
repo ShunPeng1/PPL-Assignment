@@ -1,4 +1,6 @@
-
-## DTAr#
-func RcFh ()	return true
-## GXm*Nr7)HnGDJ=LOEckG
+    
+            func a()
+            begin
+                fun() fun()
+            end
+        

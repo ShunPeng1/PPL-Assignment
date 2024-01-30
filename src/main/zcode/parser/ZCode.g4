@@ -11,7 +11,7 @@ options {
 // ============== parser rules ===================
 
 
-program						: newline_list? declaration_list? EOF;
+program						: declaration_list EOF;
 
 
 declaration_list			: (newline_list|declaration) declaration_list // Recursive
@@ -107,15 +107,17 @@ basic_parameter_declaration	: basic_type IDENTIFIER;
 array_parameter_declaration	: basic_type IDENTIFIER array_dimension;
 
 // If-Else
-if_statement				: IF expression branch_body 
+if_statement				: IF branch_condition branch_body 
 								(elif_recursive_statement)?
 								(else_statement)? ;
 
 elif_recursive_statement	: elif_statement elif_recursive_statement // Recursive
 							| elif_statement;
 
-elif_statement				: ELIF expression branch_body;
+elif_statement				: ELIF branch_condition branch_body;
 else_statement				: ELSE branch_body;
+
+branch_condition			: LPAREN expression RPAREN;
 branch_body					: local_statement_single;
 
 
@@ -156,21 +158,20 @@ negation_expression			: NOT negation_expression // Unary Prefix Right Associativ
 							| sign_expression; // Next precedence
 
 sign_expression				: additive_operator sign_expression // Unary Prefix Right Associative
-							| element_expression; // Next precedence
-
-element_expression 			: operand LBRACK array_index_access RBRACK  // Unary Postfix Left Associative
-							| LBRACK array_index_access? RBRACK
 							| parenthesis_expression; // Next precedence
 
-					
 parenthesis_expression		: LPAREN expression RPAREN // Parenthesis
 							| operand; // Next precedence
 
 operand						: literal 
 							| function_call_statement 
-							| IDENTIFIER ;
+							| IDENTIFIER 
+							| array_literal;
 
 // Array access
+array_literal 				: (function_call_statement | IDENTIFIER)? LBRACK array_index_access RBRACK ; // Unary Postfix Left Associative
+							
+
 array_access				: IDENTIFIER LBRACK array_index_access RBRACK; // Unary Postfix Left Associative
 		
 array_index_access			: expression COMMA array_index_access // Recursive

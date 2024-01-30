@@ -1,1 +1,1 @@
-Illegal Escape In String: W\d
+Error on line 4 col 23: return

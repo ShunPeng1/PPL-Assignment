@@ -1,4 +1,5 @@
-
-bool MvIp[857,994] <- "'"" ## B
-string Is0h[279e+45,13.541e-81] <- false ## )@R t k^L<:0KK8Qa(H
-## ,:
+    
+        func a()
+            begin
+            end var c <- 1
+        

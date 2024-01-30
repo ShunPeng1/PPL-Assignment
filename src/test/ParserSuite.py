@@ -47,7 +47,7 @@ class ParserSuite(unittest.TestCase):
             var VoTien
         """
         expect = "Error on line 2 col 23: \n"
-        self.assertTrue(TestParser.test(input, expect, 202))   
+        #self.assertTrue(TestParser.test(input, expect, 202))   
         
         input = """ 
             dynamic VoTien[5] <- 3

@@ -1,1 +1,3 @@
-zi
+    
+            number a <- fun()[1]
+        

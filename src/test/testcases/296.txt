@@ -1,6 +1,3 @@
-
-## F!Snqk~cC
-dynamic AcU[15.367] <- 776.261
-## Lx6k_P>#8/
-func j4jH (bool de, dynamic WR)	return
-##  
+    
+            func a(string s["2"])
+        

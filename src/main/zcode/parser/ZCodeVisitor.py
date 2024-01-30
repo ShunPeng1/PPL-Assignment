@@ -164,6 +164,11 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ZCodeParser#branch_condition.
+    def visitBranch_condition(self, ctx:ZCodeParser.Branch_conditionContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ZCodeParser#branch_body.
     def visitBranch_body(self, ctx:ZCodeParser.Branch_bodyContext):
         return self.visitChildren(ctx)
@@ -239,11 +244,6 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#element_expression.
-    def visitElement_expression(self, ctx:ZCodeParser.Element_expressionContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by ZCodeParser#parenthesis_expression.
     def visitParenthesis_expression(self, ctx:ZCodeParser.Parenthesis_expressionContext):
         return self.visitChildren(ctx)
@@ -251,6 +251,11 @@ class ZCodeVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by ZCodeParser#operand.
     def visitOperand(self, ctx:ZCodeParser.OperandContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by ZCodeParser#array_literal.
+    def visitArray_literal(self, ctx:ZCodeParser.Array_literalContext):
         return self.visitChildren(ctx)
 
 

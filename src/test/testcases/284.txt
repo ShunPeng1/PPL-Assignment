@@ -1,3 +1,3 @@
-
-func eY (string K8Se, number rk, string RXZL[7,197,3E68])	return
-
+    
+            var a <- 1[1]
+        

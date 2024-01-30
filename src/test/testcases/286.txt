@@ -1,9 +1,6 @@
-
-func yh (number aXd, string auz, dynamic EF[0,194.269])
-	begin
-		## }0q"#R
-		## Vqvd6tp-Zg2f1yT
-		d0HD(fc, false, false)
-	end
-
-## &
+    
+        func a()
+            begin
+                a[1][2] <- 1
+            end
+        

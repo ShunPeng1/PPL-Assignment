@@ -1,15 +1,2 @@
 
-func EiE (string d8A[701,454E87], var B6[76], dynamic C9Xx)	return
-
-bool eJcE[0E+67,269.923,75.397] ## jr|K["O#E_
-dynamic fYS[62.329e-03]
-func l2HW (bool bKk1)	begin
-		begin
-			break
-			break
-			## A
-		end
-	end
-
-func sde (var Efo[767])
-	return
+        

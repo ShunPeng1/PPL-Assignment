@@ -1,1 +1,7 @@
-"r'"'"'""
+    
+            func a()
+            begin
+                if (1)  return true
+                elif 1 return true
+            end
+        

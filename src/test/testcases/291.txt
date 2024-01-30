@@ -1,4 +1,6 @@
-
-## =4f_FnrBin
-## ;k@.GR}ugBC5,Ec
-## }[er3Q,;]cRddQ<
+    
+        func a()
+            begin
+                c()[1] <- 1
+            end
+        
