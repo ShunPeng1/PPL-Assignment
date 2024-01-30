@@ -283,7 +283,7 @@ fragment TRUE      		: 'true' ;
 fragment FALSE     		: 'false' ;
 
 //Normal regex:  "([^\'\"\r\n\\]|\\['\\nrtbf]|'")*"
-STRING_LIT 			: '"' (~['"\r\n\\] | '\\' ['\\nrtbf] | '\'"')* '"' {
+STRING_LIT 			: '"' (~['"\r\n\\] | [\\] ['\\nrtbf] | [']~[\r\n\\]?)* '"' {
 self.text = self.text[1:-1]
 };
 
@@ -298,7 +298,7 @@ raise ErrorToken(self.text)
 ;
 
 
-UNCLOSE_STRING  : '"' (~['"\\\f\b] | '\\' ['\\nrtbf] | '\'"' | [\r\n] )* ('"'| EOF)
+UNCLOSE_STRING  : '"' (~['"\\\f\b] | [\\] ['\\nrtbf] | [']~[\\\f\b]? | [\r\n] )* ('"'| EOF)
 {
 newlineIndex = self.text.find('\r\n') 
 raise UncloseString(self.text[1:newlineIndex] if newlineIndex != -1 else self.text[1:]) # if end with \n else end with EOF
@@ -307,14 +307,14 @@ raise UncloseString(self.text[1:newlineIndex] if newlineIndex != -1 else self.te
 
 
 //ILLEGAL_ESCAPE  : '"' (~['"\\] | '\\' ['\\nrtbf] | '\'"' )* ('\\' ~['\\nrtbf] | [\t\b\f] | '\'' ~["])
-ILLEGAL_ESCAPE  : '"'  (~["] | [\f\b]  )* ('"' | EOF)
+ILLEGAL_ESCAPE  : '"'  (~['"\\] | [\f\b] | [\\]. | [']~[\\\f\b]? )* ('"' | EOF)
 {
 import re
 import math
 
 match1 = re.search(r'[^\\]\\[^\\nrtbf]', self.text)
 match2 = re.search(r'[\f\b]', self.text)
-match3 = re.search(r'\'[^"]', self.text)
+#match3 = re.search(r'\'[^"]', self.text)
 
 end_indices = []
 
@@ -326,10 +326,10 @@ if match2:
     end_index2 = match2.start() + 1  # +1 to include the escape character itself
     end_indices.append(end_index2)
     print("Case 2", end_index2)
-if match3:
-    end_index3 = match3.start() + 2  # +1 to include the escape character itself
-    end_indices.append(end_index3)
-    print("Case 3", end_index3)
+#if match3:
+#    end_index3 = match3.start() + 2  # +1 to include the escape character itself
+#    end_indices.append(end_index3)
+#    print("Case 3", end_index3)
 
 if end_indices:
     end_index = min(end_indices)
@@ -337,6 +337,7 @@ else:
     end_index = -1
     print("Case 4", end_index)
 
+print("Original text: ", self.text)
 raise IllegalEscape(self.text[1:end_index])
 		
 };

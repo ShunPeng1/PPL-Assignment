@@ -1,6 +1,2 @@
- 
-            ## 12
-            
-            var a <- 1 ## 12
-            ## 12
+ var VoTien <- true > x >= z 
         

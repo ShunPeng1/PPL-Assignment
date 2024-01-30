@@ -1,1 +1,2 @@
-func main(number a) 
+var VoTien <- true >= "true" and 1 > 2
+        

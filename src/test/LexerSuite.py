@@ -159,3 +159,21 @@ class LexerSuite(unittest.TestCase):
 """Illegal Escape In String: 'a \\a""", 157))
         
         self.assertTrue(TestLexer.test("1.1/3","1.1,/,3,<EOF>",110))
+
+
+    def test_thuan(self):
+        input = """ "' " """
+        expect = "' ,<EOF>"
+        self.assertTrue(TestLexer.test(input,expect,21530110001))
+
+        input = """ "'a" """
+        expect = "'a,<EOF>"
+        self.assertTrue(TestLexer.test(input,expect,21530110002))
+
+        input = """ "'"" """
+        expect = "'\",<EOF>"
+        self.assertTrue(TestLexer.test(input,expect,21530110003))
+
+        
+        self.assertTrue(TestLexer.test(""" "Tien \\\'" " """, "Tien \\',Unclosed String:  ", 149))
+        
