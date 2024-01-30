@@ -1,9 +1,0 @@
-
-dynamic o3I_
-func qku (dynamic aLp[79])	begin
-	end
-
-func Sh ()
-	return true
-
-## `S 

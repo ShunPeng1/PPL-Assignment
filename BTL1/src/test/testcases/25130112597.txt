@@ -1,3 +1,0 @@
-
-number deeF[8.881E18,82.849]
-var Eil <- true

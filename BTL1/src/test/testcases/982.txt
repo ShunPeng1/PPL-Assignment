@@ -1,8 +1,0 @@
-
-func Rfy4 ()
-	return 910E-67
-
-dynamic xVV6 ## y0
-## heH}IbC*Cc0WR6;i|i=
-dynamic t1y <- 55E-51 ## t}1Bz!H0%INJ7@
-var fY[10.581]

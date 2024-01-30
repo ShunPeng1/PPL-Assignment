@@ -1,6 +1,0 @@
-
-func GIq (var yBWN)
-	return "d$'"S1"
-## 2FkOQg
-bool BF[4,308e-74]
-func giL ()	return true

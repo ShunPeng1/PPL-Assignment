@@ -1,3 +1,0 @@
-
-bool AI4 ## H?#+
-string TTg

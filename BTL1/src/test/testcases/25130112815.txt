@@ -1,8 +1,0 @@
-
-func tqa ()
-	return "8mk2"
-
-func lJ9 ()	return true
-
-number U4 <- 52.221 ## QeAkr1_cX(qLEmTUX
-## QW.C 

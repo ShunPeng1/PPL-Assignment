@@ -1,6 +1,0 @@
-
-number vc4 <- ir9
-func AMp ()	return
-var RD <- false
-func NYVI (string JG[1.774,78])	return
-

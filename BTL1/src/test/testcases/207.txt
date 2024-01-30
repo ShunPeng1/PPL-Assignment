@@ -1,4 +1,0 @@
-
-bool n0h7
-number bPgA[25.884]
-dynamic r3

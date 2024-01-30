@@ -1,9 +1,0 @@
-
-bool np3 ## %%3J}k?/hYH1@o%$jN{
-func si_N (number nA, string f7[47.737,774.748], var Jc[4,15.598])
-	begin
-		hX()
-		## 8vq
-		for c4wo until false by true
-			return "8S"
-	end

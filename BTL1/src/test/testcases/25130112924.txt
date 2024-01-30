@@ -1,3 +1,0 @@
-
-func as (string BW[985], var xZ)	return
-string J51[255] ## >>

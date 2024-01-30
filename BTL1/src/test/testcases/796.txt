@@ -1,4 +1,0 @@
-
-func Ax (dynamic tY23[3e+82,107.135e-01,2], dynamic zpEM, bool Tsl4)	return
-
-bool A7D[0.967,56.276e43]

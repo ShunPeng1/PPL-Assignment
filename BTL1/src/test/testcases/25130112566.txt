@@ -1,8 +1,0 @@
-
-func YS (var JQ[5E-65,6e+77], string AW, number Ls9[698,38E+80])	return Tqat
-func VBq (var TsOv, var rH1, string ax2r)
-	return
-
-func jnTt (dynamic qP)	begin
-	end
-## SnfM=AHvw3Y"Yjy

@@ -1,8 +1,0 @@
-
-func rab (bool vF[904.602E+66,4E89,821], number bVjs, number m9[31,9,8.693E+89])	begin
-		begin
-			## Rz>FZmf
-		end
-		bool ES1k ## h!O6/N,h?Hp/jB$
-		Khq <- MfR
-	end

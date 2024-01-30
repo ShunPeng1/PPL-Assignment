@@ -1,6 +1,0 @@
-
-func bl8X (bool Kd, number GMj, dynamic oL)	begin
-	end
-string cwfl[1E80]
-## z)K/r>TWR/j*>pw
-## y|s

@@ -1,2 +1,0 @@
-
-func nkQ (bool MGD)	return 321e79

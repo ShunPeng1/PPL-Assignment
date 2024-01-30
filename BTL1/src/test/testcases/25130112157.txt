@@ -1,2 +1,0 @@
-
-func ojR4 ()	return ukR2

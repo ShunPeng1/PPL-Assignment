@@ -1,3 +1,0 @@
-
-dynamic KK[159.542e-48,53E-79] <- "XT"
-string Dj[9.827]

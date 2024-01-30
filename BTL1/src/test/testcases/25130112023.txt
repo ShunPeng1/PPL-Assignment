@@ -1,5 +1,0 @@
-
-## }rG,_c>SsmGKn^YK[;
-func KY ()
-	return
-

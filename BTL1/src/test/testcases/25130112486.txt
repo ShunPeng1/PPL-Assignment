@@ -1,9 +1,0 @@
-
-## ^k#Tp[07jKL
-dynamic NhZN[631.435E+39,26E+03,31.782] <- "#" ## v":zpDNCS=i>7r(}+x
-func JT ()
-	begin
-		## E7-1D
-	end
-func IzBa (string aXR6, bool FE)	return 6
-bool gJI[58E00,242.399E80] <- false

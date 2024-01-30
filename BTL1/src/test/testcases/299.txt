@@ -1,4 +1,0 @@
-
-func Cd2y ()
-	return false
-

@@ -1,8 +1,0 @@
-
-## 8gEl[C008pc*X0
-number jP <- ""|'""
-## YFPh!G|i]U|]8FQ]
-string iJvH
-func hqn (string JRJ[23], dynamic vIt[9.182])
-	return "'"'"R"
-

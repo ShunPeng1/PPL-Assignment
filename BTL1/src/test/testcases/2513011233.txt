@@ -1,3 +1,0 @@
-
-func Ri (number twjJ[62], var HNIp[427e46,8E09,42], number i37)	return 275e-67
-

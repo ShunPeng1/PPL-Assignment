@@ -1,7 +1,0 @@
-
-##  B;3r]i/$.smeFn}(
-## mXT}cEHB;gKXzXv
-func Fi (string LqHh[4.213e39,3,5.398e57], string EZ)	return false
-func yV (dynamic SDwc[4E+41], dynamic r78J, dynamic b5)
-	return
-

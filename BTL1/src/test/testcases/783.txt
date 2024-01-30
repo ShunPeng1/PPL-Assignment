@@ -1,7 +1,0 @@
-
-## %jcFc:.8r
-func U5 (bool v7[315.889e89,67e45,4], number Pk, string lf[6])
-	begin
-	end
-
-## a~.|

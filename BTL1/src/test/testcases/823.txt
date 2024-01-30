@@ -1,8 +1,0 @@
-
-dynamic AY0 <- true ## VtCidIu
-func GX ()	return
-
-func oh (bool nFct, number Bw3)	return true
-
-func wJBK (var ygbv, bool KE[7])	return
-## kF_U^FU>prJ:%|jx

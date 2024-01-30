@@ -1,8 +1,0 @@
-
-## <>
-func cY3 ()
-	begin
-		dynamic gSGF[7e+53,5.173,2] ## *L)owZ[+
-		ki4B <- true
-		## -g_0B
-	end

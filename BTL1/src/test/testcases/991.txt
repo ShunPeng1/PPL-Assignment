@@ -1,4 +1,0 @@
-
-func iw (dynamic UqCz)
-	return
-

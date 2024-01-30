@@ -1,6 +1,0 @@
-
-number AxKI ## 4
-func CDJ1 (string nErn[63E-99])
-	return 38.834
-
-string YVk0 ## N9.WJGu`&7M

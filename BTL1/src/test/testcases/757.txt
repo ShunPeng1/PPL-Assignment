@@ -1,4 +1,0 @@
-
-func ysu_ (bool EJ[69e-25,466.371,311], var rz[33,61.991e-51,5.103], dynamic xxvQ[0E60,37e-96])
-	return q5u
-func m9G (string LilB[5E+27,6e40,5e-37])	return "'""

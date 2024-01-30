@@ -1,7 +1,0 @@
-
-string bv5N[3e-50] ## J
-func OT (string aLoc[650.011e91,72.050E18,680], number kp)
-	return
-number mekD[82.442e+97,52.057,1] <- "4u" ## UC5*5K{pphw
-bool FD <- false
-## qlvhj~O3V~9@"v]|q}

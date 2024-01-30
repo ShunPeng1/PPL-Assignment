@@ -1,4 +1,0 @@
-
-func tf7 (string vL)
-	return
-number Hjs <- false

@@ -1,6 +1,0 @@
-
-dynamic qFE[86.528E+46,7.663E-37]
-dynamic Vadw[9.300]
-dynamic NK6s
-string yCRh[5e-29] ## |L??*hP"A&C
-dynamic dX[1E85] ## &7$%8D@7k5Ar;C`*2J

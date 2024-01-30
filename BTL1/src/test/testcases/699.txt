@@ -1,7 +1,0 @@
-
-bool pnt[647,6.337E+57] <- "'"'";'""
-func VAV (var uuP3, bool is1, bool omxp[3E98,979E37])
-	return 4.364
-func DpfN ()	return true
-
-bool CvD[364E+12,3.215,338E97] ## w_ulsf_

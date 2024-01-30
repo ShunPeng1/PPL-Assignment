@@ -1,7 +1,0 @@
-
-func hT (number dEn[57,85.160], string TDh, bool Ojn)
-	begin
-		## EZth>w@
-		## fAUYCnT<C[+AOXLQv3"
-	end
-

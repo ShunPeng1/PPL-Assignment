@@ -1,6 +1,0 @@
-
-func YAb (bool fp)
-	return
-string hIrI <- 296.558
-func CV (var f04, number EJH, number SmHg[8e25,49.184])	return
-

@@ -1,6 +1,0 @@
-
-func hc47 ()	begin
-		continue
-		break
-	end
-## {A(

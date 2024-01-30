@@ -1,7 +1,0 @@
-
-func sS3k (string sboe, var D2vQ[48.652E21,68E+73])	begin
-		##  MV_4}
-		for bUo until false by false
-			Si <- "'"'""
-	end
-func dvdt (string ivKI[766])	return

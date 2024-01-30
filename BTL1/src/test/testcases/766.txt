@@ -1,4 +1,0 @@
-
-var DmCq[373,69.814,605]
-func wn (dynamic Ua[7], string Jo)	return
-string fSs[878,807.391,45.476E+07] <- 12

@@ -1,7 +1,0 @@
-
-number rG <- "'""
-bool vVjZ[6.299,91.603,96E85]
-bool FE <- "56" ## XQ@ZXYthn,e tZ)6]
-## I[QEb:%"#f/6b(L1)[A(
-func LF ()
-	return "#'"p'"F"

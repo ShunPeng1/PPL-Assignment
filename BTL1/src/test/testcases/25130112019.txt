@@ -1,2 +1,0 @@
-
-func jya (var oC1R, bool XLZ, bool EzB[1E+77])	return

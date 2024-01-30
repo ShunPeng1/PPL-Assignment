@@ -1,4 +1,0 @@
-
-string aZIQ <- true
-## B$XAx&H:
-dynamic SNP[32,69.803]

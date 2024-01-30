@@ -1,6 +1,0 @@
-
-func Kg (number n3S, number wtfw[95.763,5.218,84E-27], number WF)
-	return false
-
-dynamic TU7c[742e-22,4.202e+12,686.115]
-var hKA

@@ -1,2 +1,0 @@
-
-func IB (string YKX, bool guD)	return

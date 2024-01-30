@@ -1,6 +1,0 @@
-
-func iq (bool huV[5.266e-99,156e+10,1.675], number U2V)	return
-## E-Nj#9}|9n."< T.G7
-number hM[433.447,91] <- Nvzi
-dynamic dH[957.385,790.761,758.780e+04] <- false
-func Gc9 (var dRW)	return

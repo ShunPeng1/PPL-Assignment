@@ -1,5 +1,0 @@
-
-## fl0_~{`~<$V!o
-func TDZ ()
-	return
-

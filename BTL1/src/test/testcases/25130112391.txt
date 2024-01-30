@@ -1,2 +1,0 @@
-
-func MK (dynamic r8rO, number XZZf[70,975e27], string oF)	return

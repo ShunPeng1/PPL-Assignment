@@ -1,7 +1,0 @@
-
-## {#j1 sr^o{6r<G$
-func wd (dynamic RYh[6,692E-54])	return dP
-func Bv (bool u8Y5, number t753)	return
-func XcV ()
-	begin
-	end

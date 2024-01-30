@@ -1,3 +1,0 @@
-
-func pIsW (var LqE[53.484E+97], bool MU[4.635E36], var IzP)
-	return 50E+23

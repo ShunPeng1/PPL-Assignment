@@ -1,8 +1,0 @@
-
-func PjU6 (var RsK)
-	return false
-
-var KR[10.040,41,6.458e-41] ## [$o}t$&S;q$L^3Ait
-func mdv8 ()
-	return on
-dynamic ntiw[604.085e12,8E+47,0] ## B9Zmd`F0=AO->L_3IEc

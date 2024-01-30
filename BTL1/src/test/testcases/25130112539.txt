@@ -1,4 +1,0 @@
-
-func rDpI (string BAEn[5], string uM[9e22,678], number iq)
-	return 457E49
-

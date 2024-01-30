@@ -1,9 +1,0 @@
-
-string z5[550,33] ## NLc+4dbLcb{Via~IC~V
-func UYtB (number rX[9,6e+95])	return 5.529e-26
-
-func g8Uq (dynamic jNGc[9.092E+56,887])
-	return true
-
-## KvjG1<vTLK2
-bool uCy[0,589.815] <- loU ## I)`!(sH4dKS"d

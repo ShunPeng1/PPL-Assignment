@@ -1,5 +1,0 @@
-
-func vt (var s7Mu[915.849,77.374], number Jmmk[532.568e84,114.270E71])	return true
-
-number AnV[8e49] <- true
-bool PUe[4.289,64.052]

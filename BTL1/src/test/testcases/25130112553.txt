@@ -1,5 +1,0 @@
-
-func a1 (dynamic v9T, number H_7, var aEsN[25.550,578.489E-30,5])	return false
-
-## >a
-## >Xi6TO;_@T|yYV&Ueg

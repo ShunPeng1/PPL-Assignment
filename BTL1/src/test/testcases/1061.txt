@@ -1,8 +1,0 @@
-
-func bx (number EY, dynamic ZCo[932,50.228E-75])	return 422e+89
-
-func nC (string yP7l, var No[82])	begin
-		nD("'"dC'"", false, true)
-		break
-	end
-

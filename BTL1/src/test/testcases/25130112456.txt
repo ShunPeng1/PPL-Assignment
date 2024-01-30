@@ -1,9 +1,0 @@
-
-## HaC@
-## 2=LqH*W
-func w0V (string O05[507.956e-54,610.569], string YLM)
-	return
-func kk (string jO[99e32,7.377e-97], number aJs[8E+40])
-	return "'"'"2"
-func MP ()
-	return false

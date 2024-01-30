@@ -1,8 +1,0 @@
-
-func VG ()
-	return
-
-func CB ()	return
-
-var Vdt <- oL ## O%{sB[}E>+0Yxbl]bU
-var ClkE

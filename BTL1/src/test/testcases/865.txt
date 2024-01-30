@@ -1,2 +1,0 @@
-
-dynamic adOb[4] <- "'"@"

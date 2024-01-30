@@ -1,3 +1,0 @@
-
-number Hlc <- "'"v"
-string XiQ <- yMF0

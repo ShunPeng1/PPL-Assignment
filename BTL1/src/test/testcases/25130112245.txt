@@ -1,7 +1,0 @@
-
-func CX (var Umo[363,995.461e+27], bool jdi, string FuQ[853.979e58])
-	return
-
-bool wR <- 1.835 ## ^H9Xfdx}!
-dynamic ztrq[37] <- Jehz
-## t=m>i9

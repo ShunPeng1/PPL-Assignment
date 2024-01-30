@@ -1,6 +1,0 @@
-
-func ULO (bool w7, dynamic P8q, number MTzf[422E-03,6.160e+75,32E-01])
-	return
-
-string L3 <- 17e+06
-## xpYx7(?U4/

@@ -1,7 +1,0 @@
-
-func C7 ()	return
-
-## ]fE
-func mR (bool DSry, number YSbq, bool S0)	return nI
-
-## ~:uJ$D6hO;I:MWJ

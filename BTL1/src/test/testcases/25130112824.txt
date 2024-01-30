@@ -1,6 +1,0 @@
-
-## ke
-func pqE (string rx[6,70,34E+39], dynamic gk)	return
-
-## s"5aO
-dynamic Fg[253E+68,32.253,611E+87] <- "'"#"

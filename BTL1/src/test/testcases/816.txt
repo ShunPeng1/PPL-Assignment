@@ -1,4 +1,0 @@
-
-string Ncd[297.599] <- 0.300 ## &A^ B#,hzU&*>H3V?pb&
-var rn <- true ## aXHm
-string zNtW

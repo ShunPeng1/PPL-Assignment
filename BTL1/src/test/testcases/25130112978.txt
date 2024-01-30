@@ -1,7 +1,0 @@
-
-func sw23 (var xQId[1], string xJp)	return PZl
-
-## w>
-func Q09v (var wQ[510.314e11,4,69.217], var pv)
-	return
-

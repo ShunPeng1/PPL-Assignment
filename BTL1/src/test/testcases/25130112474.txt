@@ -1,8 +1,0 @@
-
-## v@:s>/(8
-## FW9,@"5}3
-func CJwS (var Ygh[4e12,16.799], number u4F[12.394,3.626], number tt84[2,35])
-	begin
-		break
-	end
-

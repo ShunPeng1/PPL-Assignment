@@ -1,4 +1,0 @@
-
-var TRE <- "'"'"" ## |3H
-func nmO (string cT54)	begin
-	end

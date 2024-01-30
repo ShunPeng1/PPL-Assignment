@@ -1,4 +1,0 @@
-
-func ydQ ()	return
-func zk ()	begin
-	end

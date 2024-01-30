@@ -1,7 +1,0 @@
-
-func lR ()
-	begin
-	end
-
-string JXVh ## 3lw1$
-var RIfg <- true

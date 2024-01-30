@@ -1,3 +1,0 @@
-
-func Pl9f (number Dnp[58E-38,6.831])
-	return

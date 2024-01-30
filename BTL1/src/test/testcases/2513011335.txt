@@ -1,2 +1,0 @@
-
-string Xca[86] <- true

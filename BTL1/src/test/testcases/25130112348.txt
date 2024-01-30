@@ -1,6 +1,0 @@
-
-## ?k"0*?*Vw+in]B a
-func f4 (bool dWVK[25,8.136], string Io3j, dynamic EX0[9.132,6.075E+72])
-	return kDa
-
-dynamic vu4

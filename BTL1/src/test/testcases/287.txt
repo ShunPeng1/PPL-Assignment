@@ -1,5 +1,0 @@
-
-dynamic uR[7,1.169] <- 309e16 ## b$|GDS]<8wVk1%h*Y:
-func vU (bool sp1[56E+56], dynamic hzP8[212e-27,20.259e+61])	return
-dynamic HOc[689.972] <- 561.401
-## qAyk}92,.

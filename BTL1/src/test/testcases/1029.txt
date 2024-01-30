@@ -1,6 +1,0 @@
-
-func xB (number ZMY, number iN98, string fn[49])
-	return qi
-## {$mG
-bool oF ## IkYpLD0qV/a0
-dynamic BA[87] <- j8

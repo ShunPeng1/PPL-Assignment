@@ -1,8 +1,0 @@
-
-func knie (dynamic hT, string mPH[8E68], var jHI)	begin
-		## ;71DJjSc+NvY
-		## OsiUe0o|3Mn5q-8x,y
-		var MpX2 <- false ## g`
-	end
-## J5>u:+7V
-func HfC (bool eJ[626,346.986e-07])	return false

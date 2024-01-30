@@ -1,4 +1,0 @@
-
-func CMeP ()
-	return "'"Sj'""
-

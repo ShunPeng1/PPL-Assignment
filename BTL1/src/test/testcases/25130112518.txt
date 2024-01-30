@@ -1,8 +1,0 @@
-
-var UwB <- "W'"'"" ## E9e_
-func iNlv (number nEk, var oy)	begin
-		## Y"i6p-1?%v0A5V
-		return
-		## :".=";`Tf7R3^S)e
-	end
-

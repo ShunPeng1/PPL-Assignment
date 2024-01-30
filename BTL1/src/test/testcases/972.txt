@@ -1,7 +1,0 @@
-
-## e1[
-func wth (string z5C, var Kn[14,90.948])	begin
-	end
-func clAz (number mYC[626e+73,11E+36,135e-43])
-	begin
-	end

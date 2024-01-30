@@ -1,5 +1,0 @@
-
-func Hme (string Ov, dynamic TnmS, dynamic qNi)
-	return false
-
-## {"

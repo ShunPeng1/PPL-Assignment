@@ -1,6 +1,0 @@
-
-func MW (number fX[572,61.993,14.924])
-	return "(-"
-
-var JYfc[27.844e+89,61] <- false ## 4RMl)lz7KWPBU0
-## czY.(gXj(WW`kpR_`c

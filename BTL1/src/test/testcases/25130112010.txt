@@ -1,6 +1,0 @@
-
-dynamic rsqL <- 26e+70 ## QU
-number LTDB <- "'""
-func f9l ()	begin
-		gD4z()
-	end

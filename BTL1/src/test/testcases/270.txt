@@ -1,2 +1,0 @@
-
-func up (number G5J, bool mWN[1E+46,6.606,773.823], number ag)	return 205.910

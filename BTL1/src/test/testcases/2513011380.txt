@@ -1,9 +1,0 @@
-
-## p<A*&$5
-dynamic Ama[476] <- "P-RO," ## C]=gZWy~-
-func szK_ ()
-	begin
-	end
-
-## B1
-func cbq (number HP[922e+45,4.325E18], number uWR[4], bool WuU[60,2,946.730E+95])	return true

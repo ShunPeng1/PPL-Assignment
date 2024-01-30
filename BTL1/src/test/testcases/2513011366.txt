@@ -1,5 +1,0 @@
-
-func FGO (number ps, dynamic asY)	return
-
-func Nd (var Wos)
-	return

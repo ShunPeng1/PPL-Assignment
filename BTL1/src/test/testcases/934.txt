@@ -1,5 +1,0 @@
-
-func gJ2 (var X2hq[578.083e69,266,71], dynamic dlt4)	begin
-		## R{p,YHVeI.3
-		continue
-	end

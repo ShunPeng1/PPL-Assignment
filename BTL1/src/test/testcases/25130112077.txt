@@ -1,7 +1,0 @@
-
-func U9 (number vh3, dynamic LCg[225.817e+97,1.498,91.467e-05])
-	return
-
-number iMkW[13.710,53.517] <- Lit ## d@QvAB4Mv%q(q}
-## 8;:
-string WDq[9,675.358E+67,391] <- "'"'":'"'""

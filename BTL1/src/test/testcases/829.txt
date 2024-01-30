@@ -1,6 +1,0 @@
-
-## &heep$RTfWu8sYI
-func x80x (var nvux)	begin
-	end
-var Z5D <- false
-## HO-CWGa

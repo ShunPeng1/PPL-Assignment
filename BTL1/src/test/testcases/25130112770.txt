@@ -1,9 +1,0 @@
-
-number DI_ <- 8e-66
-string Y7 <- "'"'""
-func MzE (string Xp7[458,3E97], number j3_[795.589], var L6TN[2e+45,398.684e13,9.663E-94])
-	begin
-		WHnj <- 4.161
-	end
-
-string Iu

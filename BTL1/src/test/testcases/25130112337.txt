@@ -1,3 +1,0 @@
-
-func vnLx (number eW)
-	return lpU

@@ -1,7 +1,0 @@
-
-func XU6 (number E_, var gn)
-	return
-func JzX (bool d1wl[58,4.136E21,3E+89])	return
-
-func VNjQ ()
-	return

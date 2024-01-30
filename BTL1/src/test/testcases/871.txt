@@ -1,4 +1,0 @@
-
-func EbSh (number vL[652.782])
-	return
-func qSJ ()	return "X^'"'""

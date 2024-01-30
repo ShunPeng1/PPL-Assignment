@@ -1,7 +1,0 @@
-
-func VahE (dynamic pg_X, bool gMD2[343,84])	return
-number R3[1.654E16] <- "lq'"" ## d.).;@kD<^*
-## AE*eDqY
-## @$r^EWe/
-func Ez0 (dynamic qVF[4], number ngg[1.019], number cJ)
-	return 814e04

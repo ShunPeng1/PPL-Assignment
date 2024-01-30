@@ -1,6 +1,0 @@
-
-## b`248Y?
-var bopz[931.847] <- "'"V'"H" ## wsf$c
-var pS <- false
-func YE (number Sfn[84.427E+57,44.612,7E+93])
-	return 3E59

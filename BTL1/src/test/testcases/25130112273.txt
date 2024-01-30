@@ -1,6 +1,0 @@
-
-dynamic mdvG
-dynamic k9[879.212E96] <- 8.635
-func Tu (var XWK[28,4.865,325.101])
-	return
-

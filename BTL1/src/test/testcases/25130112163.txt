@@ -1,7 +1,0 @@
-
-func A3Zu (bool ob)
-	return ":"
-
-## lA%632|Ga:;SW
-bool ZEd <- false
-bool S0fv

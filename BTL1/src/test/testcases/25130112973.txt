@@ -1,3 +1,0 @@
-
-func IP6D (string ZzY, bool sZ[14.241e-75,1.869E46,0E94], bool ZIpW)	return 1.941e-36
-

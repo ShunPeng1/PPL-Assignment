@@ -1,7 +1,0 @@
-
-func huyA ()
-	begin
-	end
-
-string Y1i
-## F{Y(B#hV?W_

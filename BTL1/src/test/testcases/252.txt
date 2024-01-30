@@ -1,6 +1,0 @@
-
-dynamic Nu[2e-84,22.435] <- false
-## #b*<@7#HdRo4S|h,
-dynamic h1e <- 5.817e-37 ## :KfJB@:M;nNg_T%
-dynamic vuen[8.671] <- false
-func BWJo (dynamic mIMd, dynamic u5i_[8e-95])	return

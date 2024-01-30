@@ -1,6 +1,0 @@
-
-bool eE ## Ds.2]B0.;0
-string jW_ <- - gfR[false, 2.777e-00]
-## :
-func jG9 (var kgA8, string lY3l, var z3)
-	return "'"'"@:E"

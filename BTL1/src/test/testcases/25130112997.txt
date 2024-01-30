@@ -1,6 +1,0 @@
-
-func oJ (var M0[7.997,586.880,162E-27])	return
-## RTtQ9#=-$
-func A1oe (string iFt9, var NibO, bool TKS)	begin
-	end
-

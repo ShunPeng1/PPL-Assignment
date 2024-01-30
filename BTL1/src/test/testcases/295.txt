@@ -1,9 +1,0 @@
-
-func vL9f (dynamic cQ[183.551e+76,2E+75], dynamic cZTc, number Tj)
-	return
-
-## 1]r@r
-## +gR!m/
-func DB (string jAq)	begin
-	end
-## *F

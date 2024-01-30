@@ -1,6 +1,0 @@
-
-func HD (var Bg[4.577E74,54], string Uf[21,614])
-	return
-## nZ
-bool GM[6,168E49,475.834] <- Xe
-## ,]e !Pb@DNbT2zN!hpT~

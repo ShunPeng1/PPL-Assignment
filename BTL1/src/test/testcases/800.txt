@@ -1,5 +1,0 @@
-
-number dq8[6,0.738,84]
-func Vu (bool Ew[23.016])	return
-## K:0"
-## .x`>

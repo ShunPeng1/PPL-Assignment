@@ -1,6 +1,0 @@
-
-bool PZbz[213,557.370E+87,943e-79] ## OHBauLIs|6#J[l Syn q
-func N1Lj (bool ApLQ)	return true
-
-## T@N}~P`n$
-func JU (number xyKv[159.617,670.525,13.502E-74], number O2Je[448,9.714,4e-03], bool tI[94E89,865e-29,4.767])	return

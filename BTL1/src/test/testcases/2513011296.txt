@@ -1,9 +1,0 @@
-
-func lbz (dynamic SP, number BZh)
-	return 872
-
-## K#*fp=|:]f$U= 
-func Lp (dynamic k3d)	begin
-		## ey#pLfR/UKgSa1@.L>x@
-	end
-

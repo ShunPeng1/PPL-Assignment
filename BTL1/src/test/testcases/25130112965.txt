@@ -1,7 +1,0 @@
-
-## (
-func i720 (string nmyL[909E+81,245E04])	begin
-		bool zoN[82.660,53.479e+90,13e-53] <- "'"L"
-	end
-
-## <"6C+ONw3q)(2r=Q

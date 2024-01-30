@@ -1,2 +1,0 @@
-
-func xM (var fP[0.903e-41])	return dKF

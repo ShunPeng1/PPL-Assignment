@@ -1,5 +1,0 @@
-
-string zUjF[878,43.180] <- 0
-func Ux (string Gl_, var jhN, var Ma[2.164])
-	return "-K)"
-

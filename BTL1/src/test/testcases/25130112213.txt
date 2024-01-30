@@ -1,5 +1,0 @@
-
-func OE ()	return
-
-func T0 (bool nq)	return
-

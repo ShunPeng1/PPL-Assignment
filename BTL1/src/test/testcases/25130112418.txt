@@ -1,7 +1,0 @@
-
-func Cvqs (dynamic pP_l[0.625], number fe[172.859,10.342,921.075], number CEBl)	return
-## `9]
-## R&
-func TeG (bool jL, var pC)
-	begin
-	end

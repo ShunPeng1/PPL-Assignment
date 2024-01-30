@@ -1,3 +1,0 @@
-
-func SY (number QBQi[29.776,1.610E-88,979])
-	return

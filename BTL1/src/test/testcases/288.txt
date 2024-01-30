@@ -1,4 +1,0 @@
-
-func vmqD (var miy, bool J1T, number ArDd[7E+95,76.345,47.948])
-	begin
-	end

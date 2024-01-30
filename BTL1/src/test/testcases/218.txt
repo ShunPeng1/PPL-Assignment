@@ -1,5 +1,0 @@
-
-func qm2 (dynamic xI9)
-	return mYTC
-func Cd ()
-	return "'"'"'""

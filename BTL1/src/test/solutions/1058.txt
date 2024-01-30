@@ -1,2 +1,0 @@
-Error on line 10 col 26: 
-

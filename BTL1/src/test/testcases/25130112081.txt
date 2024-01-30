@@ -1,4 +1,0 @@
-
-func Zr_v (number rWkg[25,9.182e91], number xOr8[3.424E-52,954.402])	return 79e80
-
-bool cfCC[68] <- 943.236E+85

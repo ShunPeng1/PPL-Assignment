@@ -1,3 +1,0 @@
-
-func BfD (var s_[877e+49], bool jdc, number HV)
-	return XDfH

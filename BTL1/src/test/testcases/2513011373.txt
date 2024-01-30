@@ -1,7 +1,0 @@
-
-dynamic iFy[0] ## x_7ns"V
-func UVFH (dynamic Kba[0.843,31.793E38], number Cwul)
-	begin
-	end
-func WlC4 (number mA5)	return true
-

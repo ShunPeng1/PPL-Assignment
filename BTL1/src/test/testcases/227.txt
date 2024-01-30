@@ -1,5 +1,0 @@
-
-bool Ge[706] <- 787
-## S*SoT
-func x_N1 ()
-	return

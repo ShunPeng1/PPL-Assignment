@@ -1,6 +1,0 @@
-
-number HUy
-dynamic u_1_[108] <- 77.008E28 ## 8}(3(X
-string uKGc
-func JtF (string po, var Fk[0.626], number Nr7y)
-	return

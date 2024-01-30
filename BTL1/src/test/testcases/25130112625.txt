@@ -1,4 +1,0 @@
-
-func Wyk (string Vs[3.427E-61,22.550E63,15.232], bool gidy, bool jmo[44E+62])
-	return "|'"'"'"'""
-func Zg ()	return s1yk

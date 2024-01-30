@@ -1,2 +1,0 @@
-
-func TFT (dynamic sSXK)	return 578.437

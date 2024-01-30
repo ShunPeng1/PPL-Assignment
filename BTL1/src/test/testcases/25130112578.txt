@@ -1,7 +1,0 @@
-
-func L3 (number IM, dynamic MC[5.721,9.221,54], var pP4A[881e36,361.318E-22])	begin
-		break
-		## FGfds>FR@2
-		continue
-	end
-

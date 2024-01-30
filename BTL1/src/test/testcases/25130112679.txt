@@ -1,9 +1,0 @@
-
-func gW ()
-	begin
-		## Z9kQBz
-		Gq(Y1A, false, "'"")
-	end
-
-string pGUq <- qYO
-## q>@8>Z[/2JO9A_9/a

@@ -1,3 +1,0 @@
-
-func fc6 (string C4[56.459,1e08,12.251e28], dynamic Zlq[9E+21,943,562.963E25], string jH[418])
-	return 0

@@ -1,7 +1,0 @@
-
-func nj (bool y2j, number Ppb[69.172e-39], bool eC)
-	begin
-		break
-		break
-		return
-	end

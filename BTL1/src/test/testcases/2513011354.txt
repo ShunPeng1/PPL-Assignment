@@ -1,3 +1,0 @@
-
-func pm (dynamic w6qA[0e+21,772.981], number brw)	return
-

@@ -1,6 +1,0 @@
-
-var HbM[7.799E+05,8.315E-39] <- bg
-bool dI <- "'"T'"'""
-bool Ez[886.166e-08,25e+35]
-number KC
-string VrN[321E09,6.419E+33,72.969]

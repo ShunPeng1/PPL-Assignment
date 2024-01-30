@@ -1,8 +1,0 @@
-
-## "?<s5Bx)( k;G28z!
-## Rql}
-number pNP
-func UV ()
-	return
-
-bool nRc[30E-58] <- 4.105

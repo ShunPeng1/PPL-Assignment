@@ -1,5 +1,0 @@
-
-string ml[849.155e02,44]
-func tonF (string rSeK[30.087E86,69E+14,0.575e+20])	return
-
-number SMV ## 2gs&[8_uc4gHxPZ}L

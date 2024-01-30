@@ -1,4 +1,0 @@
-
-number r2Z[3e-09,8.252e30,4] <- B9Gt ## xxiH
-## =C(W%9"}TM:/<{t)5Oa
-func t_7 (dynamic s7[91.926,313,73E-37])	return

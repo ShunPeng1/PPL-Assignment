@@ -1,8 +1,0 @@
-
-bool NgI[58] <- false
-func Uaz7 (number LOW, dynamic iG_[76.452,77.325], bool AM7)
-	return
-
-func FSB ()	return "'"f'"e'""
-dynamic DwbH <- "~'"U'"'""
-## {H}IbYO(:s|~u

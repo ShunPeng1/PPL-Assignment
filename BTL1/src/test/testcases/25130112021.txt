@@ -1,7 +1,0 @@
-
-## lqI>{1,kS*:Sg)yAx
-## V;ANr6}rR
-## NX}hC^2t65&u[)h@Yz9
-func MO (var PW[85,93.625E-71,99e-99], bool cUA[8.132,17], string aTga)
-	return
-

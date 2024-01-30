@@ -1,9 +1,0 @@
-
-number n66[425.420,158E50,793] ## &
-## 9/Zsq5Yur5
-func Ok6H (bool yoR[87.493E83], bool lKs[3e+58], string E2[44.225E-00])
-	return Y7Q
-
-## ^7`0
-func FX (string tFZ)	return
-

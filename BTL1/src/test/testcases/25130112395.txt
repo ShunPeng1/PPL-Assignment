@@ -1,8 +1,0 @@
-
-func Hf3 (dynamic xV4[92,39])
-	return
-func eF (number LT3)
-	return
-
-func dY ()
-	return

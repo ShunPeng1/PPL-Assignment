@@ -1,8 +1,0 @@
-
-func E8 (string S3uQ, var R4w, bool DR[390E17,5.882e05])	return
-func A6iR ()
-	return true
-
-number dD_g <- "'"'""
-number OHN[724.518e+45,835.541e-17]
-## #2:Zo61=12/`]

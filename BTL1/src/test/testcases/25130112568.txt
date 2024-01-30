@@ -1,5 +1,0 @@
-
-func kc (number w0C, number d5s, dynamic Ue[11.841E-43,9.964])
-	return GH6j
-
-func geM (var q9U[30e+46,153.113E-63,8e-04], bool PV[42e+32])	return

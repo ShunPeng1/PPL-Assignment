@@ -1,7 +1,0 @@
-
-## 4]hy3o[
-string Td
-var ZXB
-number oTHN[56.310E94,810.751,3E45]
-func Ey1j (number oZLu[2.118E44], number Hf)
-	return

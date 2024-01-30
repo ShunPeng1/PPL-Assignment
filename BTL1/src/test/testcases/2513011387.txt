@@ -1,4 +1,0 @@
-
-func d2 ()
-	return uBkH
-## >X

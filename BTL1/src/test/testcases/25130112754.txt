@@ -1,4 +1,0 @@
-
-dynamic PGRf[8.736e09,18,49] ## U8E(wD(JC[P*tLpu
-func MYu ()	return
-

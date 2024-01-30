@@ -1,6 +1,0 @@
-
-func lP9 (dynamic E3, string Xd[9,97.194,9.725], bool iXcT[389])
-	return
-
-func IOXm (number EP[7.466E60,24E+81])
-	return false

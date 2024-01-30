@@ -1,2 +1,0 @@
-
-func CX7 (number DAU[9.259E+98,8.405], bool xwDF)	return

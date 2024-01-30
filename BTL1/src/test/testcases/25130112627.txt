@@ -1,6 +1,0 @@
-
-## !
-func z_ (number o2)	return "'"#'":'""
-func Mt9z ()	begin
-	end
-bool Es <- 2.232e24 ## xJ`@Qr}^7bQ}e

@@ -1,7 +1,0 @@
-
-func oXV (bool HMLV, string OGq)	begin
-		OA("D", false)
-		gHQO()
-		## />,,~Z
-	end
-## K*SbQ;g83}_F4,NJ{

@@ -1,4 +1,0 @@
-
-func Dl (number yC[93.105], number x6)	return NLeg
-## 4G 
-dynamic zAp <- 5.930

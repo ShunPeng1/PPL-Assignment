@@ -1,4 +1,0 @@
-
-func yV (number Og)
-	return true
-## p2HGX[,IM~%M)aYG6JB

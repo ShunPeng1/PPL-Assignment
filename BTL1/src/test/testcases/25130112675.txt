@@ -1,5 +1,0 @@
-
-dynamic re[58.747,75e25] ## /x
-func fxL (dynamic iu, var b9i[7.595E+28,4])
-	return false
-

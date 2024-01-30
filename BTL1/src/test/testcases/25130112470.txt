@@ -1,5 +1,0 @@
-
-dynamic G3A[83] <- as4 ## 45BP@)pe
-## XfU!Z<mu9aCI
-func ShU (bool sUl, dynamic hK3O)
-	return Qe_5

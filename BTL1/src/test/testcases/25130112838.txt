@@ -1,4 +1,0 @@
-
-string a810 <- 5.570 ## MT~l<@NA#
-dynamic OJ[472.217E04,783e+21] ## 9_4Raz
-## Y0MRe<LE

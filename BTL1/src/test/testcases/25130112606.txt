@@ -1,2 +1,0 @@
-
-dynamic sd[81.417,43.894] <- true ## QAD5E54WCP(4lo k|"0J

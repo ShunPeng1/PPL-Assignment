@@ -1,6 +1,0 @@
-
-func XPD (dynamic rhO[8,1e-01,82.865], number cW6u, var MJlG[5,6.608,2])	return "pQ'"&"
-
-## p%@J@]UL
-number MQH5
-var B6p[80.715e-22,10.772e-37,26e+04] <- N8 ## *8igr=:N

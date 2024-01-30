@@ -1,7 +1,0 @@
-
-## [Yjo0(dFZub[:z`?8
-func Vn (number JPq, var iGG[772,0.033,96E-12])
-	return true
-func Ty (dynamic XB_E[534.144,0.441e+13,635E16])
-	return gmx
-

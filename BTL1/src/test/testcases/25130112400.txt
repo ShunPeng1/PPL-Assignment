@@ -1,6 +1,0 @@
-
-func NVCb (number V18k[360,2], number R3J[80.625E57], number ccLN[91])	return
-## $Q,ol~x9:2Gof|<?
-func siM9 (var yYcZ)
-	return
-

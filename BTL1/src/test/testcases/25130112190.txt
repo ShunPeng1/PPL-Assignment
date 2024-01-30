@@ -1,2 +1,0 @@
-
-func HF0E ()	return ":'"9g"

@@ -1,8 +1,0 @@
-
-## va,cNq..m]#4[4><3[
-## Tf};=
-func PKf (dynamic x3[11e+23,939.902])	return
-
-func o2PM (var ycp[8.001E-30], bool Kia_[1.519,189.720e-45], number pSi)
-	begin
-	end

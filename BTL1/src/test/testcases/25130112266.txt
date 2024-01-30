@@ -1,7 +1,0 @@
-
-func ccQ (dynamic B8kd, var Ta)
-	return 53.788e-85
-
-func UP ()
-	return
-

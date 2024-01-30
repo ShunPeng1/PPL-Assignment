@@ -1,7 +1,0 @@
-
-## p{
-func jS (string oP)
-	return
-
-func NtKC (dynamic Ax7)	return
-

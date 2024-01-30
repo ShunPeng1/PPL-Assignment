@@ -1,7 +1,0 @@
-
-func mZU8 ()	return true
-
-number Sq[417.950,3,20E-10]
-## C>r5
-## +y
-## 68K

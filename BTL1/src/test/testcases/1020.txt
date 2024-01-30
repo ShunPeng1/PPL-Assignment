@@ -1,5 +1,0 @@
-
-func gBOA (string NPv9[272.711], bool Pjw[241.719,959e35,60e+45], number HiA[78.036E23,5])
-	return 4
-
-var uI9f ## mqygi=a<>EQm*

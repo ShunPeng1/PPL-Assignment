@@ -1,6 +1,0 @@
-
-string VMB <- "ya" ## <qGL,IOBU+_g#?fw{#
-number YV[1e05,92e+38,4.584] <- " '"" ## :KxHSLP{8}iK~Hb/rd
-func U5Ef (dynamic PqdJ, var NlM[0.719E+78,25E+01,9])	return false
-
-bool KpNR ## =

@@ -1,8 +1,0 @@
-
-func LP ()
-	return
-
-dynamic Pj
-## QBJ
-bool JuU <- Zg
-func Sn (bool Reg, bool F6bg)	return 6E48

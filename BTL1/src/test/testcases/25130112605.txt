@@ -1,5 +1,0 @@
-
-func x3 ()	begin
-		continue
-	end
-

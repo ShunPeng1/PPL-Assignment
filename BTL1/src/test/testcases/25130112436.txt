@@ -1,8 +1,0 @@
-
-func V1 (bool pqqm, var Qv[712,3.059,6.172E+96], number XF)	return
-func d7 (bool OlHo[39,85], var O3f[452,0E44,6E-40])	return false
-func tz (bool D7k[650E+17])
-	return x1iH
-func GSr (string Hebe)
-	return
-## BGY^.ho

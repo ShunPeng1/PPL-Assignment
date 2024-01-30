@@ -1,5 +1,0 @@
-
-func EIk ()
-	return "HN'"'""
-
-var gDwW[76.319E46,5.909] <- false

@@ -1,3 +1,0 @@
-
-func STfG (dynamic EQ[86.261])
-	return Z_CY

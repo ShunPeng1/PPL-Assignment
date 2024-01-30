@@ -1,8 +1,0 @@
-
-dynamic nBQ[526.140,191,54e-32]
-string ktA <- gGuP
-number jAfO <- Jb7
-func pV7 (number SMy[0E+42,83.530], number jV[6.732,60.606E-49])
-	begin
-	end
-dynamic faYZ[7.308E34,211,1.048] <- false

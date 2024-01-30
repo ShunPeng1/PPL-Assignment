@@ -1,4 +1,0 @@
-
-func GR (bool Ts, bool ZdO)
-	return
-## :V3mT8l`xPE]xiuHmZ

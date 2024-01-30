@@ -1,3 +1,0 @@
-
-## !^8SQ
-string nEQ <- false

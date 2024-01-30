@@ -1,6 +1,0 @@
-
-## "4H<,T~X&f|39nxZwG
-func tt (var rxPD[56,65e05], string O2[276e92,295.852])
-	begin
-	end
-

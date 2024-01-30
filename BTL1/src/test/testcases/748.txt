@@ -1,7 +1,0 @@
-
-func I_qw (var M8)	return
-
-dynamic nGE[332.541] <- 73
-## k>ar
-## AcGGn
-func nW ()	return

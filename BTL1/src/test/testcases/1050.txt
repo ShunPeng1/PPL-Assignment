@@ -1,6 +1,0 @@
-
-dynamic S7
-func Tn ()	return false
-
-var hjs
-var yQZX <- i5g

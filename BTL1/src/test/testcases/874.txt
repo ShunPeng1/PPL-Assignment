@@ -1,9 +1,0 @@
-
-func j0wA (dynamic vxeb)	return false
-
-func ato (bool SF, number IwRf, bool e26T[638.131E12,226.491,2.390E-61])	begin
-		for oC until ghY by true
-			begin
-			end
-	end
-## pNn

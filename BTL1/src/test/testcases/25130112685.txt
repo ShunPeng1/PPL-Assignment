@@ -1,6 +1,0 @@
-
-## oFle%x
-func eE (dynamic CcUm)
-	return false
-func nS07 ()
-	return

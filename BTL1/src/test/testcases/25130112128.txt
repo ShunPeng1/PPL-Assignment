@@ -1,7 +1,0 @@
-
-dynamic Z9[9]
-func QTpA (var Q0HJ[53,0.424E+67], var ybk)
-	return
-func qqM ()	return
-
-## [

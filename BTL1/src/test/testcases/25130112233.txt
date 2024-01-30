@@ -1,4 +1,0 @@
-
-func lbXG (bool Dr, dynamic QIW, string cO92)
-	return "'"|'""
-

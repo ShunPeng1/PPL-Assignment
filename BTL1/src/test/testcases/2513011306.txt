@@ -1,3 +1,0 @@
-
-func sFF (dynamic S2k_, var Md[5.665E+72,47.856e02,70e83])	return "'""
-

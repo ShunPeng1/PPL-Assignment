@@ -1,7 +1,0 @@
-
-## Uq3
-## B+U8_yqNz$Lx%(}zm%4
-## 42l
-func gWPc (number Bl, bool s2hF, dynamic WR[33E24,0.985,59E57])
-	return false
-

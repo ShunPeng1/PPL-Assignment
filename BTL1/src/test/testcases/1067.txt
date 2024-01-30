@@ -1,6 +1,0 @@
-
-## *
-## :G<6$Y{38b
-func IAwp ()
-	return "]5"
-

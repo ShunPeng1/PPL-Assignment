@@ -1,3 +1,0 @@
-
-number R0Ka
-dynamic wXr[66,813.703e+41] <- PQI

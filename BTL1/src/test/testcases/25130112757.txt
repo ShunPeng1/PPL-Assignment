@@ -1,6 +1,0 @@
-
-func OQu (number Luo, string v4D[30.742,38.658e+62,22E+36])	begin
-		## *HS"1M6MGNXm,|Dn
-		kRU <- Tn
-	end
-

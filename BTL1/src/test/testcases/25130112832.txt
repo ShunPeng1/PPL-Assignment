@@ -1,7 +1,0 @@
-
-func sI ()	begin
-	end
-
-## G!"
-func TKl (bool vw7, string FDh[44,4.357E+61,2.422E17])	return
-

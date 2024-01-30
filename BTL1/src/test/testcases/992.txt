@@ -1,8 +1,0 @@
-
-string GcJ[894E47,71E-66,29.339e34] <- 86
-bool Pst <- "~" ## 4Sm5hil+p/F]eJOP
-##  XjbJh;rV|D^|P} hb
-func HL (string etxt)
-	begin
-	end
-

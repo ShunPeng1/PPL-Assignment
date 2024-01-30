@@ -1,4 +1,0 @@
-
-dynamic Zgu[53.783,53.432,7E+88] <- 20.257 ## @7b"?#3YL
-func rSwQ (dynamic Ki[2], string bd1[5,71.411], string XeS)
-	return POv

@@ -1,6 +1,0 @@
-
-## Ie2:rMwteGzEt:
-## 3O
-dynamic ZJ[58.021] <- 10E+30
-func vUx (bool gh)	return "'"'""
-

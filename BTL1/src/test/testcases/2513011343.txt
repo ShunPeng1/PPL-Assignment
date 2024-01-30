@@ -1,3 +1,0 @@
-
-func az3 (number Ah)	return 86.406e+58
-## &48#jlj>-P#

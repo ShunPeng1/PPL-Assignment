@@ -1,4 +1,0 @@
-
-func fXuO (dynamic kU37[95.912,60.783])
-	return ix
-

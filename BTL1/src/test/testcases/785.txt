@@ -1,2 +1,0 @@
-
-func iy (bool HC[0,2])	return

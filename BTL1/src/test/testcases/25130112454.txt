@@ -1,3 +1,0 @@
-
-func uQ (number wECr[107e15,6.820,82e+88], dynamic zU1e[68,4e34], bool QcfV[8.354,9.663e+47])	begin
-	end

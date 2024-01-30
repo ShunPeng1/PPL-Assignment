@@ -1,7 +1,0 @@
-
-func Rc8 (var i2qd)
-	begin
-	end
-## r6A7s$
-func GY ()
-	return 6

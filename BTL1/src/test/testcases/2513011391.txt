@@ -1,5 +1,0 @@
-
-func oEi4 ()	return Dn
-
-## KVV
-func IOb (number z_Q[678,450E+65,40.360E-06])	return

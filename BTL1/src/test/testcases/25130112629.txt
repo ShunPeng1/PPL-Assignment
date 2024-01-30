@@ -1,9 +1,0 @@
-
-var ni <- "E"
-## "
-## $d1[hm]S)dXa
-func s0f (dynamic OU7t)	return
-func fe (var N1C[5.127E+31,566])
-	begin
-		cDJY <- false
-	end

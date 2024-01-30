@@ -1,5 +1,0 @@
-
-var R8 ## %,c]f 65iT?xrpWDh
-func FaK (dynamic fXEr, dynamic mj[554.256,3.205e+74])
-	return 8.079e+11
-string pbRl[5e-24]

@@ -1,2 +1,0 @@
-
-func VK (number RI)	return 3.055

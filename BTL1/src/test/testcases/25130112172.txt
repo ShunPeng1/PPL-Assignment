@@ -1,6 +1,0 @@
-
-func yiFx (string MJGz[93e+88,1.063E25], string cQ, var xNEH)	return false
-
-func WPLN (dynamic TvnJ[12E-59], number i_6)
-	return "?'"s'""
-

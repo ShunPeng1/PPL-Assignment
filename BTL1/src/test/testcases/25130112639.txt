@@ -1,4 +1,0 @@
-
-func or (var Zl[11.876E-56])
-	return "Z"
-

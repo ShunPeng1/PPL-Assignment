@@ -1,7 +1,0 @@
-
-number GaW[0] <- 517.664 ## RyQ`Sf#"k
-## F3;Ob{t9#9Ku
-func Ub (bool BSF6, bool M3[28])
-	begin
-		break
-	end

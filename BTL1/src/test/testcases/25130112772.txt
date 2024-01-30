@@ -1,9 +1,0 @@
-
-func WvxP (string tsaJ, number TyCk[15.448,5.834,230], bool peyj)
-	begin
-	end
-func MU2 (var MKT[678.997e73,691E+96])
-	return QKb_
-func FKt (number je, string l3f[1.899e07,616.283], string U4v)	begin
-	end
-dynamic YT[3.289,52] <- O8 ## },vD

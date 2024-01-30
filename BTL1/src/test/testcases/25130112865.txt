@@ -1,8 +1,0 @@
-
-## jJ{9lxK]
-func cJqQ (string VO, string n2, dynamic AK)
-	begin
-		for oYOE until 164 by pML1
-			Y4r("se|'"'"")
-		return true
-	end

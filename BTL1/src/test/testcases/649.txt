@@ -1,6 +1,0 @@
-
-bool wOqR
-bool aro ## J5g.]HQO
-func RZn (string hw, bool y7)
-	return false
-var Y1

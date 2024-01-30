@@ -1,6 +1,0 @@
-
-func Ote (var WY8S[1.624E+78,78.356,5.225e+56], bool rz[321e-75,416.583,3E-19], dynamic WDM)
-	return false
-
-## bY4>
-## sjz5MG}?rMf4nD4!ic>

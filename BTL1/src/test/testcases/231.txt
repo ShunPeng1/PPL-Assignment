@@ -1,6 +1,0 @@
-
-number NU9 <- 19.796e+43 ## 5Oi<@5LBad|u&EUC_
-## =$LaZ"
-## Z Tfsh
-func cC (number PLC8, var Mo6[6.361,0.255E-63])	return "'""
-number e4

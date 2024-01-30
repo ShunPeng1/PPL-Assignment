@@ -1,4 +1,0 @@
-
-func EiX (string P3)	return "K"
-
-string T7ku

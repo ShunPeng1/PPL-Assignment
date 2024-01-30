@@ -1,5 +1,0 @@
-
-string mgG <- false ## TQ`
-func mk ()
-	return
-## QRx+dL(v

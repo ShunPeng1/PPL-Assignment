@@ -1,7 +1,0 @@
-
-func gn (string CG[85E+12,517e-08,6], string W3C2)	return
-## s}T#hBV~uvJ66rE
-var vvZo
-## 3C9j$|03k<gA_b#nAE}
-func Twrb (string b_U)
-	return false

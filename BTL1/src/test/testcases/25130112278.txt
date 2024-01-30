@@ -1,2 +1,0 @@
-
-func R_ (bool yxh[185], dynamic GC)	return true

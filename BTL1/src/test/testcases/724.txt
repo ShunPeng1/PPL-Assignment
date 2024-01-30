@@ -1,3 +1,0 @@
-
-func N9Jk (dynamic yU[7e-87,6e-16], string azm[5.896E-33,29.703])	return
-number tg6[21E74] <- DO

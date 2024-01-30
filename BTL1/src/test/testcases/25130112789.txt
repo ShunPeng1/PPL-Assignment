@@ -1,2 +1,0 @@
-
-bool ncv[0.234e+13,94.458e-29] ## C ESxtkBRTz

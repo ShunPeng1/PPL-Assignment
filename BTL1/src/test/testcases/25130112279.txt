@@ -1,7 +1,0 @@
-
-## >nN}^*Um8Ctb8!2B|N
-func sYo5 (bool aP[6e+08])	return 8E29
-number lY[483] ## Q)VT-ezg2
-func nyM (dynamic SJ, dynamic XRF[2.667,10,1], bool mEY)
-	return "'"?'""
-

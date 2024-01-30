@@ -1,8 +1,0 @@
-
-var WW7 ## X#"J/kDDtaD.I
-bool Mp <- lMw ## c#j@:$ZI
-func X2 (bool yKaJ[80.178e61,581,129], dynamic KPh[3,34.685], number zL0w)
-	begin
-		continue
-		## [LiKA,gOe<wDD
-	end

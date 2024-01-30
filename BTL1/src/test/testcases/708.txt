@@ -1,8 +1,0 @@
-
-bool Xkc <- true
-func Amjb (dynamic uF, number J4VW[9.452E+17], var Nkji[8E32,988.103E+56,6.431])
-	return "I'"'"'"'""
-func wet (number sm[6.702E+40,31,75e73])	return
-
-number t_E ## =N#
-## x

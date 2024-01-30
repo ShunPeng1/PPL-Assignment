@@ -1,4 +1,0 @@
-
-dynamic n5[56.070,11.488E+18,764.242] <- 35.464
-number xCfJ[31.531E+45] <- false
-string ib ## {+:b>b?Ps.2@

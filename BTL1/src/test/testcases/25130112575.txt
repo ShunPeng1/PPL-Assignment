@@ -1,4 +1,0 @@
-
-func Aj (bool Dt, dynamic dEvX[9E25,58E97,976.208e03])	return "'"G_'""
-func JL ()	return 7.247
-

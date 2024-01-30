@@ -1,3 +1,0 @@
-
-string WjMM
-string VG[769E+21,18,0] ## /_ oz/

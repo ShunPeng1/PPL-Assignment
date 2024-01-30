@@ -1,8 +1,0 @@
-
-number SI9
-string HW
-string ZdG ## H
-dynamic Za <- xYEx ## 91f8TIm<`w"
-func oSEK (string Ty, bool suJH[660.219E+87,88E-12], number Bj1b[32.546])	begin
-		## Vd3=}vj#-;Ze
-	end

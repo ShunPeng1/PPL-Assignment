@@ -1,7 +1,0 @@
-
-## @zh3gQ+
-## $0
-bool j6
-func H6 ()
-	return csz
-

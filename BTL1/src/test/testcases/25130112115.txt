@@ -1,7 +1,0 @@
-
-func te ()
-	return W4
-## "
-## WS&g]X
-## O
-string R8 ## NQ

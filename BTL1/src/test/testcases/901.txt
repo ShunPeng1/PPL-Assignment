@@ -1,2 +1,0 @@
-
-string UDY[6,143E+59] ## pb@35UJ.

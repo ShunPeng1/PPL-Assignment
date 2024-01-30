@@ -1,7 +1,0 @@
-
-dynamic pR[209,7]
-func ThKC (number NRr9[9E+90,85], number uh4[27.033E+66,932,3.085E+04], dynamic Sh2P[65e61,31.392,3.527])
-	return true
-number PmV[2E+12] <- T96
-dynamic aa[95,334e-50,97E+42] ## W<t`e6p%{H6tb
-## P9>]MHZ$H4o>xxfP,k;

@@ -1,3 +1,0 @@
-
-func t3 ()	return
-

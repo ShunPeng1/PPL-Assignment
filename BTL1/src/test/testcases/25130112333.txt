@@ -1,7 +1,0 @@
-
-bool Qy[301,6,567.933] <- "'"c" ## 1z5Q~sDH]$=.>E0L3cl[
-number oZ <- "'"'"'"'"'"" ## Ra-
-func Pa ()	return false
-
-string es6l <- "'"'"'"r" ## 2.
-number Gac <- poo

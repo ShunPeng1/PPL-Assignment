@@ -1,3 +1,0 @@
-
-func LBGC (number CE, dynamic X8_[2E13,673.426,8e11], bool P5)	return 89.474
-

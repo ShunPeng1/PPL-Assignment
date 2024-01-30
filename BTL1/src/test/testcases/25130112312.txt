@@ -1,7 +1,0 @@
-
-func BE ()	return
-
-func sru1 (dynamic V6[9e76,5], dynamic MNv)	begin
-		## "SK
-		## )
-	end

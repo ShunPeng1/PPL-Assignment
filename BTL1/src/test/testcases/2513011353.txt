@@ -1,7 +1,0 @@
-
-func ss (bool Rd6, var IUgx, number ZLv[51.866,378.613])
-	begin
-		## &KHv1&etkqMm|FKin
-		## BLt){inh0]
-	end
-string JNqB

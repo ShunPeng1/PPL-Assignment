@@ -1,5 +1,0 @@
-
-string lub <- 160e+06
-## %@(8YOP;9/sm
-## _OL
-func OM ()	return

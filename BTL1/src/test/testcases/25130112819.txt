@@ -1,7 +1,0 @@
-
-func CdD (var kK1P[5.662,152.944E+59], bool LJM[16,685.745E-15], bool Lve8[667.183,12.362,458E77])
-	begin
-	end
-func rTx9 (bool yZu)
-	return
-

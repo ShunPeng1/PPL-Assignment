@@ -1,6 +1,0 @@
-
-func S2 (bool kl)
-	begin
-	end
-
-## Ir"I<7(1K{P

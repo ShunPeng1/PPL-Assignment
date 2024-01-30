@@ -1,2 +1,0 @@
-
-bool Z0 <- true

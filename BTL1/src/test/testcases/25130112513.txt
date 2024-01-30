@@ -1,3 +1,0 @@
-
-func Msc (var FvuA, dynamic jQg, number ZX[669E-46])
-	return

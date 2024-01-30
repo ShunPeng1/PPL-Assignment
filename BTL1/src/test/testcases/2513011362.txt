@@ -1,4 +1,0 @@
-
-func nZf ()
-	return 96E+60
-## |&%Zc3$

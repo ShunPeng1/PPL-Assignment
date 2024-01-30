@@ -1,4 +1,0 @@
-
-dynamic Szz[55e-34] <- "'"A.0"
-string Hs_[650.194e-09,138E-82,3.824E+47] ## O]LHsQ9]XyT4v>w
-func o_4 ()	return

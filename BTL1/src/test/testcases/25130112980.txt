@@ -1,2 +1,0 @@
-
-string nm40[5.695] <- OmtZ

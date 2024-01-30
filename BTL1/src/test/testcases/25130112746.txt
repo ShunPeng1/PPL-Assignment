@@ -1,6 +1,0 @@
-
-bool QG1[166.748e-03,82.579] <- "G'"'""
-func DtPL ()
-	return
-
-dynamic cVqa <- 7.636 ## 8>

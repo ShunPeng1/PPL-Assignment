@@ -1,5 +1,0 @@
-
-func DndH ()
-	return
-
-dynamic ly[1E-85,447e41]

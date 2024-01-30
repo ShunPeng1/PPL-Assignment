@@ -1,3 +1,0 @@
-
-func CRe (string bssF[227.459e+61,9.518], number QWlD, var rqRM)	return
-

@@ -1,9 +1,0 @@
-
-## <
-func HPr ()	begin
-		for hf0 until sV by 250e+69
-			begin
-				dynamic yxeQ[5.951,35.588e64,343E82]
-			end
-		## 6S<!`>P!
-	end

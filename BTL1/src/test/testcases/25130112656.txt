@@ -1,4 +1,0 @@
-
-func f_xH ()
-	return 73.325
-## JRpwG

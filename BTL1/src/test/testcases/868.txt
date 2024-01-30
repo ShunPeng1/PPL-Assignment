@@ -1,5 +1,0 @@
-
-## $NkV;1JzR#
-func R8 (number S8, string e0[780.498E-41,1.946,67.958])
-	return
-var SDxC[2e-98]

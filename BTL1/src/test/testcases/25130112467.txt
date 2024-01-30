@@ -1,3 +1,0 @@
-
-func V1 (number cMP[85.239,34,478.981], bool yr[4.230E35], string ZVVg[8.912])	return
-

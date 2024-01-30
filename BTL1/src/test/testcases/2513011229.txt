@@ -1,4 +1,0 @@
-
-dynamic Utz <- true ## p
-func rlEI (number FXJa[80.269E-35,7E-63,0.641E-05], var R85K[7])	return 4
-

@@ -1,2 +1,0 @@
-
-func xT9 (dynamic kY6M[6,612], string zK_, number Wy4[0.502,2.290])	return

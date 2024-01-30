@@ -1,9 +1,0 @@
-
-func x8Rd ()
-	begin
-	end
-
-bool k7[73.912] <- "="
-func P9o (number Xw9[59])
-	return
-

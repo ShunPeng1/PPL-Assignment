@@ -1,9 +1,0 @@
-
-func ZW8 (number HC)
-	return mil
-
-func FMjG ()
-	return
-
-string p5A1[9.998,365E-78]
-## L<mu~v{~
