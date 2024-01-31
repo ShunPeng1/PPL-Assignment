@@ -5,22 +5,37 @@ from AST import *
 class ASTGeneration(ZCodeVisitor):
 
         
-        # Visit a parse tree produced by ZCodeParser#program.
+    
+    # program						: newline_list? declaration_list newline_list? EOF;
     def visitProgram(self, ctx:ZCodeParser.ProgramContext):
-        return self.visitChildren(ctx)
+        return Program(self.visit(ctx.declaration_list()))
 
-
-    # Visit a parse tree produced by ZCodeParser#declaration_list.
+    
+    # declaration_list			: declaration declaration_list // Recursive
+	#						    | declaration; // At least one declaration
     def visitDeclaration_list(self, ctx:ZCodeParser.Declaration_listContext):
-        return self.visitChildren(ctx)
+        if ctx.declaration_list():
+            
+            return [self.visit(ctx.declaration())] + self.visit(ctx.declaration_list())
+        else:
+            return [self.visit(ctx.declaration())]
+        
+        
 
-
-    # Visit a parse tree produced by ZCodeParser#declaration.
+    # declaration					: function_declaration_statement newline_list?
+    #   							| variable_declaration_statement newline_list;     
     def visitDeclaration(self, ctx:ZCodeParser.DeclarationContext):
-        return self.visitChildren(ctx)
+        if ctx.function_declaration_statement():
+            return self.visit(ctx.function_declaration_statement())
+        elif ctx.variable_declaration_statement():
+            return self.visit(ctx.variable_declaration_statement())
+        else :
+            return None
+        
+        
 
-
-    # Visit a parse tree produced by ZCodeParser#local_statement_single.
+    
+    # local_statement_single		: newline_list? local_statement newline_list?;
     def visitLocal_statement_single(self, ctx:ZCodeParser.Local_statement_singleContext):
         return self.visitChildren(ctx)
 
@@ -50,39 +65,69 @@ class ASTGeneration(ZCodeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#variable_declaration_statement.
+    # variable_declaration_statement	: basic_variable_declaration | array_declaration ;
     def visitVariable_declaration_statement(self, ctx:ZCodeParser.Variable_declaration_statementContext):
-        return self.visitChildren(ctx)
+        if ctx.basic_variable_declaration():
+            return self.visit(ctx.basic_variable_declaration())
+        elif ctx.array_declaration():
+            return self.visit(ctx.array_declaration())
+        else :
+            return None
 
 
-    # Visit a parse tree produced by ZCodeParser#basic_variable_declaration.
+    # basic_variable_declaration	: VAR IDENTIFIER ASSIGN expression // Must have initial value
+	#	        					| (basic_type | DYNAMIC) IDENTIFIER (ASSIGN expression)?;
     def visitBasic_variable_declaration(self, ctx:ZCodeParser.Basic_variable_declarationContext):
-        return self.visitChildren(ctx)
+        expression = self.visit(ctx.expression()) if ctx.expression() else None
+        type = self.visit(ctx.basic_type()) if ctx.basic_type() else None
+        id = Id(ctx.IDENTIFIER().getText())
+        
+        return VarDecl(id, type, None, expression)
+        
 
-
-    # Visit a parse tree produced by ZCodeParser#basic_type.
+    # basic_type					: (NUMBER_TYPE | STRING_TYPE | BOOLEAN_TYPE) ;
     def visitBasic_type(self, ctx:ZCodeParser.Basic_typeContext):
-        return self.visitChildren(ctx)
+        if ctx.NUMBER_TYPE():
+            return NumberType()
+        elif ctx.STRING_TYPE():
+            return StringType()
+        elif ctx.BOOLEAN_TYPE():
+            return BoolType()
+        else :
+            return None
 
 
-    # Visit a parse tree produced by ZCodeParser#array_declaration.
+    # array_declaration			: basic_type IDENTIFIER array_dimension (ASSIGN array_value)?;
     def visitArray_declaration(self, ctx:ZCodeParser.Array_declarationContext):
-        return self.visitChildren(ctx)
+        type = self.visit(ctx.basic_type())
+        id = Id(ctx.IDENTIFIER().getText())
+        dimension = self.visit(ctx.array_dimension())
 
+        arrayType = ArrayType(dimension, type)
+        
+        value = self.visit(ctx.array_value()) if ctx.array_value() else None
+        
+        return VarDecl(id, arrayType, None, value)
+        
 
-    # Visit a parse tree produced by ZCodeParser#array_dimension.
+    # array_dimension 			: LBRACK array_dimension_list RBRACK;
     def visitArray_dimension(self, ctx:ZCodeParser.Array_dimensionContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.array_dimension_list())
+        
 
-
-    # Visit a parse tree produced by ZCodeParser#array_dimension_list.
+    # array_dimension_list 		: number_literal COMMA array_dimension_list // Recursive
+	#   						| number_literal;
     def visitArray_dimension_list(self, ctx:ZCodeParser.Array_dimension_listContext):
-        return self.visitChildren(ctx)
+        if ctx.array_dimension_list():
+            return [self.visit(ctx.number_literal())] + self.visit(ctx.array_dimension_list())
+        else:
+            return [self.visit(ctx.number_literal())]
 
 
-    # Visit a parse tree produced by ZCodeParser#array_value.
+    # array_value				: LBRACK array_value_expression_list RBRACK
+	#				    		| expression ;
     def visitArray_value(self, ctx:ZCodeParser.Array_valueContext):
-        return self.visitChildren(ctx)
+        return self.visitChildren(ctx) ## TODO
 
 
     # Visit a parse tree produced by ZCodeParser#array_value_expression_list.
