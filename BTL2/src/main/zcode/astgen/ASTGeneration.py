@@ -42,10 +42,16 @@ class ASTGeneration(ZCodeVisitor):
     # local_statement_list		    : (newline_list|local_statement) local_statement_list // Recursive
 	#	        					| ; // Empty statement list
     def visitLocal_statement_list(self, ctx:ZCodeParser.Local_statement_listContext):
-        if ctx.local_statement_list():
+        print("Local Statement List ", ctx.local_statement(), ctx.local_statement_list())
+        
+        if ctx.local_statement() and ctx.local_statement_list():
             return [self.visit(ctx.local_statement())] + self.visit(ctx.local_statement_list())
-        else:
+        elif ctx.local_statement_list():
+            return self.visit(ctx.local_statement_list())
+        elif ctx.local_statement():
             return [self.visit(ctx.local_statement())]
+        else:
+            return []
 
     # local_statement				: variable_declaration_statement NEWLINE
 	#       						| if_statement 
@@ -91,6 +97,7 @@ class ASTGeneration(ZCodeVisitor):
 
     # block_statement				: BEGIN newline_list local_statement_list END newline_list ;
     def visitBlock_statement(self, ctx:ZCodeParser.Block_statementContext):
+        print("Block Statement ", ctx.local_statement_list())
         return Block(self.visit(ctx.local_statement_list()))
 
     # variable_declaration_statement	: basic_variable_declaration | array_declaration ;
@@ -191,6 +198,7 @@ class ASTGeneration(ZCodeVisitor):
 	#	    				    	| newline_list? block_statement
 	#		    		    		| newline;
     def visitFunction_body(self, ctx:ZCodeParser.Function_bodyContext):
+        print("Function Body ", ctx.return_statement(), ctx.block_statement(), ctx.newline())
         if ctx.return_statement():
             return self.visit(ctx.return_statement())
         elif ctx.block_statement():
@@ -226,6 +234,8 @@ class ASTGeneration(ZCodeVisitor):
         type = self.visit(ctx.basic_type())
         id = Id(ctx.IDENTIFIER().getText())
 
+        print("Basic Parameter Declaration ", ctx.basic_type(), ctx.IDENTIFIER())
+
         return VarDecl(id, type, None, None)
 
     # array_parameter_declaration	: basic_type IDENTIFIER array_dimension;
@@ -234,6 +244,8 @@ class ASTGeneration(ZCodeVisitor):
         id = Id(ctx.IDENTIFIER().getText())
         dimension = self.visit(ctx.array_dimension())
         arrayType = ArrayType(dimension, type)
+
+        print("Array Parameter Declaration ", ctx.basic_type(), ctx.IDENTIFIER(), ctx.array_dimension(), arrayType)
 
         return VarDecl(id, arrayType, None, None)
 

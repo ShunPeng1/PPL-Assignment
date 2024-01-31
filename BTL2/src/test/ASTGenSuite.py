@@ -119,11 +119,11 @@ class ASTGenSuite(unittest.TestCase):
                 return
         """
         expect = str(Program([
-                    FuncDecl(Id("main"), [VarDecl("a", NumberType())], None),
-                    FuncDecl(Id("main"), [VarDecl("a", NumberType()), 
-                                          VarDecl("a", StringType()), 
-                                          VarDecl("a", ArrayType([2], BoolType()))], None),
-                    FuncDecl(Id("main"), [VarDecl("Votien", ArrayType([1, 2], NumberType()))], Return(None))
+                    FuncDecl(Id("main"), [VarDecl(Id("a"), NumberType())], None),
+                    FuncDecl(Id("main"), [VarDecl(Id("a"), NumberType()), 
+                                          VarDecl(Id("a"), StringType()), 
+                                          VarDecl(Id("a"), ArrayType([2], BoolType()))], None),
+                    FuncDecl(Id("main"), [VarDecl(Id("Votien"), ArrayType([1, 2], NumberType()))], Return(None))
                 ]))
         # print(expect)
         self.assertTrue(TestAST.test(input, expect, 311))
@@ -422,4 +422,6 @@ class ASTGenSuite(unittest.TestCase):
         ]))
         #print(expect)
         self.assertTrue(TestAST.test(input, expect, 330))    
+        
+        
         
