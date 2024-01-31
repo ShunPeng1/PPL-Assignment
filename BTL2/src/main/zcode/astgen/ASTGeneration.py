@@ -22,11 +22,11 @@ class ASTGeneration(ZCodeVisitor):
         
         
 
-    # declaration					: function_declaration_statement newline_list?
+    # declaration					: function_declaration newline_list?
     #   							| variable_declaration_statement newline_list;     
     def visitDeclaration(self, ctx:ZCodeParser.DeclarationContext):
-        if ctx.function_declaration_statement():
-            return self.visit(ctx.function_declaration_statement())
+        if ctx.function_declaration():
+            return self.visit(ctx.function_declaration())
         elif ctx.variable_declaration_statement():
             return self.visit(ctx.variable_declaration_statement())
         else :
@@ -97,7 +97,7 @@ class ASTGeneration(ZCodeVisitor):
             return None
 
 
-    # array_declaration			: basic_type IDENTIFIER array_dimension (ASSIGN array_value)?;
+    # array_declaration			: basic_type IDENTIFIER array_dimension (ASSIGN expression)?;
     def visitArray_declaration(self, ctx:ZCodeParser.Array_declarationContext):
         type = self.visit(ctx.basic_type())
         id = Id(ctx.IDENTIFIER().getText())
@@ -105,7 +105,7 @@ class ASTGeneration(ZCodeVisitor):
 
         arrayType = ArrayType(dimension, type)
         
-        value = self.visit(ctx.array_value()) if ctx.array_value() else None
+        value = self.visit(ctx.expression()) if ctx.expression() else None
         
         return VarDecl(id, arrayType, None, value)
         
@@ -124,14 +124,8 @@ class ASTGeneration(ZCodeVisitor):
             return [self.visit(ctx.number_literal())]
 
 
-    # array_value				: LBRACK array_value_expression_list RBRACK
-	#				    		| expression ;
-    def visitArray_value(self, ctx:ZCodeParser.Array_valueContext):
-        return self.visitChildren(ctx) ## TODO
-
-
-    # Visit a parse tree produced by ZCodeParser#array_value_expression_list.
-    def visitArray_value_expression_list(self, ctx:ZCodeParser.Array_value_expression_listContext):
+    # Visit a parse tree produced by ZCodeParser#array_dimension_list.
+    def visitArray_dimension_list(self, ctx:ZCodeParser.Array_dimension_listContext):
         return self.visitChildren(ctx)
 
 
@@ -140,18 +134,8 @@ class ASTGeneration(ZCodeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#basic_variable_assignment.
-    def visitBasic_variable_assignment(self, ctx:ZCodeParser.Basic_variable_assignmentContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ZCodeParser#array_assignment.
-    def visitArray_assignment(self, ctx:ZCodeParser.Array_assignmentContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by ZCodeParser#function_declaration_statement.
-    def visitFunction_declaration_statement(self, ctx:ZCodeParser.Function_declaration_statementContext):
+    # Visit a parse tree produced by ZCodeParser#function_declaration.
+    def visitFunction_declaration(self, ctx:ZCodeParser.Function_declarationContext):
         return self.visitChildren(ctx)
 
 
@@ -170,8 +154,8 @@ class ASTGeneration(ZCodeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#parameter_declaration_statement.
-    def visitParameter_declaration_statement(self, ctx:ZCodeParser.Parameter_declaration_statementContext):
+    # Visit a parse tree produced by ZCodeParser#parameter_declaration.
+    def visitParameter_declaration(self, ctx:ZCodeParser.Parameter_declarationContext):
         return self.visitChildren(ctx)
 
 
@@ -300,13 +284,13 @@ class ASTGeneration(ZCodeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#array_access.
-    def visitArray_access(self, ctx:ZCodeParser.Array_accessContext):
+    # Visit a parse tree produced by ZCodeParser#element_expression.
+    def visitElement_expression(self, ctx:ZCodeParser.Element_expressionContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#array_index_access.
-    def visitArray_index_access(self, ctx:ZCodeParser.Array_index_accessContext):
+    # Visit a parse tree produced by ZCodeParser#index_operator.
+    def visitIndex_operator(self, ctx:ZCodeParser.Index_operatorContext):
         return self.visitChildren(ctx)
 
 
@@ -348,4 +332,3 @@ class ASTGeneration(ZCodeVisitor):
     # Visit a parse tree produced by ZCodeParser#boolean_literal.
     def visitBoolean_literal(self, ctx:ZCodeParser.Boolean_literalContext):
         return self.visitChildren(ctx)
-    
