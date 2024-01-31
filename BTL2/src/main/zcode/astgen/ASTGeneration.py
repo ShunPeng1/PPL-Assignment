@@ -89,7 +89,7 @@ class ASTGeneration(ZCodeVisitor):
 
     # block_statement				: BEGIN newline_list local_statement_list END newline_list ;
     def visitBlock_statement(self, ctx:ZCodeParser.Block_statementContext):
-        return self.visit(ctx.local_statement_list())
+        return Block(self.visit(ctx.local_statement_list()))
 
     # variable_declaration_statement	: basic_variable_declaration | array_declaration ;
     def visitVariable_declaration_statement(self, ctx:ZCodeParser.Variable_declaration_statementContext):
@@ -158,10 +158,19 @@ class ASTGeneration(ZCodeVisitor):
             return [self.visit(ctx.number_literal())]
 
 
-    # Visit a parse tree produced by ZCodeParser#assignment_statement.
+    # assignment_statement		: IDENTIFIER element_expression? ASSIGN expression;
     def visitAssignment_statement(self, ctx:ZCodeParser.Assignment_statementContext):
-        return self.visitChildren(ctx)
+        lhs = Expr
+        id = Id(ctx.IDENTIFIER().getText())
+        
+        if ctx.element_expression():
+            lhs = ArrayCell(id, self.visit(ctx.element_expression()))
+        else:
+            lhs = id
 
+        expression = self.visit(ctx.expression())
+
+        return Assign(lhs, expression)
 
     # function_declaration		: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN function_body ; // Declaration onlu or body definition might be empty
     def visitFunction_declaration(self, ctx:ZCodeParser.Function_declarationContext):
@@ -416,7 +425,7 @@ class ASTGeneration(ZCodeVisitor):
         else:
             arr = None
             
-        return ArrayLiteral(arr, self.visit(ctx.element_expression()))
+        return ArrayCell(arr, self.visit(ctx.element_expression()))
 
     # element_expression			: LBRACK index_operator RBRACK; 
     def visitElement_expression(self, ctx:ZCodeParser.Element_expressionContext):
