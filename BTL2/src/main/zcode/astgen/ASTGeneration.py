@@ -418,15 +418,18 @@ class ASTGeneration(ZCodeVisitor):
     # TODO : Check again
     def visitArray_literal(self, ctx:ZCodeParser.Array_literalContext):
         arr = Expr
+        value = self.visit(ctx.element_expression())
+
         if ctx.function_call_statement():
             arr = self.visit(ctx.function_call_statement())
+            return ArrayCell(arr, value)
         elif ctx.IDENTIFIER():
             arr = Id(ctx.IDENTIFIER().getText())
+            return ArrayCell(arr, value)
         else:
-            arr = None
+            return ArrayLiteral(value)
             
-        return ArrayCell(arr, self.visit(ctx.element_expression()))
-
+        
     # element_expression			: LBRACK index_operator RBRACK; 
     def visitElement_expression(self, ctx:ZCodeParser.Element_expressionContext):
         return self.visit(ctx.index_operator())
