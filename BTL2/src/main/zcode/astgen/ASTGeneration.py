@@ -275,6 +275,13 @@ class ASTGeneration(ZCodeVisitor):
 
         return CallStmt(id, argument)
 
+    # function_call_expression	: IDENTIFIER LPAREN argument_part? RPAREN ;
+    def visitFunction_call_expression(self, ctx:ZCodeParser.Function_call_expressionContext):
+        id = Id(ctx.IDENTIFIER().getText())
+        argument = self.visit(ctx.argument_part()) if ctx.argument_part() else None
+
+        return CallExpr(id, argument)
+
     # argument_part		    		: expression COMMA argument_part // Recursive
 	#   				    		| expression;
     def visitArgument_part(self, ctx:ZCodeParser.Argument_partContext):
@@ -405,8 +412,8 @@ class ASTGeneration(ZCodeVisitor):
     def visitOperand(self, ctx:ZCodeParser.OperandContext):
         if ctx.literal():
             return self.visit(ctx.literal())
-        elif ctx.function_call_statement():
-            return self.visit(ctx.function_call_statement())
+        elif ctx.function_call_expression():
+            return self.visit(ctx.function_call_expression())
         elif ctx.IDENTIFIER():
             return Id(ctx.IDENTIFIER().getText())
         elif ctx.array_literal():
@@ -420,8 +427,8 @@ class ASTGeneration(ZCodeVisitor):
         arr = Expr
         value = self.visit(ctx.element_expression())
 
-        if ctx.function_call_statement():
-            arr = self.visit(ctx.function_call_statement())
+        if ctx.function_call_expression():
+            arr = self.visit(ctx.function_call_expression())
             return ArrayCell(arr, value)
         elif ctx.IDENTIFIER():
             arr = Id(ctx.IDENTIFIER().getText())

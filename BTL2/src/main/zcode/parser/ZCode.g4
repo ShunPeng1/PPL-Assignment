@@ -109,6 +109,7 @@ branch_body					: local_statement_single;
 
 // Function call
 function_call_statement		: IDENTIFIER LPAREN argument_part? RPAREN ;
+function_call_expression	: IDENTIFIER LPAREN argument_part? RPAREN ;
 argument_part				: expression COMMA argument_part // Recursive
 							| expression;
 
@@ -150,12 +151,12 @@ parenthesis_expression		: LPAREN expression RPAREN // Parenthesis
 							| operand; // Next precedence
 
 operand						: literal 
-							| function_call_statement 
+							| function_call_expression 
 							| IDENTIFIER 
 							| array_literal;
 
 // Array access
-array_literal 				: (function_call_statement | IDENTIFIER)? element_expression ; // Unary Postfix Left Associative
+array_literal 				: (function_call_expression | IDENTIFIER)? element_expression ; // Unary Postfix Left Associative
 						
 element_expression			: LBRACK index_operator RBRACK; 
 
@@ -191,7 +192,7 @@ COMMENT			: '##' ~[\n\r\f]* -> skip;
 
 NEWLINE 		: ('\r\n'|'\n')
 {
-self.text = self.text.replace('\r', '\n')
+self.text = self.text.replace('\r', '')
 };
 
 WHITESPACE		: [ \t\b\f]+ -> skip ; // skip spaces, tabs, newlines

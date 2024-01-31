@@ -312,7 +312,7 @@ class ZCodeLexer(Lexer):
     def NEWLINE_action(self, localctx:RuleContext , actionIndex:int):
         if actionIndex == 0:
 
-            self.text = self.text.replace('\r', '\n')
+            self.text = self.text.replace('\r', '')
 
      
 
