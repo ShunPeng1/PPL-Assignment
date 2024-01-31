@@ -1,5 +1,7 @@
 grammar ZCode;
-
+// Student : Banh Tan Thuan
+// Student ID : 2153011
+// Class : CC03
 @lexer::header {
 from lexererr import *
 }
@@ -18,7 +20,7 @@ declaration_list			: declaration declaration_list // Recursive
 							| declaration; // At least one declaration
 							
 
-declaration					: function_declaration_statement newline_list?
+declaration					: function_declaration newline_list?
 							| variable_declaration_statement newline_list; 
 
 // Local statement
@@ -42,10 +44,10 @@ local_statement				: variable_declaration_statement NEWLINE
 
 // Ignore statement
 							
-newline_list		: newline newline_list // Recursive
+newline_list				: newline newline_list // Recursive
 							| newline;
 
-newline			: NEWLINE;
+newline						: NEWLINE;
 
 
 // Scope
@@ -61,35 +63,19 @@ basic_type					: (NUMBER_TYPE | STRING_TYPE | BOOLEAN_TYPE) ;
 
 // Array
 
-array_declaration			: basic_type IDENTIFIER array_dimension (ASSIGN array_value)?;
+array_declaration			: basic_type IDENTIFIER array_dimension (ASSIGN expression)?;
 
 array_dimension 			: LBRACK array_dimension_list RBRACK;
 array_dimension_list 		: number_literal COMMA array_dimension_list // Recursive
 							| number_literal;
 
 
-array_value					: LBRACK array_value_expression_list RBRACK
-							//| LBRACK RBRACK // Empty array
-							| expression
-							;
-
-array_value_expression_list	: expression COMMA array_value_expression_list // Recursive
-							//| array_value COMMA array_value
-							| array_value
-							| expression;
-
-
-
 // Assignment
 
-assignment_statement		: basic_variable_assignment
-							| array_assignment;
-basic_variable_assignment	: IDENTIFIER ASSIGN expression ;
-array_assignment 			: array_access ASSIGN expression ;
-
+assignment_statement		: IDENTIFIER element_expression? ASSIGN expression;
 
 // Function 
-function_declaration_statement	: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN function_body ; // Declaration onlu or body definition might be empty
+function_declaration		: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN function_body ; // Declaration onlu or body definition might be empty
 
 function_body			   	: newline_list? return_statement NEWLINE
 							| newline_list? block_statement
@@ -98,11 +84,11 @@ function_body			   	: newline_list? return_statement NEWLINE
 return_statement			: RETURN expression?;
 
 // Parameter
-parameter_part_recursive    : parameter_declaration_statement COMMA parameter_part_recursive // Recursive
-							| parameter_declaration_statement;
+parameter_part_recursive    : parameter_declaration COMMA parameter_part_recursive // Recursive
+							| parameter_declaration;
 							
-parameter_declaration_statement	: basic_parameter_declaration
-								| array_parameter_declaration;
+parameter_declaration		: basic_parameter_declaration
+							| array_parameter_declaration;
 basic_parameter_declaration	: basic_type IDENTIFIER;
 array_parameter_declaration	: basic_type IDENTIFIER array_dimension;
 
@@ -169,12 +155,11 @@ operand						: literal
 							| array_literal;
 
 // Array access
-array_literal 				: (function_call_statement | IDENTIFIER)? LBRACK array_index_access RBRACK ; // Unary Postfix Left Associative
-							
+array_literal 				: (function_call_statement | IDENTIFIER)? element_expression ; // Unary Postfix Left Associative
+						
+element_expression			: LBRACK index_operator RBRACK; 
 
-array_access				: IDENTIFIER LBRACK array_index_access RBRACK; // Unary Postfix Left Associative
-		
-array_index_access			: expression COMMA array_index_access // Recursive
+index_operator				: expression COMMA index_operator // Recursive
 							| expression;
 
 // Expression operator

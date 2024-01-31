@@ -1,5 +1,7 @@
 grammar ZCode;
-
+// Student : Banh Tan Thuan
+// Student ID : 2153011
+// Class : CC03
 @lexer::header {
 from lexererr import *
 }
