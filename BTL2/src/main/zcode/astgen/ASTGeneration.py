@@ -32,38 +32,64 @@ class ASTGeneration(ZCodeVisitor):
         else :
             return None
         
-        
-
     
     # local_statement_single		: newline_list? local_statement newline_list?;
     def visitLocal_statement_single(self, ctx:ZCodeParser.Local_statement_singleContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.local_statement())
 
-
-    # Visit a parse tree produced by ZCodeParser#local_statement_list.
+    # local_statement_list		    : (newline_list|local_statement) local_statement_list // Recursive
+	#	        					| ; // Empty statement list
     def visitLocal_statement_list(self, ctx:ZCodeParser.Local_statement_listContext):
-        return self.visitChildren(ctx)
+        if ctx.local_statement_list():
+            return [self.visit(ctx.local_statement())] + self.visit(ctx.local_statement_list())
+        else:
+            return [self.visit(ctx.local_statement())]
 
-
-    # Visit a parse tree produced by ZCodeParser#local_statement.
+    # local_statement				: variable_declaration_statement NEWLINE
+	#       						| if_statement 
+	#       						| function_call_statement NEWLINE
+	#       						| for_statement 
+	#       						| break_statement NEWLINE
+	#       						| continue_statement NEWLINE
+	#       						| block_statement
+	#       						| assignment_statement NEWLINE
+	#       						| return_statement NEWLINE;
     def visitLocal_statement(self, ctx:ZCodeParser.Local_statementContext):
-        return self.visitChildren(ctx)
+        if ctx.variable_declaration_statement():
+            return self.visit(ctx.variable_declaration_statement())
+        elif ctx.if_statement():
+            return self.visit(ctx.if_statement())
+        elif ctx.function_call_statement():
+            return self.visit(ctx.function_call_statement())
+        elif ctx.for_statement():
+            return self.visit(ctx.for_statement())
+        elif ctx.break_statement():
+            return self.visit(ctx.break_statement())
+        elif ctx.continue_statement():
+            return self.visit(ctx.continue_statement())
+        elif ctx.block_statement():
+            return self.visit(ctx.block_statement())
+        elif ctx.assignment_statement():
+            return self.visit(ctx.assignment_statement())
+        elif ctx.return_statement():
+            return self.visit(ctx.return_statement())
+        else :
+            return None
 
 
     # Visit a parse tree produced by ZCodeParser#newline_list.
     def visitNewline_list(self, ctx:ZCodeParser.Newline_listContext):
-        return self.visitChildren(ctx)
+        return None
 
 
     # Visit a parse tree produced by ZCodeParser#newline.
     def visitNewline(self, ctx:ZCodeParser.NewlineContext):
-        return self.visitChildren(ctx)
+        return None
 
 
-    # Visit a parse tree produced by ZCodeParser#block_statement.
+    # block_statement				: BEGIN newline_list local_statement_list END newline_list ;
     def visitBlock_statement(self, ctx:ZCodeParser.Block_statementContext):
-        return self.visitChildren(ctx)
-
+        return self.visit(ctx.local_statement_list())
 
     # variable_declaration_statement	: basic_variable_declaration | array_declaration ;
     def visitVariable_declaration_statement(self, ctx:ZCodeParser.Variable_declaration_statementContext):
@@ -82,7 +108,15 @@ class ASTGeneration(ZCodeVisitor):
         type = self.visit(ctx.basic_type()) if ctx.basic_type() else None
         id = Id(ctx.IDENTIFIER().getText())
         
-        return VarDecl(id, type, None, expression)
+        modifier = str
+        if ctx.DYNAMIC():
+            modifier = ctx.DYNAMIC().getText()
+        elif ctx.VAR():
+            modifier = ctx.VAR().getText()
+        else :
+            modifier = None
+        
+        return VarDecl(id, type, modifier, expression)
         
 
     # basic_type					: (NUMBER_TYPE | STRING_TYPE | BOOLEAN_TYPE) ;
@@ -124,211 +158,348 @@ class ASTGeneration(ZCodeVisitor):
             return [self.visit(ctx.number_literal())]
 
 
-    # Visit a parse tree produced by ZCodeParser#array_dimension_list.
-    def visitArray_dimension_list(self, ctx:ZCodeParser.Array_dimension_listContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by ZCodeParser#assignment_statement.
     def visitAssignment_statement(self, ctx:ZCodeParser.Assignment_statementContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by ZCodeParser#function_declaration.
+    # function_declaration		: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN function_body ; // Declaration onlu or body definition might be empty
     def visitFunction_declaration(self, ctx:ZCodeParser.Function_declarationContext):
-        return self.visitChildren(ctx)
+        id = Id(ctx.IDENTIFIER().getText())
+        parameter = self.visit(ctx.parameter_part_recursive()) if ctx.parameter_part_recursive() else None
+        body = self.visit(ctx.function_body()) if ctx.function_body() else None
+        
+        return FuncDecl(id, parameter, body)
 
-
-    # Visit a parse tree produced by ZCodeParser#function_body.
+    # function_body			   	    : newline_list? return_statement NEWLINE
+	#	    				    	| newline_list? block_statement
+	#		    		    		| newline;
     def visitFunction_body(self, ctx:ZCodeParser.Function_bodyContext):
-        return self.visitChildren(ctx)
+        if ctx.return_statement():
+            return self.visit(ctx.return_statement())
+        elif ctx.block_statement():
+            return self.visit(ctx.block_statement())
+        else :
+            return None
 
-
-    # Visit a parse tree produced by ZCodeParser#return_statement.
+    # return_statement		    	: RETURN expression?;
     def visitReturn_statement(self, ctx:ZCodeParser.Return_statementContext):
-        return self.visitChildren(ctx)
+        expression = self.visit(ctx.expression()) if ctx.expression() else None
+        return Return(expression)
 
-
-    # Visit a parse tree produced by ZCodeParser#parameter_part_recursive.
+    # parameter_part_recursive      : parameter_declaration COMMA parameter_part_recursive // Recursive
+	#                               | parameter_declaration;
     def visitParameter_part_recursive(self, ctx:ZCodeParser.Parameter_part_recursiveContext):
-        return self.visitChildren(ctx)
+        if ctx.parameter_part_recursive():
+            return [self.visit(ctx.parameter_declaration())] + self.visit(ctx.parameter_part_recursive())
+        else:
+            return [self.visit(ctx.parameter_declaration())]
 
-
-    # Visit a parse tree produced by ZCodeParser#parameter_declaration.
+    # parameter_declaration	    	: basic_parameter_declaration
+	#   		    				| array_parameter_declaration;
     def visitParameter_declaration(self, ctx:ZCodeParser.Parameter_declarationContext):
-        return self.visitChildren(ctx)
+        if ctx.basic_parameter_declaration():
+            return self.visit(ctx.basic_parameter_declaration())
+        elif ctx.array_parameter_declaration():
+            return self.visit(ctx.array_parameter_declaration())
+        else :
+            return None
 
-
-    # Visit a parse tree produced by ZCodeParser#basic_parameter_declaration.
+    # basic_parameter_declaration	: basic_type IDENTIFIER;
     def visitBasic_parameter_declaration(self, ctx:ZCodeParser.Basic_parameter_declarationContext):
-        return self.visitChildren(ctx)
+        type = self.visit(ctx.basic_type())
+        id = Id(ctx.IDENTIFIER().getText())
 
+        return VarDecl(id, type, None, None)
 
-    # Visit a parse tree produced by ZCodeParser#array_parameter_declaration.
+    # array_parameter_declaration	: basic_type IDENTIFIER array_dimension;
     def visitArray_parameter_declaration(self, ctx:ZCodeParser.Array_parameter_declarationContext):
-        return self.visitChildren(ctx)
+        type = self.visit(ctx.basic_type())
+        id = Id(ctx.IDENTIFIER().getText())
+        dimension = self.visit(ctx.array_dimension())
+        arrayType = ArrayType(dimension, type)
 
+        return VarDecl(id, arrayType, None, None)
 
-    # Visit a parse tree produced by ZCodeParser#if_statement.
+    # if_statement				: IF branch_condition branch_body 
+	#							(elif_recursive_statement)?
+	#							(else_statement)? ;
     def visitIf_statement(self, ctx:ZCodeParser.If_statementContext):
-        return self.visitChildren(ctx)
+        condition = self.visit(ctx.branch_condition())
+        body = self.visit(ctx.branch_body())
+        elifStmt = self.visit(ctx.elif_recursive_statement()) if ctx.elif_recursive_statement() else None
+        elseStmt = self.visit(ctx.else_statement()) if ctx.else_statement() else None
 
+        return If(condition, body, elifStmt, elseStmt) ## TODO : Check again
 
-    # Visit a parse tree produced by ZCodeParser#elif_recursive_statement.
+    # elif_recursive_statement	: elif_statement elif_recursive_statement // Recursive
+	#   						| elif_statement;
     def visitElif_recursive_statement(self, ctx:ZCodeParser.Elif_recursive_statementContext):
-        return self.visitChildren(ctx)
+        if ctx.elif_recursive_statement():
+            return [self.visit(ctx.elif_statement())] + self.visit(ctx.elif_recursive_statement())
+        else:
+            return [self.visit(ctx.elif_statement())]
 
-
-    # Visit a parse tree produced by ZCodeParser#elif_statement.
+    # elif_statement				: ELIF branch_condition branch_body;
     def visitElif_statement(self, ctx:ZCodeParser.Elif_statementContext):
-        return self.visitChildren(ctx)
+        condition = self.visit(ctx.branch_condition())
+        body = self.visit(ctx.branch_body())
 
+        return (condition, body)
 
-    # Visit a parse tree produced by ZCodeParser#else_statement.
+    # else_statement				: ELSE branch_body;
     def visitElse_statement(self, ctx:ZCodeParser.Else_statementContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.branch_body())
 
-
-    # Visit a parse tree produced by ZCodeParser#branch_condition.
+    # branch_condition		    	: LPAREN expression RPAREN;
     def visitBranch_condition(self, ctx:ZCodeParser.Branch_conditionContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.expression())
 
-
-    # Visit a parse tree produced by ZCodeParser#branch_body.
+    # branch_body					: local_statement_single;
     def visitBranch_body(self, ctx:ZCodeParser.Branch_bodyContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.local_statement_single())
 
-
-    # Visit a parse tree produced by ZCodeParser#function_call_statement.
+    # function_call_statement		: IDENTIFIER LPAREN argument_part? RPAREN ;
     def visitFunction_call_statement(self, ctx:ZCodeParser.Function_call_statementContext):
-        return self.visitChildren(ctx)
+        id = Id(ctx.IDENTIFIER().getText())
+        argument = self.visit(ctx.argument_part()) if ctx.argument_part() else None
 
+        return CallStmt(id, argument)
 
-    # Visit a parse tree produced by ZCodeParser#argument_part.
+    # argument_part		    		: expression COMMA argument_part // Recursive
+	#   				    		| expression;
     def visitArgument_part(self, ctx:ZCodeParser.Argument_partContext):
-        return self.visitChildren(ctx)
+        if ctx.argument_part():
+            return [self.visit(ctx.expression())] + self.visit(ctx.argument_part())
+        else:
+            return [self.visit(ctx.expression())]
 
-
-    # Visit a parse tree produced by ZCodeParser#for_statement.
+    # for_statement				: FOR IDENTIFIER UNTIL expression BY expression loop_body;
     def visitFor_statement(self, ctx:ZCodeParser.For_statementContext):
-        return self.visitChildren(ctx)
+        id = Id(ctx.IDENTIFIER().getText())
+        condition = self.visit(ctx.expression(0))
+        update = self.visit(ctx.expression(1))
+        body = self.visit(ctx.loop_body())
 
+        return For(id, condition, update, body)
 
-    # Visit a parse tree produced by ZCodeParser#loop_body.
+    # loop_body					: local_statement_single;
     def visitLoop_body(self, ctx:ZCodeParser.Loop_bodyContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.local_statement_single())
 
-
-    # Visit a parse tree produced by ZCodeParser#break_statement.
+    # break_statement				: BREAK;
     def visitBreak_statement(self, ctx:ZCodeParser.Break_statementContext):
-        return self.visitChildren(ctx)
+        return Break()
 
-
-    # Visit a parse tree produced by ZCodeParser#continue_statement.
+    # continue_statement			: CONTINUE;
     def visitContinue_statement(self, ctx:ZCodeParser.Continue_statementContext):
-        return self.visitChildren(ctx)
+        return Continue()
 
-
-    # Visit a parse tree produced by ZCodeParser#expression.
+    # expression 					: string_expression; // Highest precedence
     def visitExpression(self, ctx:ZCodeParser.ExpressionContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.string_expression())
 
 
-    # Visit a parse tree produced by ZCodeParser#string_expression.
+    # string_expression 			: relational_expression CONCATE relational_expression // Binary Infix None Associative
+	#       						| relational_expression; // Next precedence
     def visitString_expression(self, ctx:ZCodeParser.String_expressionContext):
-        return self.visitChildren(ctx)
+        if ctx.CONCATE():
+            left = self.visit(ctx.relational_expression(0))
+            right = self.visit(ctx.relational_expression(1))
+            op = ctx.CONCATE().getText()
+            return BinaryOp(op, left, right)    
+        else:
+            return self.visit(ctx.relational_expression(0))
 
 
-    # Visit a parse tree produced by ZCodeParser#relational_expression.
+    # relational_expression	    	: logical_expression relational_operator logical_expression // Binary Infix None Associative
+	#   						    | logical_expression; // Next precedence
     def visitRelational_expression(self, ctx:ZCodeParser.Relational_expressionContext):
-        return self.visitChildren(ctx)
+        if ctx.relational_operator():
+            left = self.visit(ctx.logical_expression(0))
+            right = self.visit(ctx.logical_expression(1))
+            op = self.visit(ctx.relational_operator())
+            return BinaryOp(op, left, right)
+        else:
+            return self.visit(ctx.logical_expression(0))
+        
 
-
-    # Visit a parse tree produced by ZCodeParser#logical_expression.
+    # logical_expression			: logical_expression logic_operator adding_expression // Binary Infix Left Associative
+	#       						| adding_expression; // Next precedence
     def visitLogical_expression(self, ctx:ZCodeParser.Logical_expressionContext):
-        return self.visitChildren(ctx)
+        if ctx.logic_operator():
+            left = self.visit(ctx.logical_expression())
+            right = self.visit(ctx.adding_expression())
+            op = self.visit(ctx.logic_operator())
+            return BinaryOp(op, left, right)
+        else:
+            return self.visit(ctx.adding_expression())
 
 
-    # Visit a parse tree produced by ZCodeParser#adding_expression.
+    # adding_expression			: adding_expression additive_operator multiplying_expression // Binary Infix Left Associative
+	#   						| multiplying_expression; // Next precedence
     def visitAdding_expression(self, ctx:ZCodeParser.Adding_expressionContext):
-        return self.visitChildren(ctx)
+        if ctx.additive_operator():
+            left = self.visit(ctx.adding_expression())
+            right = self.visit(ctx.multiplying_expression())
+            op = self.visit(ctx.additive_operator())
+            return BinaryOp(op, left, right)
+        else:
+            return self.visit(ctx.multiplying_expression())
+        
 
-
-    # Visit a parse tree produced by ZCodeParser#multiplying_expression.
+    # multiplying_expression		: multiplying_expression multiplicative_operator negation_expression // Binary Infix Left Associative
+	#       						| negation_expression; // Next precedence
     def visitMultiplying_expression(self, ctx:ZCodeParser.Multiplying_expressionContext):
-        return self.visitChildren(ctx)
+        if ctx.multiplicative_operator():
+            left = self.visit(ctx.multiplying_expression())
+            right = self.visit(ctx.negation_expression())
+            op = self.visit(ctx.multiplicative_operator())
+            return BinaryOp(op, left, right)
+        else:
+            return self.visit(ctx.negation_expression())
+        
 
-
-    # Visit a parse tree produced by ZCodeParser#negation_expression.
+    # negation_expression			: NOT negation_expression // Unary Prefix Right Associative
+	#       						| sign_expression; // Next precedence
     def visitNegation_expression(self, ctx:ZCodeParser.Negation_expressionContext):
-        return self.visitChildren(ctx)
+        if ctx.NOT():
+            operand = self.visit(ctx.negation_expression())
+            op = ctx.NOT().getText()
+            return UnaryOp(op, operand)
+        else:
+            return self.visit(ctx.sign_expression())
+        
 
-
-    # Visit a parse tree produced by ZCodeParser#sign_expression.
+    # sign_expression				: additive_operator sign_expression // Unary Prefix Right Associative
+	#       						| parenthesis_expression; // Next precedence
     def visitSign_expression(self, ctx:ZCodeParser.Sign_expressionContext):
-        return self.visitChildren(ctx)
+        if ctx.additive_operator():
+            operand = self.visit(ctx.sign_expression())
+            op = ctx.additive_operator().getText()
+            return UnaryOp(op, operand)
+        else:
+            return self.visit(ctx.parenthesis_expression())
 
-
-    # Visit a parse tree produced by ZCodeParser#parenthesis_expression.
+    # parenthesis_expression		: LPAREN expression RPAREN // Parenthesis
+	#       						| operand; // Next precedence
     def visitParenthesis_expression(self, ctx:ZCodeParser.Parenthesis_expressionContext):
-        return self.visitChildren(ctx)
+        if ctx.expression():
+            return self.visit(ctx.expression())
+        else:
+            return self.visit(ctx.operand())
 
-
-    # Visit a parse tree produced by ZCodeParser#operand.
+    # operand						: literal 
+	#	    		    			| function_call_statement 
+	#		        				| IDENTIFIER 
+	#					        	| array_literal;
     def visitOperand(self, ctx:ZCodeParser.OperandContext):
-        return self.visitChildren(ctx)
+        if ctx.literal():
+            return self.visit(ctx.literal())
+        elif ctx.function_call_statement():
+            return self.visit(ctx.function_call_statement())
+        elif ctx.IDENTIFIER():
+            return Id(ctx.IDENTIFIER().getText())
+        elif ctx.array_literal():
+            return self.visit(ctx.array_literal())
+        else :
+            return None
 
-
-    # Visit a parse tree produced by ZCodeParser#array_literal.
+    # array_literal 				: (function_call_statement | IDENTIFIER)? element_expression ; // Unary Postfix Left Associative
+    # TODO : Check again
     def visitArray_literal(self, ctx:ZCodeParser.Array_literalContext):
-        return self.visitChildren(ctx)
+        arr = Expr
+        if ctx.function_call_statement():
+            arr = self.visit(ctx.function_call_statement())
+        elif ctx.IDENTIFIER():
+            arr = Id(ctx.IDENTIFIER().getText())
+        else:
+            arr = None
+            
+        return ArrayLiteral(arr, self.visit(ctx.element_expression()))
 
-
-    # Visit a parse tree produced by ZCodeParser#element_expression.
+    # element_expression			: LBRACK index_operator RBRACK; 
     def visitElement_expression(self, ctx:ZCodeParser.Element_expressionContext):
-        return self.visitChildren(ctx)
+        return self.visit(ctx.index_operator())
 
-
-    # Visit a parse tree produced by ZCodeParser#index_operator.
+    # index_operator				: expression COMMA index_operator // Recursive
+	#       						| expression;
     def visitIndex_operator(self, ctx:ZCodeParser.Index_operatorContext):
-        return self.visitChildren(ctx)
+        if ctx.index_operator():
+            return [self.visit(ctx.expression())] + self.visit(ctx.index_operator())
+        else:
+            return [self.visit(ctx.expression())]
 
-
-    # Visit a parse tree produced by ZCodeParser#relational_operator.
+    # relational_operator 		: LT | LE | GT | GE | EQUAL | NOT_EQUAL | STRING_EQUAL;
     def visitRelational_operator(self, ctx:ZCodeParser.Relational_operatorContext):
-        return self.visitChildren(ctx)
+        if ctx.LT():
+            return ctx.LT().getText()
+        elif ctx.LE():
+            return ctx.LE().getText()
+        elif ctx.GT():
+            return ctx.GT().getText()
+        elif ctx.GE():
+            return ctx.GE().getText()
+        elif ctx.EQUAL():
+            return ctx.EQUAL().getText()
+        elif ctx.NOT_EQUAL():
+            return ctx.NOT_EQUAL().getText()
+        elif ctx.STRING_EQUAL():
+            return ctx.STRING_EQUAL().getText()
+        else :
+            return None
 
 
-    # Visit a parse tree produced by ZCodeParser#additive_operator.
+    # additive_operator 			: PLUS | MINUS ;
     def visitAdditive_operator(self, ctx:ZCodeParser.Additive_operatorContext):
-        return self.visitChildren(ctx)
+        if ctx.PLUS():
+            return ctx.PLUS().getText()
+        elif ctx.MINUS():
+            return ctx.MINUS().getText()
+        else :
+            return None
 
-
-    # Visit a parse tree produced by ZCodeParser#multiplicative_operator.
+    # multiplicative_operator		: MULTIPLY | DIVIDE | MOD ;
     def visitMultiplicative_operator(self, ctx:ZCodeParser.Multiplicative_operatorContext):
-        return self.visitChildren(ctx)
+        if ctx.MULTIPLY():
+            return ctx.MULTIPLY().getText()
+        elif ctx.DIVIDE():
+            return ctx.DIVIDE().getText()
+        elif ctx.MOD():
+            return ctx.MOD().getText()
+        else :
+            return None
 
-
-    # Visit a parse tree produced by ZCodeParser#logic_operator.
+    # logic_operator 				: AND | OR ;
     def visitLogic_operator(self, ctx:ZCodeParser.Logic_operatorContext):
-        return self.visitChildren(ctx)
+        if ctx.AND():
+            return ctx.AND().getText()
+        elif ctx.OR():
+            return ctx.OR().getText()
+        else :
+            return None
 
-
-    # Visit a parse tree produced by ZCodeParser#literal.
+    # literal						: NUMBER_LIT | BOOLEAN_LIT | STRING_LIT;
     def visitLiteral(self, ctx:ZCodeParser.LiteralContext):
-        return self.visitChildren(ctx)
+        if ctx.NUMBER_LIT():
+            return self.visit(ctx.NUMBER_LIT())
+        elif ctx.BOOLEAN_LIT():
+            return self.visit(ctx.BOOLEAN_LIT())
+        elif ctx.STRING_LIT():
+            return self.visit(ctx.STRING_LIT())
+        else :
+            return None
 
-
-    # Visit a parse tree produced by ZCodeParser#string_literal.
+    # string_literal 				: STRING_LIT ;
     def visitString_literal(self, ctx:ZCodeParser.String_literalContext):
-        return self.visitChildren(ctx)
+        return StringLiteral(ctx.STRING_LIT().getText())
 
 
-    # Visit a parse tree produced by ZCodeParser#number_literal.
+    # number_literal 				: NUMBER_LIT ;
     def visitNumber_literal(self, ctx:ZCodeParser.Number_literalContext):
-        return self.visitChildren(ctx)
+        return NumberLiteral(ctx.NUMBER_LIT().getText())
 
 
-    # Visit a parse tree produced by ZCodeParser#boolean_literal.
+    # boolean_literal 			: BOOLEAN_LIT ;
     def visitBoolean_literal(self, ctx:ZCodeParser.Boolean_literalContext):
-        return self.visitChildren(ctx)
+        return BooleanLiteral(ctx.BOOLEAN_LIT().getText())
