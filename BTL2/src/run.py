@@ -86,17 +86,19 @@ def getAndTest(cls):
     test(suite)
 
 
-def test(suite):
-    from pprint import pprint
+def getAndTest(cls):
     from io import StringIO
+    testLoader = unittest.TestLoader()
+    suite = testLoader.loadTestsFromTestCase(cls)
     stream = StringIO()
     runner = unittest.TextTestRunner(stream=stream)
     result = runner.run(suite)
-    print('Tests run ', result.testsRun)
-    print('Errors ', result.errors)
-    pprint(result.failures)
     stream.seek(0)
-    print('Test output\n', stream.read())
+    res = stream.read().split('\n')[0]
+    for idx in range(result.testsRun):
+        print(f"Testcase {idx + 1}: {'Passed' if res[idx] == '.' else 'Failed'}")
+    
+    print(f"Score: {res.count('.')}/{result.testsRun}")
 
 
 def printUsage():
