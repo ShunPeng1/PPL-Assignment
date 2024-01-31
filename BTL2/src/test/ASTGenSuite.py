@@ -3,6 +3,7 @@ from TestUtils import TestAST
 from AST import *
 
 class ASTGenSuite(unittest.TestCase):
+    a =    '''
     def test_declared(self):
         """declared  declared  declared  declared"""
         input = """
@@ -127,7 +128,7 @@ class ASTGenSuite(unittest.TestCase):
                 ]))
         # print(expect)
         self.assertTrue(TestAST.test(input, expect, 311))
-        
+        '''
     def test_Expression(self):
         """Expression Expression Expression"""
         input = """

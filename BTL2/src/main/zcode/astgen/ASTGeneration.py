@@ -290,14 +290,14 @@ class ASTGeneration(ZCodeVisitor):
     # function_call_statement		: IDENTIFIER LPAREN argument_part? RPAREN ;
     def visitFunction_call_statement(self, ctx:ZCodeParser.Function_call_statementContext):
         id = Id(ctx.IDENTIFIER().getText())
-        argument = self.visit(ctx.argument_part()) if ctx.argument_part() else None
+        argument = self.visit(ctx.argument_part()) if ctx.argument_part() else []
 
         return CallStmt(id, argument)
 
     # function_call_expression	: IDENTIFIER LPAREN argument_part? RPAREN ;
     def visitFunction_call_expression(self, ctx:ZCodeParser.Function_call_expressionContext):
         id = Id(ctx.IDENTIFIER().getText())
-        argument = self.visit(ctx.argument_part()) if ctx.argument_part() else None
+        argument = self.visit(ctx.argument_part()) if ctx.argument_part() else []
 
         return CallExpr(id, argument)
 
