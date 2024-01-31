@@ -115,7 +115,8 @@ class TestAST:
             print(expect)
             print("Found:")
             print(line)
-            
+        else :
+            print("Test case " + str(num) + " passed")
 
         return line == expect
 

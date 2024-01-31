@@ -423,5 +423,3 @@ class ASTGenSuite(unittest.TestCase):
         #print(expect)
         self.assertTrue(TestAST.test(input, expect, 330))    
         
-        
-        

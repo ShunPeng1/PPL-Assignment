@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
-        "./src/test"
+        "./src/test",
+        "./BTL2/src/test"
     ]
 }
