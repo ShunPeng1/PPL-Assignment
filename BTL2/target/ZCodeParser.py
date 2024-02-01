@@ -54,9 +54,9 @@ def serializedATN():
         buf.write("\66\3\67\3\67\38\38\39\39\3:\3:\3:\2\5PRT;\2\4\6\b\n\f")
         buf.write("\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@")
         buf.write("BDFHJLNPRTVXZ\\^`bdfhjlnpr\2\b\3\2\3\5\4\2%*,,\3\2\35")
-        buf.write("\36\3\2\37!\3\2#$\3\2.\60\2\u01c3\2u\3\2\2\2\4\u0081\3")
-        buf.write("\2\2\2\6\u008a\3\2\2\2\b\u008d\3\2\2\2\n\u009a\3\2\2\2")
-        buf.write("\f\u00b1\3\2\2\2\16\u00b7\3\2\2\2\20\u00b9\3\2\2\2\22")
+        buf.write("\36\3\2\37!\3\2#$\4\2--/\60\2\u01c3\2u\3\2\2\2\4\u0081")
+        buf.write("\3\2\2\2\6\u008a\3\2\2\2\b\u008d\3\2\2\2\n\u009a\3\2\2")
+        buf.write("\2\f\u00b1\3\2\2\2\16\u00b7\3\2\2\2\20\u00b9\3\2\2\2\22")
         buf.write("\u00bb\3\2\2\2\24\u00c3\3\2\2\2\26\u00d2\3\2\2\2\30\u00d4")
         buf.write("\3\2\2\2\32\u00d6\3\2\2\2\34\u00dd\3\2\2\2\36\u00e6\3")
         buf.write("\2\2\2 \u00e8\3\2\2\2\"\u00ef\3\2\2\2$\u0103\3\2\2\2&")
@@ -105,24 +105,24 @@ def serializedATN():
         buf.write("\2\u00be\u00bf\7\f\2\2\u00bf\u00c0\5\16\b\2\u00c0\23\3")
         buf.write("\2\2\2\u00c1\u00c4\5\26\f\2\u00c2\u00c4\5\32\16\2\u00c3")
         buf.write("\u00c1\3\2\2\2\u00c3\u00c2\3\2\2\2\u00c4\25\3\2\2\2\u00c5")
-        buf.write("\u00c6\7\6\2\2\u00c6\u00c7\7-\2\2\u00c7\u00c8\7\27\2\2")
+        buf.write("\u00c6\7\6\2\2\u00c6\u00c7\7.\2\2\u00c7\u00c8\7\27\2\2")
         buf.write("\u00c8\u00d3\5J&\2\u00c9\u00cc\5\30\r\2\u00ca\u00cc\7")
         buf.write("\7\2\2\u00cb\u00c9\3\2\2\2\u00cb\u00ca\3\2\2\2\u00cc\u00cd")
-        buf.write("\3\2\2\2\u00cd\u00d0\7-\2\2\u00ce\u00cf\7\27\2\2\u00cf")
+        buf.write("\3\2\2\2\u00cd\u00d0\7.\2\2\u00ce\u00cf\7\27\2\2\u00cf")
         buf.write("\u00d1\5J&\2\u00d0\u00ce\3\2\2\2\u00d0\u00d1\3\2\2\2\u00d1")
         buf.write("\u00d3\3\2\2\2\u00d2\u00c5\3\2\2\2\u00d2\u00cb\3\2\2\2")
         buf.write("\u00d3\27\3\2\2\2\u00d4\u00d5\t\2\2\2\u00d5\31\3\2\2\2")
-        buf.write("\u00d6\u00d7\5\30\r\2\u00d7\u00d8\7-\2\2\u00d8\u00db\5")
+        buf.write("\u00d6\u00d7\5\30\r\2\u00d7\u00d8\7.\2\2\u00d8\u00db\5")
         buf.write("\34\17\2\u00d9\u00da\7\27\2\2\u00da\u00dc\5J&\2\u00db")
         buf.write("\u00d9\3\2\2\2\u00db\u00dc\3\2\2\2\u00dc\33\3\2\2\2\u00dd")
         buf.write("\u00de\7\32\2\2\u00de\u00df\5\36\20\2\u00df\u00e0\7\33")
         buf.write("\2\2\u00e0\35\3\2\2\2\u00e1\u00e2\5p9\2\u00e2\u00e3\7")
         buf.write("\34\2\2\u00e3\u00e4\5\36\20\2\u00e4\u00e7\3\2\2\2\u00e5")
         buf.write("\u00e7\5p9\2\u00e6\u00e1\3\2\2\2\u00e6\u00e5\3\2\2\2\u00e7")
-        buf.write("\37\3\2\2\2\u00e8\u00ea\7-\2\2\u00e9\u00eb\5`\61\2\u00ea")
+        buf.write("\37\3\2\2\2\u00e8\u00ea\7.\2\2\u00e9\u00eb\5`\61\2\u00ea")
         buf.write("\u00e9\3\2\2\2\u00ea\u00eb\3\2\2\2\u00eb\u00ec\3\2\2\2")
         buf.write("\u00ec\u00ed\7\27\2\2\u00ed\u00ee\5J&\2\u00ee!\3\2\2\2")
-        buf.write("\u00ef\u00f0\7\r\2\2\u00f0\u00f1\7-\2\2\u00f1\u00f3\7")
+        buf.write("\u00ef\u00f0\7\r\2\2\u00f0\u00f1\7.\2\2\u00f1\u00f3\7")
         buf.write("\30\2\2\u00f2\u00f4\5(\25\2\u00f3\u00f2\3\2\2\2\u00f3")
         buf.write("\u00f4\3\2\2\2\u00f4\u00f5\3\2\2\2\u00f5\u00f6\7\31\2")
         buf.write("\2\u00f6\u00f7\5$\23\2\u00f7#\3\2\2\2\u00f8\u00fa\5\16")
@@ -138,8 +138,8 @@ def serializedATN():
         buf.write("\3\2\2\2\u010d\u010f\5*\26\2\u010e\u0109\3\2\2\2\u010e")
         buf.write("\u010d\3\2\2\2\u010f)\3\2\2\2\u0110\u0113\5,\27\2\u0111")
         buf.write("\u0113\5.\30\2\u0112\u0110\3\2\2\2\u0112\u0111\3\2\2\2")
-        buf.write("\u0113+\3\2\2\2\u0114\u0115\5\30\r\2\u0115\u0116\7-\2")
-        buf.write("\2\u0116-\3\2\2\2\u0117\u0118\5\30\r\2\u0118\u0119\7-")
+        buf.write("\u0113+\3\2\2\2\u0114\u0115\5\30\r\2\u0115\u0116\7.\2")
+        buf.write("\2\u0116-\3\2\2\2\u0117\u0118\5\30\r\2\u0118\u0119\7.")
         buf.write("\2\2\u0119\u011a\5\34\17\2\u011a/\3\2\2\2\u011b\u011c")
         buf.write("\7\17\2\2\u011c\u011d\58\35\2\u011d\u011f\5:\36\2\u011e")
         buf.write("\u0120\5\62\32\2\u011f\u011e\3\2\2\2\u011f\u0120\3\2\2")
@@ -152,15 +152,15 @@ def serializedATN():
         buf.write("\7\20\2\2\u012f\u0130\5:\36\2\u0130\67\3\2\2\2\u0131\u0132")
         buf.write("\7\30\2\2\u0132\u0133\5J&\2\u0133\u0134\7\31\2\2\u0134")
         buf.write("9\3\2\2\2\u0135\u0136\5\b\5\2\u0136;\3\2\2\2\u0137\u0138")
-        buf.write("\7-\2\2\u0138\u013a\7\30\2\2\u0139\u013b\5@!\2\u013a\u0139")
+        buf.write("\7.\2\2\u0138\u013a\7\30\2\2\u0139\u013b\5@!\2\u013a\u0139")
         buf.write("\3\2\2\2\u013a\u013b\3\2\2\2\u013b\u013c\3\2\2\2\u013c")
-        buf.write("\u013d\7\31\2\2\u013d=\3\2\2\2\u013e\u013f\7-\2\2\u013f")
+        buf.write("\u013d\7\31\2\2\u013d=\3\2\2\2\u013e\u013f\7.\2\2\u013f")
         buf.write("\u0141\7\30\2\2\u0140\u0142\5@!\2\u0141\u0140\3\2\2\2")
         buf.write("\u0141\u0142\3\2\2\2\u0142\u0143\3\2\2\2\u0143\u0144\7")
         buf.write("\31\2\2\u0144?\3\2\2\2\u0145\u0146\5J&\2\u0146\u0147\7")
         buf.write("\34\2\2\u0147\u0148\5@!\2\u0148\u014b\3\2\2\2\u0149\u014b")
         buf.write("\5J&\2\u014a\u0145\3\2\2\2\u014a\u0149\3\2\2\2\u014bA")
-        buf.write("\3\2\2\2\u014c\u014d\7\22\2\2\u014d\u014e\7-\2\2\u014e")
+        buf.write("\3\2\2\2\u014c\u014d\7\22\2\2\u014d\u014e\7.\2\2\u014e")
         buf.write("\u014f\7\23\2\2\u014f\u0150\5J&\2\u0150\u0151\7\24\2\2")
         buf.write("\u0151\u0152\5J&\2\u0152\u0153\5D#\2\u0153C\3\2\2\2\u0154")
         buf.write("\u0155\5\b\5\2\u0155E\3\2\2\2\u0156\u0157\7\25\2\2\u0157")
@@ -192,10 +192,10 @@ def serializedATN():
         buf.write("\u019b\5J&\2\u019b\u019c\7\31\2\2\u019c\u019f\3\2\2\2")
         buf.write("\u019d\u019f\5\\/\2\u019e\u0199\3\2\2\2\u019e\u019d\3")
         buf.write("\2\2\2\u019f[\3\2\2\2\u01a0\u01a5\5l\67\2\u01a1\u01a5")
-        buf.write("\5> \2\u01a2\u01a5\7-\2\2\u01a3\u01a5\5^\60\2\u01a4\u01a0")
+        buf.write("\5> \2\u01a2\u01a5\7.\2\2\u01a3\u01a5\5^\60\2\u01a4\u01a0")
         buf.write("\3\2\2\2\u01a4\u01a1\3\2\2\2\u01a4\u01a2\3\2\2\2\u01a4")
         buf.write("\u01a3\3\2\2\2\u01a5]\3\2\2\2\u01a6\u01a9\5> \2\u01a7")
-        buf.write("\u01a9\7-\2\2\u01a8\u01a6\3\2\2\2\u01a8\u01a7\3\2\2\2")
+        buf.write("\u01a9\7.\2\2\u01a8\u01a6\3\2\2\2\u01a8\u01a7\3\2\2\2")
         buf.write("\u01a8\u01a9\3\2\2\2\u01a9\u01aa\3\2\2\2\u01aa\u01ab\5")
         buf.write("`\61\2\u01ab_\3\2\2\2\u01ac\u01ad\7\32\2\2\u01ad\u01ae")
         buf.write("\5b\62\2\u01ae\u01af\7\33\2\2\u01afa\3\2\2\2\u01b0\u01b1")
@@ -205,8 +205,8 @@ def serializedATN():
         buf.write("e\3\2\2\2\u01b9\u01ba\t\4\2\2\u01bag\3\2\2\2\u01bb\u01bc")
         buf.write("\t\5\2\2\u01bci\3\2\2\2\u01bd\u01be\t\6\2\2\u01bek\3\2")
         buf.write("\2\2\u01bf\u01c0\t\7\2\2\u01c0m\3\2\2\2\u01c1\u01c2\7")
-        buf.write("\60\2\2\u01c2o\3\2\2\2\u01c3\u01c4\7.\2\2\u01c4q\3\2\2")
-        buf.write("\2\u01c5\u01c6\7/\2\2\u01c6s\3\2\2\2,uy\u0081\u0085\u008a")
+        buf.write("\60\2\2\u01c2o\3\2\2\2\u01c3\u01c4\7/\2\2\u01c4q\3\2\2")
+        buf.write("\2\u01c5\u01c6\7-\2\2\u01c6s\3\2\2\2,uy\u0081\u0085\u008a")
         buf.write("\u008d\u0091\u0095\u009a\u00b1\u00b7\u00c3\u00cb\u00d0")
         buf.write("\u00d2\u00db\u00e6\u00ea\u00f3\u00f9\u00ff\u0103\u0107")
         buf.write("\u010e\u0112\u011f\u0122\u0128\u013a\u0141\u014a\u0161")
@@ -240,8 +240,8 @@ class ZCodeParser ( Parser ):
                       "LPAREN", "RPAREN", "LBRACK", "RBRACK", "COMMA", "PLUS", 
                       "MINUS", "MULTIPLY", "DIVIDE", "MOD", "NOT", "AND", 
                       "OR", "EQUAL", "NOT_EQUAL", "LT", "LE", "GT", "GE", 
-                      "CONCATE", "STRING_EQUAL", "IDENTIFIER", "NUMBER_LIT", 
-                      "BOOLEAN_LIT", "STRING_LIT", "ERROR_CHAR", "UNCLOSE_STRING", 
+                      "CONCATE", "STRING_EQUAL", "BOOLEAN_LIT", "IDENTIFIER", 
+                      "NUMBER_LIT", "STRING_LIT", "ERROR_CHAR", "UNCLOSE_STRING", 
                       "ILLEGAL_ESCAPE" ]
 
     RULE_program = 0
@@ -365,9 +365,9 @@ class ZCodeParser ( Parser ):
     GE=40
     CONCATE=41
     STRING_EQUAL=42
-    IDENTIFIER=43
-    NUMBER_LIT=44
-    BOOLEAN_LIT=45
+    BOOLEAN_LIT=43
+    IDENTIFIER=44
+    NUMBER_LIT=45
     STRING_LIT=46
     ERROR_CHAR=47
     UNCLOSE_STRING=48
@@ -1678,7 +1678,7 @@ class ZCodeParser ( Parser ):
             self.state = 261
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ZCodeParser.LPAREN) | (1 << ZCodeParser.LBRACK) | (1 << ZCodeParser.PLUS) | (1 << ZCodeParser.MINUS) | (1 << ZCodeParser.NOT) | (1 << ZCodeParser.IDENTIFIER) | (1 << ZCodeParser.NUMBER_LIT) | (1 << ZCodeParser.BOOLEAN_LIT) | (1 << ZCodeParser.STRING_LIT))) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ZCodeParser.LPAREN) | (1 << ZCodeParser.LBRACK) | (1 << ZCodeParser.PLUS) | (1 << ZCodeParser.MINUS) | (1 << ZCodeParser.NOT) | (1 << ZCodeParser.BOOLEAN_LIT) | (1 << ZCodeParser.IDENTIFIER) | (1 << ZCodeParser.NUMBER_LIT) | (1 << ZCodeParser.STRING_LIT))) != 0):
                 self.state = 260
                 self.expression()
 
@@ -2275,7 +2275,7 @@ class ZCodeParser ( Parser ):
             self.state = 312
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ZCodeParser.LPAREN) | (1 << ZCodeParser.LBRACK) | (1 << ZCodeParser.PLUS) | (1 << ZCodeParser.MINUS) | (1 << ZCodeParser.NOT) | (1 << ZCodeParser.IDENTIFIER) | (1 << ZCodeParser.NUMBER_LIT) | (1 << ZCodeParser.BOOLEAN_LIT) | (1 << ZCodeParser.STRING_LIT))) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ZCodeParser.LPAREN) | (1 << ZCodeParser.LBRACK) | (1 << ZCodeParser.PLUS) | (1 << ZCodeParser.MINUS) | (1 << ZCodeParser.NOT) | (1 << ZCodeParser.BOOLEAN_LIT) | (1 << ZCodeParser.IDENTIFIER) | (1 << ZCodeParser.NUMBER_LIT) | (1 << ZCodeParser.STRING_LIT))) != 0):
                 self.state = 311
                 self.argument_part()
 
@@ -2337,7 +2337,7 @@ class ZCodeParser ( Parser ):
             self.state = 319
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ZCodeParser.LPAREN) | (1 << ZCodeParser.LBRACK) | (1 << ZCodeParser.PLUS) | (1 << ZCodeParser.MINUS) | (1 << ZCodeParser.NOT) | (1 << ZCodeParser.IDENTIFIER) | (1 << ZCodeParser.NUMBER_LIT) | (1 << ZCodeParser.BOOLEAN_LIT) | (1 << ZCodeParser.STRING_LIT))) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ZCodeParser.LPAREN) | (1 << ZCodeParser.LBRACK) | (1 << ZCodeParser.PLUS) | (1 << ZCodeParser.MINUS) | (1 << ZCodeParser.NOT) | (1 << ZCodeParser.BOOLEAN_LIT) | (1 << ZCodeParser.IDENTIFIER) | (1 << ZCodeParser.NUMBER_LIT) | (1 << ZCodeParser.STRING_LIT))) != 0):
                 self.state = 318
                 self.argument_part()
 
@@ -3037,7 +3037,7 @@ class ZCodeParser ( Parser ):
                 self.state = 397
                 self.negation_expression()
                 pass
-            elif token in [ZCodeParser.LPAREN, ZCodeParser.LBRACK, ZCodeParser.PLUS, ZCodeParser.MINUS, ZCodeParser.IDENTIFIER, ZCodeParser.NUMBER_LIT, ZCodeParser.BOOLEAN_LIT, ZCodeParser.STRING_LIT]:
+            elif token in [ZCodeParser.LPAREN, ZCodeParser.LBRACK, ZCodeParser.PLUS, ZCodeParser.MINUS, ZCodeParser.BOOLEAN_LIT, ZCodeParser.IDENTIFIER, ZCodeParser.NUMBER_LIT, ZCodeParser.STRING_LIT]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 398
                 self.sign_expression()
@@ -3100,7 +3100,7 @@ class ZCodeParser ( Parser ):
                 self.state = 402
                 self.sign_expression()
                 pass
-            elif token in [ZCodeParser.LPAREN, ZCodeParser.LBRACK, ZCodeParser.IDENTIFIER, ZCodeParser.NUMBER_LIT, ZCodeParser.BOOLEAN_LIT, ZCodeParser.STRING_LIT]:
+            elif token in [ZCodeParser.LPAREN, ZCodeParser.LBRACK, ZCodeParser.BOOLEAN_LIT, ZCodeParser.IDENTIFIER, ZCodeParser.NUMBER_LIT, ZCodeParser.STRING_LIT]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 404
                 self.parenthesis_expression()
@@ -3167,7 +3167,7 @@ class ZCodeParser ( Parser ):
                 self.state = 409
                 self.match(ZCodeParser.RPAREN)
                 pass
-            elif token in [ZCodeParser.LBRACK, ZCodeParser.IDENTIFIER, ZCodeParser.NUMBER_LIT, ZCodeParser.BOOLEAN_LIT, ZCodeParser.STRING_LIT]:
+            elif token in [ZCodeParser.LBRACK, ZCodeParser.BOOLEAN_LIT, ZCodeParser.IDENTIFIER, ZCodeParser.NUMBER_LIT, ZCodeParser.STRING_LIT]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 411
                 self.operand()
@@ -3680,7 +3680,7 @@ class ZCodeParser ( Parser ):
             self.enterOuterAlt(localctx, 1)
             self.state = 445
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ZCodeParser.NUMBER_LIT) | (1 << ZCodeParser.BOOLEAN_LIT) | (1 << ZCodeParser.STRING_LIT))) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ZCodeParser.BOOLEAN_LIT) | (1 << ZCodeParser.NUMBER_LIT) | (1 << ZCodeParser.STRING_LIT))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)

@@ -8,8 +8,8 @@ class ASTGeneration(ZCodeVisitor):
     
     # program						: newline_list? declaration_list newline_list? EOF;
     def visitProgram(self, ctx:ZCodeParser.ProgramContext):
+        print("Program ", ctx.declaration_list())
         program = Program(self.visit(ctx.declaration_list()))
-        print("Program ", program)
         return program
 
     
@@ -37,6 +37,7 @@ class ASTGeneration(ZCodeVisitor):
     
     # local_statement_single		: newline_list? local_statement newline_list?;
     def visitLocal_statement_single(self, ctx:ZCodeParser.Local_statement_singleContext):
+        print("Local Statement Single ", ctx.local_statement())
         return self.visit(ctx.local_statement())
 
     # local_statement_list		    : (newline_list|local_statement) local_statement_list // Recursive
@@ -98,7 +99,9 @@ class ASTGeneration(ZCodeVisitor):
     # block_statement				: BEGIN newline_list local_statement_list END newline_list ;
     def visitBlock_statement(self, ctx:ZCodeParser.Block_statementContext):
         print("Block Statement ", ctx.local_statement_list())
-        return Block(self.visit(ctx.local_statement_list()))
+        block = Block(self.visit(ctx.local_statement_list()))
+        print("Block Statement ", block)
+        return block
 
     # variable_declaration_statement	: basic_variable_declaration | array_declaration ;
     def visitVariable_declaration_statement(self, ctx:ZCodeParser.Variable_declaration_statementContext):
@@ -187,11 +190,12 @@ class ASTGeneration(ZCodeVisitor):
 
     # function_declaration		: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN function_body ; // Declaration onlu or body definition might be empty
     def visitFunction_declaration(self, ctx:ZCodeParser.Function_declarationContext):
+        print("Function Declaration ", ctx.IDENTIFIER(), ctx.parameter_part_recursive(), ctx.function_body())
+
         id = Id(ctx.IDENTIFIER().getText())
         parameter = self.visit(ctx.parameter_part_recursive()) if ctx.parameter_part_recursive() else []
         body = self.visit(ctx.function_body()) if ctx.function_body() else None
         
-        print("Function Declaration ", id, parameter, body)
         return FuncDecl(id, parameter, body)
 
     # function_body			   	    : newline_list? return_statement NEWLINE
@@ -240,12 +244,13 @@ class ASTGeneration(ZCodeVisitor):
 
     # array_parameter_declaration	: basic_type IDENTIFIER array_dimension;
     def visitArray_parameter_declaration(self, ctx:ZCodeParser.Array_parameter_declarationContext):
+        print("Array Parameter Declaration ", ctx.basic_type(), ctx.IDENTIFIER(), ctx.array_dimension())
+
         type = self.visit(ctx.basic_type())
         id = Id(ctx.IDENTIFIER().getText())
         dimension = self.visit(ctx.array_dimension())
         arrayType = ArrayType(dimension, type)
 
-        print("Array Parameter Declaration ", ctx.basic_type(), ctx.IDENTIFIER(), ctx.array_dimension(), arrayType)
 
         return VarDecl(id, arrayType, None, None)
 
@@ -253,12 +258,17 @@ class ASTGeneration(ZCodeVisitor):
 	#							(elif_recursive_statement)?
 	#							(else_statement)? ;
     def visitIf_statement(self, ctx:ZCodeParser.If_statementContext):
+        print("If Statement ", ctx.branch_condition(), ctx.branch_body(), ctx.elif_recursive_statement(), ctx.else_statement())
+
         condition = self.visit(ctx.branch_condition())
         body = self.visit(ctx.branch_body())
         elifStmt = self.visit(ctx.elif_recursive_statement()) if ctx.elif_recursive_statement() else None
         elseStmt = self.visit(ctx.else_statement()) if ctx.else_statement() else None
 
-        return If(condition, body, elifStmt, elseStmt) ## TODO : Check again
+        if_statement = If(condition, body, elifStmt, elseStmt) ## TODO : Check again
+        print("If Statement ", condition, body, elifStmt, elseStmt)
+        print("If Statement ", if_statement)
+        return if_statement
 
     # elif_recursive_statement	: elif_statement elif_recursive_statement // Recursive
 	#   						| elif_statement;
@@ -277,6 +287,7 @@ class ASTGeneration(ZCodeVisitor):
 
     # else_statement				: ELSE branch_body;
     def visitElse_statement(self, ctx:ZCodeParser.Else_statementContext):
+        print("Else Statement ", ctx.branch_body())
         return self.visit(ctx.branch_body())
 
     # branch_condition		    	: LPAREN expression RPAREN;
@@ -285,6 +296,7 @@ class ASTGeneration(ZCodeVisitor):
 
     # branch_body					: local_statement_single;
     def visitBranch_body(self, ctx:ZCodeParser.Branch_bodyContext):
+        print("Branch Body ", ctx.local_statement_single())
         return self.visit(ctx.local_statement_single())
 
     # function_call_statement		: IDENTIFIER LPAREN argument_part? RPAREN ;
@@ -530,9 +542,9 @@ class ASTGeneration(ZCodeVisitor):
     def visitLiteral(self, ctx:ZCodeParser.LiteralContext):
         print("Literal ", ctx.NUMBER_LIT(), ctx.BOOLEAN_LIT(), ctx.STRING_LIT())
         if ctx.NUMBER_LIT():
-            return NumberLiteral(ctx.NUMBER_LIT().getText())
+            return NumberLiteral((ctx.NUMBER_LIT().getText())) # TODO : Check again does it need to convert to float(...), NumLit(1) or NumLit(1.0) ?
         elif ctx.BOOLEAN_LIT():
-            return BooleanLiteral(ctx.BOOLEAN_LIT().getText())
+            return BooleanLiteral(ctx.BOOLEAN_LIT().getText() == "true")
         elif ctx.STRING_LIT():
             return StringLiteral(ctx.STRING_LIT().getText())
         else :

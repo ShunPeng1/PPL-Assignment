@@ -252,6 +252,11 @@ GE       		: '>=' ;
 CONCATE    		: '...' ;
 STRING_EQUAL   	: '==' ;
 
+
+BOOLEAN_LIT    	: TRUE | FALSE ;
+fragment TRUE      		: 'true' ;
+fragment FALSE     		: 'false' ;
+
 // Literal
 IDENTIFIER		: [a-zA-Z_] [a-z0-9A-Z_]*;
 
@@ -260,9 +265,6 @@ fragment NUMBER_INTERGER 	: [0-9]+ ;
 fragment NUMBER_DECIMAL 	: '.'[0-9]* ;
 fragment NUMBER_EXPONENT 	: [eE][+-]?[0-9]+ ;
 
-BOOLEAN_LIT    	: TRUE | FALSE ;
-fragment TRUE      		: 'true' ;
-fragment FALSE     		: 'false' ;
 
 //Normal regex:  "([^\'\"\r\n\\]|\\['\\nrtbf]|'")*"
 STRING_LIT 			: '"' (~['"\r\n\\] | [\\] ['\\nrtbf] | ['](~[\r\n\\])?)* '"' {
