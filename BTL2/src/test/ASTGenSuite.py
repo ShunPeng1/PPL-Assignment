@@ -3,7 +3,7 @@ from TestUtils import TestAST
 from AST import *
 
 class ASTGenSuite(unittest.TestCase):
-    a =    '''
+    #a =    '''
     def test_declared(self):
         """declared  declared  declared  declared"""
         input = """
@@ -128,7 +128,9 @@ class ASTGenSuite(unittest.TestCase):
                 ]))
         # print(expect)
         self.assertTrue(TestAST.test(input, expect, 311))
-        '''
+        #'''
+    
+    #b = '''
     def test_Expression(self):
         """Expression Expression Expression"""
         input = """
@@ -244,7 +246,9 @@ class ASTGenSuite(unittest.TestCase):
                 ]))
         #print(expect)
         self.assertTrue(TestAST.test(input, expect, 321)) 
-         
+    #'''
+
+    #c = '''
     def test_Statements(self):
         """Statements Statements Statements"""
         input = """
@@ -424,5 +428,5 @@ class ASTGenSuite(unittest.TestCase):
         #print(expect)
         self.assertTrue(TestAST.test(input, expect, 330))    
         
-        
+    #'''
         

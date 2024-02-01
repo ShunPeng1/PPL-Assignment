@@ -262,7 +262,7 @@ class ASTGeneration(ZCodeVisitor):
 
         condition = self.visit(ctx.branch_condition())
         body = self.visit(ctx.branch_body())
-        elifStmt = self.visit(ctx.elif_recursive_statement()) if ctx.elif_recursive_statement() else None
+        elifStmt = self.visit(ctx.elif_recursive_statement()) if ctx.elif_recursive_statement() else []
         elseStmt = self.visit(ctx.else_statement()) if ctx.else_statement() else None
 
         if_statement = If(condition, body, elifStmt, elseStmt) ## TODO : Check again
@@ -542,7 +542,8 @@ class ASTGeneration(ZCodeVisitor):
     def visitLiteral(self, ctx:ZCodeParser.LiteralContext):
         print("Literal ", ctx.NUMBER_LIT(), ctx.BOOLEAN_LIT(), ctx.STRING_LIT())
         if ctx.NUMBER_LIT():
-            return NumberLiteral((ctx.NUMBER_LIT().getText())) # TODO : Check again does it need to convert to float(...), NumLit(1) or NumLit(1.0) ?
+            return NumberLiteral((ctx.NUMBER_LIT().getText())) # NumLit(1) 
+            #return NumberLiteral((ctx.NUMBER_LIT().getText())) # NumLit(1.0) 
         elif ctx.BOOLEAN_LIT():
             return BooleanLiteral(ctx.BOOLEAN_LIT().getText() == "true")
         elif ctx.STRING_LIT():
