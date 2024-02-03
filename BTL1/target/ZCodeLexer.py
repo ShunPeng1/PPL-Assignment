@@ -55,20 +55,20 @@ def serializedATN():
         buf.write("\34\67\359\36;\37= ?!A\"C#E$G%I&K\'M(O)Q*S+U,W-Y\2[\2")
         buf.write("]._/a\2c\2e\2g\60i\61k\62m\63\3\2\21\4\2\f\f\16\17\5\2")
         buf.write("\n\13\16\16\"\"\5\2C\\aac|\6\2\62;C\\aac|\3\2\62;\4\2")
-        buf.write("GGgg\4\2--//\7\2\f\f\17\17$$))^^\3\2^^\t\2))^^ddhhppt")
-        buf.write("tvv\3\2))\5\2\f\f\17\17^^\5\2$$))^^\5\2\n\n\16\16^^\3")
-        buf.write("\3$$\2\u0198\2\3\3\2\2\2\2\5\3\2\2\2\2\7\3\2\2\2\2\t\3")
-        buf.write("\2\2\2\2\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2")
-        buf.write("\2\2\2\23\3\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2")
-        buf.write("\2\2\33\3\2\2\2\2\35\3\2\2\2\2\37\3\2\2\2\2!\3\2\2\2\2")
-        buf.write("#\3\2\2\2\2%\3\2\2\2\2\'\3\2\2\2\2)\3\2\2\2\2+\3\2\2\2")
-        buf.write("\2-\3\2\2\2\2/\3\2\2\2\2\61\3\2\2\2\2\63\3\2\2\2\2\65")
-        buf.write("\3\2\2\2\2\67\3\2\2\2\29\3\2\2\2\2;\3\2\2\2\2=\3\2\2\2")
-        buf.write("\2?\3\2\2\2\2A\3\2\2\2\2C\3\2\2\2\2E\3\2\2\2\2G\3\2\2")
-        buf.write("\2\2I\3\2\2\2\2K\3\2\2\2\2M\3\2\2\2\2O\3\2\2\2\2Q\3\2")
-        buf.write("\2\2\2S\3\2\2\2\2U\3\2\2\2\2W\3\2\2\2\2]\3\2\2\2\2_\3")
-        buf.write("\2\2\2\2g\3\2\2\2\2i\3\2\2\2\2k\3\2\2\2\2m\3\2\2\2\3o")
-        buf.write("\3\2\2\2\5v\3\2\2\2\7{\3\2\2\2\t\u0082\3\2\2\2\13\u0086")
+        buf.write("GGgg\4\2--//\7\2\f\f\16\17$$))^^\3\2^^\t\2))^^ddhhppt")
+        buf.write("tvv\3\2))\6\2\n\n\f\f\16\17^^\5\2$$))^^\5\2\n\n\16\16")
+        buf.write("^^\3\3$$\2\u0198\2\3\3\2\2\2\2\5\3\2\2\2\2\7\3\2\2\2\2")
+        buf.write("\t\3\2\2\2\2\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2\2\21")
+        buf.write("\3\2\2\2\2\23\3\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3")
+        buf.write("\2\2\2\2\33\3\2\2\2\2\35\3\2\2\2\2\37\3\2\2\2\2!\3\2\2")
+        buf.write("\2\2#\3\2\2\2\2%\3\2\2\2\2\'\3\2\2\2\2)\3\2\2\2\2+\3\2")
+        buf.write("\2\2\2-\3\2\2\2\2/\3\2\2\2\2\61\3\2\2\2\2\63\3\2\2\2\2")
+        buf.write("\65\3\2\2\2\2\67\3\2\2\2\29\3\2\2\2\2;\3\2\2\2\2=\3\2")
+        buf.write("\2\2\2?\3\2\2\2\2A\3\2\2\2\2C\3\2\2\2\2E\3\2\2\2\2G\3")
+        buf.write("\2\2\2\2I\3\2\2\2\2K\3\2\2\2\2M\3\2\2\2\2O\3\2\2\2\2Q")
+        buf.write("\3\2\2\2\2S\3\2\2\2\2U\3\2\2\2\2W\3\2\2\2\2]\3\2\2\2\2")
+        buf.write("_\3\2\2\2\2g\3\2\2\2\2i\3\2\2\2\2k\3\2\2\2\2m\3\2\2\2")
+        buf.write("\3o\3\2\2\2\5v\3\2\2\2\7{\3\2\2\2\t\u0082\3\2\2\2\13\u0086")
         buf.write("\3\2\2\2\r\u008e\3\2\2\2\17\u009c\3\2\2\2\21\u00a1\3\2")
         buf.write("\2\2\23\u00a7\3\2\2\2\25\u00ad\3\2\2\2\27\u00b1\3\2\2")
         buf.write("\2\31\u00b6\3\2\2\2\33\u00bd\3\2\2\2\35\u00c0\3\2\2\2")
@@ -331,14 +331,16 @@ class ZCodeLexer(Lexer):
     def UNCLOSE_STRING_action(self, localctx:RuleContext , actionIndex:int):
         if actionIndex == 3:
 
-            newlineIndex = self.text.find('\r\n')
 
-            if newlineIndex == -1:
-            	newlineIndex = self.text.find('\n')
-            if newlineIndex == -1:
-            	newlineIndex = self.text.find('\r')
+            index = len(self.text)
+            if self.text.find('\r') != -1:
+            	index = min(index, self.text.find('\r'))
+            if self.text.find('\n') != -1:
+            	index = min(index, self.text.find('\n'))
+            if self.text.find('\f') != -1:
+            	index = min(index, self.text.find('\f'))
 
-            raise UncloseString(self.text[1:newlineIndex] if newlineIndex != -1 else self.text[1:]) # if end with \n else end with EOF
+            raise UncloseString(self.text[1:index] if index != len(self.text) else self.text[1:]) # if end with \n else end with EOF
 
      
 

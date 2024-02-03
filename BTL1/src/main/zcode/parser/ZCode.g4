@@ -267,7 +267,7 @@ fragment NUMBER_EXPONENT 	: [eE][+-]?[0-9]+ ;
 
 
 //Normal regex:  "([^\'\"\r\n\\]|\\['\\nrtbf]|'")*"
-STRING_LIT 			: '"' (~['"\r\n\\] | [\\] ['\\nrtbf] | ['](~[\r\n\\])?)* '"' {
+STRING_LIT 			: '"' (~['"\r\n\\\f] | [\\] ['\\nrtbf] | ['](~[\r\n\\\f\b])?)* '"' {
 self.text = self.text[1:-1]
 };
 
@@ -284,14 +284,16 @@ raise ErrorToken(self.text)
 
 UNCLOSE_STRING  : '"' (~['"\\] | [\\] ['\\nrtbf] | ['](~[\\\f\b])? )* ('"' | EOF)
 {
-newlineIndex = self.text.find('\r\n')
 
-if newlineIndex == -1:
-	newlineIndex = self.text.find('\n')
-if newlineIndex == -1:
-	newlineIndex = self.text.find('\r')
+index = len(self.text)
+if self.text.find('\r') != -1:
+	index = min(index, self.text.find('\r'))
+if self.text.find('\n') != -1:
+	index = min(index, self.text.find('\n'))
+if self.text.find('\f') != -1:
+	index = min(index, self.text.find('\f'))
 
-raise UncloseString(self.text[1:newlineIndex] if newlineIndex != -1 else self.text[1:]) # if end with \n else end with EOF
+raise UncloseString(self.text[1:index] if index != len(self.text) else self.text[1:]) # if end with \n else end with EOF
 };
 
 
