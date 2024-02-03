@@ -40,7 +40,9 @@ class TestLexer:
 
         if (line != expect):
             
-            print("Lexer test case ",num)
+            print("Lexer test case ",num, " :")
+            print("Input: ")
+            print(input)
             print("Expected:")
             print(expect)
             print("Found:")

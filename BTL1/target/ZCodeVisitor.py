@@ -159,6 +159,11 @@ class ZCodeVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by ZCodeParser#function_call_expression.
+    def visitFunction_call_expression(self, ctx:ZCodeParser.Function_call_expressionContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by ZCodeParser#argument_part.
     def visitArgument_part(self, ctx:ZCodeParser.Argument_partContext):
         return self.visitChildren(ctx)

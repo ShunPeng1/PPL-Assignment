@@ -4,1180 +4,1126 @@ from TestUtils import TestParser
 class ParserSuite(unittest.TestCase):
 	def test_2513011300(self):
 		input = '''
-func TBI ()	return AIi([[hg6(+ Gn, "f>'""), 932, true], false], 8)
-## e
-func Umq (bool fYk[67.175], string zw5E[8.548e42,3,0.072])	return kJhb
-dynamic q_[195.175E32]
+func cz (bool RmAr[61e-29,5e30])
+	return RTwJ
+
 '''
-		expect = '''Error on line 5 col 10: ['''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011300))
 
 	def test_2513011301(self):
 		input = '''
-func Ni1N (dynamic nDu)
-	return "1'"'""
+func or (string zX)	return
+func nSN (string zZq[2.809e34,4], bool RU, var O8)
+	return brR((("M '""))) + dT
 
-## I MVFg
-string kl <- x9 ## Dq?}
+func XVfF (var Ge8, bool AS, string ra4G)
+	begin
+		begin
+			## }
+		end
+	end
+
+## Oze,Wep8
 '''
-		expect = '''Error on line 2 col 11: dynamic'''
+		expect = '''Error on line 2 col 5: or'''
 		self.assertTrue(TestParser.test(input, expect, 2513011301))
 
 	def test_2513011302(self):
 		input = '''
-## 3Z(
-func kud_ (string nE, bool Srtq[329,6,52.757e-70])
-	return
-number rL[9.153E+34] <- ml ## G.a8i<5!]KQw5!t.LWu0
-bool Ys
+## N|#2b:HNLa0
+## {P 
+func yLQ5 (number U1[6.138E-40,772e-05], bool KLD)
+	begin
+		begin
+			## -yZ_jJo:>nrPS
+			## }dXdr!qD
+			for KC until "'"i<" by t93v
+				Rb_("{='"", "'"'"'"E")
+		end
+		## S/}Zxzwr0=&BGs+V
+		## 82<]Hi
+	end
+
+dynamic LqJu[8e88,8.241,29E43] ## BX-oc]:HeM
+var dwo[149.822e19]
 '''
-		expect = '''successful'''
+		expect = '''Error on line 16 col 12: ['''
 		self.assertTrue(TestParser.test(input, expect, 2513011302))
 
 	def test_2513011303(self):
 		input = '''
-func Em3 (dynamic VN[9.992E29,0.107e95,33])
-	begin
-		## hPbFV_
-	end
-
-func LUwl (dynamic Yj[85e-81], number bk[775.384E+89], dynamic lVK)
-	return
-func to (number RdtS, var UMm)
-	begin
-		for d4Xd until false by false
-			K74g(nmDq, 14, "_'"'"'"t")
-	end
-func IBt ()	begin
-		sSs[65.326E-83, true, ViF7] <- true
-		## oE|@M+#YR0$H7.m:.nw
-		## qy_VAkt9WH
-	end
-
-bool d7g
+dynamic o2J <- false
+dynamic s1[57E-90,201E-94,35]
+dynamic X61 <- ss ## Rg$Ok0
+var t39[660,72]
+## cd,L+`qaY73?
 '''
-		expect = '''Error on line 2 col 10: dynamic'''
+		expect = '''Error on line 3 col 10: ['''
 		self.assertTrue(TestParser.test(input, expect, 2513011303))
 
 	def test_2513011304(self):
 		input = '''
-## dOQUV"Caq<2@
-bool Mc <- l3
+## H
 '''
-		expect = '''successful'''
+		expect = '''Error on line 3 col 0: <EOF>'''
 		self.assertTrue(TestParser.test(input, expect, 2513011304))
 
 	def test_2513011305(self):
 		input = '''
-var XQV[41.979,1E+16] ## qlkmZwzOb3*Zz
-func bAI (var L1[691.469], string hxC[22,279,54e37], bool KqO[4,0,9e+88])
-	return
-
+## (,)nPg
+number M8[311.103e-64] ## +:9I&Y
 '''
-		expect = '''Error on line 2 col 7: ['''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011305))
 
 	def test_2513011306(self):
 		input = '''
-func nL ()	return
-bool md[678] ## ET4-Sb4E|l,2CWi}
-## feZP
+func Xxlr (bool lx[672.867e+55,0.944E32], var MEMl[737.853,19E-73,87.089E+71])	return Kb
+bool Han[16,1.995e+09] ## n(2`nb}/~l {{sIB
+## 1B9g}Z/HDS1/g$x~P
+func zGxB ()
+	return false
+var ytEr[533,578.724e80,192] <- 26E+25 ## Wyn
 '''
-		expect = '''successful'''
+		expect = '''Error on line 2 col 42: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011306))
 
 	def test_2513011307(self):
 		input = '''
-func lkL (dynamic Y42R, string QoqN[71.788E-88])	return
+func enW (number xW, var TL, bool ik)	return
 
-## IPgv401jrxn>;eoV)M#
-func dLUB ()	return C7Mv
-bool ARi[5e59]
+## EE4V:[Ur
+## RKrtJLn0zSoa
+## &ge!5m 0oe+
 '''
-		expect = '''Error on line 2 col 10: dynamic'''
+		expect = '''Error on line 2 col 21: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011307))
 
 	def test_2513011308(self):
 		input = '''
-## u>bsW5-^Vx5b2%s.wi~
+## F"cu[M"(Ro?,
 '''
 		expect = '''Error on line 3 col 0: <EOF>'''
 		self.assertTrue(TestParser.test(input, expect, 2513011308))
 
 	def test_2513011309(self):
 		input = '''
-func HSNh (dynamic EB1j[15.891], number TYmP)
-	return "Qj"
-func INMf (number yH[49e93,37.474E-54], number ZkX)
-	return 357.935e-41
+var aXe ## 5}$qS6T`VpV<E
+## Xoq
+## R3L>UY=&}w%O
+## U54
+bool bV ## eicb/yqc=]ufL$EAN
 '''
-		expect = '''Error on line 2 col 11: dynamic'''
+		expect = '''Error on line 2 col 24: 
+'''
 		self.assertTrue(TestParser.test(input, expect, 2513011309))
 
 	def test_2513011310(self):
 		input = '''
-## 7u$Z
-## Le`Nt>fEoi
-## T+;?I-yZ*|6/}x
+bool du[697.090E+07,8e-99,574.161e-22] <- 495.974 ## !z$%
 '''
-		expect = '''Error on line 5 col 0: <EOF>'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011310))
 
 	def test_2513011311(self):
 		input = '''
-number niMw[2e+47] <- "'"" ## }nxHd>wcnI9()
+## 8tn35Ot&6QRjHC$
 '''
-		expect = '''successful'''
+		expect = '''Error on line 3 col 0: <EOF>'''
 		self.assertTrue(TestParser.test(input, expect, 2513011311))
 
 	def test_2513011312(self):
 		input = '''
-string B_se <- odpS ## q
-## <j7keZ0O6?D
-func h4I (var cAj6[799,8.417])	return
-func qaWI (bool XMBX[42E+65], string RM, var qO[3,6.519,584])
-	begin
-		number t35[442.652E+26,838,40e-68] <- true ## xZkE
-		begin
-		end
-	end
+## :.cF/4,xN
+## ]LW6NG>JB
+## /9
+func NEx (dynamic qB0[851], dynamic Kbi[66E+30,57.028E11], number RbJ0[248E-23])	return "'"'"'"r'""
 
-## q #
 '''
-		expect = '''Error on line 4 col 10: var'''
+		expect = '''Error on line 5 col 10: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011312))
 
 	def test_2513011313(self):
 		input = '''
-number H_[29,6.438]
-## |44^N`H
+bool Fri
+bool f8bt ## C>!b&&3|
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011313))
 
 	def test_2513011314(self):
 		input = '''
-func lj (bool FjAz[22,67.338], dynamic Nw)	begin
-	end
-func Fi (var rC)
-	return 87
-
-string hJ[6,5.295,2.692E85] <- 162
+## ~Rv>V,y
 '''
-		expect = '''Error on line 2 col 31: dynamic'''
+		expect = '''Error on line 3 col 0: <EOF>'''
 		self.assertTrue(TestParser.test(input, expect, 2513011314))
 
 	def test_2513011315(self):
 		input = '''
-func L97 (string U3z2[72.114], var feD)
-	begin
-		RCuO("'"y")
-		## m^;e
-	end
-string Ji[5.996E-93,145.295e-28,153.393] ## ?qn"Zf6GI>NN%oX|z<Rj
-bool Tve4
-## MKW?
+func POiu (var un3, bool n8S0[91,38.177e+24,859.555], dynamic al)
+	return V6S
+
 '''
-		expect = '''Error on line 2 col 31: var'''
+		expect = '''Error on line 2 col 11: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011315))
 
 	def test_2513011316(self):
 		input = '''
-number x2B2[4e+73] ## @Bj ]4~AM
-var y23 <- "n$'"kC" ## V!uc5I&j[skLV6
-func aP7 (var Iuvs, dynamic FuG)	begin
-		## RUEvgj6 7eJvE?"
-		MJ[false, "'"M'"'"'"", ivgY] <- false
-	end
-## ek~<Z3dP
+string dm ## hY[yRUQ]&.P_3]7+7q2C
 '''
-		expect = '''Error on line 4 col 10: var'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011316))
 
 	def test_2513011317(self):
 		input = '''
-## ng#*!kVXA{%H
-var L2n
-func uIPP (var KGgo[21E35])
-	begin
-		## 9(T
+func C4 (dynamic Zf, string Dq3e[6.294e+37])	begin
+		## FKw7-mHKs?c>^[]Y
+		break
 	end
 
-## ;d${12{"OA$U
-'''
-		expect = '''Error on line 3 col 7: 
+number WyAj <- "'"'"'"'"C"
+number Dl <- true ## )8=e$FQhV5?%
+func KJKi (number awj, dynamic Y5a)
+	return TJv
+func Y1 (var Kg, string alo[2.380])	return "s,V^"
 
 '''
+		expect = '''Error on line 2 col 9: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011317))
 
 	def test_2513011318(self):
 		input = '''
-## }e)th+PU-o+[q
-func AlCP (number Xg[28.229])
-	begin
-		## ml";4P41?a4C:d
-		L0["'"", true, "I'"'"'"c"] <- "'"&"
-		## WT
-	end
+## !93H35lKFb_v1%u-
+number cFOr
+bool l7Y ## !7@n[qS>Dp7Z3uO:>
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011318))
 
 	def test_2513011319(self):
 		input = '''
-func vM2q (string W3eh[8e-26,119.787,21E15], string dC6)	begin
-		number Whzj[0.045]
+## XiQ1m
+func Xpbo (string S8J[855,193,898], number KE)
+	begin
+		number uAa
+		for A0 until 838 by OI
+			var STH[18.132e+41] ## #uZx{6b8St
+		break
 	end
-string w4Q <- 490.334e+88
-func cN7 (string EMC7[5.454E25,8,45.182E-16], string SxGn)	return
 
 '''
-		expect = '''successful'''
+		expect = '''Error on line 7 col 10: ['''
 		self.assertTrue(TestParser.test(input, expect, 2513011319))
 
 	def test_2513011320(self):
 		input = '''
-## y1>Vot})3^t0?bD
-func sxY (string ZgA, dynamic pB4[28.919e+32], bool Md)
-	return BQXe
+## hMt!v>ELfz{[s=& h4wF
+## d&`W4u~C?wC&
+## *?q&y/=o3~Tsk
+bool FwC <- ";Aj"
+var G6[7.914E23,672.300e71,7.192E+34] <- Kp
 '''
-		expect = '''Error on line 3 col 22: dynamic'''
+		expect = '''Error on line 6 col 6: ['''
 		self.assertTrue(TestParser.test(input, expect, 2513011320))
 
 	def test_2513011321(self):
 		input = '''
-number VY[0] <- 74.612e+42 ## (5hwO&aUXVS8a<j+1+2P
+func EV (number rEQ, var vrf[35.484])
+	return vL1Z
+
 '''
-		expect = '''successful'''
+		expect = '''Error on line 2 col 21: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011321))
 
 	def test_2513011322(self):
 		input = '''
-bool H9B[66E+97,6,1.871] <- yIa ## Qvh[gj(L#7b"
-func e9u (number DF, string xcl)
-	return
-## 2WBCE98
-func R7 ()	begin
-		continue
-	end
+## lyJM5b6Y
+func NML (bool R4qb)
+	return true
 
+func nZqd (dynamic sjuO[44,7,4], dynamic MA, dynamic CZ3S[16E29,4.207])
+	return
+func Na4 (var iujT[68], dynamic sI)	begin
+		## upMnZ%&8BNi{2iFA
+		if (77e41)
+		continue
+		elif (true)
+		string ob0o ## ~^1i3NlY3RsEf,
+		elif (false) begin
+			begin
+				## E%}n4!}cs
+				## T&k EvBSfVo
+			end
+			bool RHlW ## xC.s
+			Q6c7[BDzk] <- "YIBr"
+		end
+		elif ("'"") continue
+		elif (VH) continue
+		elif (true) dynamic Jp4y <- "0'"'""
+		return
+	end
+## ;!Q7]^xa[rU0K+>nb
 '''
-		expect = '''successful'''
+		expect = '''Error on line 6 col 11: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011322))
 
 	def test_2513011323(self):
 		input = '''
-bool mV
-number XZq ## pg#K Z$jW~oD|S`
-func qvpq (bool sS[4.322,56e+26,75E42], number VucP)
-	return
-
+## )"iw
 '''
-		expect = '''successful'''
+		expect = '''Error on line 3 col 0: <EOF>'''
 		self.assertTrue(TestParser.test(input, expect, 2513011323))
 
 	def test_2513011324(self):
 		input = '''
-var y_uN <- Ak
-dynamic Cxo[5.534,834.196] ## y|OmF""v}{`(
+var iay ## fi
 '''
-		expect = '''Error on line 3 col 11: ['''
+		expect = '''Error on line 2 col 13: 
+'''
 		self.assertTrue(TestParser.test(input, expect, 2513011324))
 
 	def test_2513011325(self):
 		input = '''
-bool O7Xl <- "'""
+func tF (bool qpAX[183E07,5], number NSVP[4.899,197e-61,1.563e-45])	return
+dynamic XIC[11.993E+89,26.459] ## 2=qT 
 '''
-		expect = '''successful'''
+		expect = '''Error on line 3 col 11: ['''
 		self.assertTrue(TestParser.test(input, expect, 2513011325))
 
 	def test_2513011326(self):
 		input = '''
-## MW1;`04>X|:K%DO(:X]L
+func xNh8 (var SzD[6e-81,97e-04])	return
+
+func up ()	return jKL
+
+string hp <- "'"'"D%" ## Q7Z{2K&q6,F&m
+bool usM5 ## Gy2id&>3g=HE72sLN
 '''
-		expect = '''Error on line 3 col 0: <EOF>'''
+		expect = '''Error on line 2 col 11: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011326))
 
 	def test_2513011327(self):
 		input = '''
-var Ykjz <- 81.181
-## #alp~W}r;]8FN
-func bzI ()
-	return
-
+## JL{E{?:7m
 '''
-		expect = '''successful'''
+		expect = '''Error on line 3 col 0: <EOF>'''
 		self.assertTrue(TestParser.test(input, expect, 2513011327))
 
 	def test_2513011328(self):
 		input = '''
-func Za (number Yb[13e+43,13.562e-26], number q3[3e-96,5.947E-13], dynamic w5OV)	begin
-		begin
-			## c
-			if (false)
-			KA <- true
-			elif ("p'"l3j") dynamic EMsq[574,674.315E55,77.621] <- QjR ## csg9k![jn[!S}R
-			elif ("'"")
-			string ID
-			elif (482E+89) begin
-				continue
-				## Y|DJmp
-				## d(vu_{[EI
-			end
-			elif (29.744E-05) return
-		end
-		## _(:{#&~d
-	end
-
-dynamic OD[7.647,860,4.731e+82]
-dynamic OpCU[490.909e27] <- 20.404
-## A~cL:
+## x]0u)y
+## m3!9"~>r+ |I
 '''
-		expect = '''Error on line 2 col 67: dynamic'''
+		expect = '''Error on line 4 col 0: <EOF>'''
 		self.assertTrue(TestParser.test(input, expect, 2513011328))
 
 	def test_2513011329(self):
 		input = '''
-func olb (var T1[58.448E-25], number mVAl[335,18,73], string Ib)	return
+var Er6m[86] <- "'",s" ## BG
+func ZEgE (string KSyW[905.600], string qye, dynamic tf7[7.196E-88,3,2.284E+94])
+	return Hv
 
-bool w7[7,42.793,18.686] <- k_Y3 ## vQ
-bool Kd8q
-func hIy ()
-	return false
-func hG9 (string LNCu[4.190])
-	return
+func o5 (string bnmD[79.739E-89,9E63,91.049e-31])	begin
+		## o]Qc
+		break
+	end
+## w.6xz%VD"Zp$Wp`#
+bool nASa[5,66,3.270E+90] ## Z]B/BG&VI/[JW-8t
 '''
-		expect = '''Error on line 2 col 10: var'''
+		expect = '''Error on line 2 col 8: ['''
 		self.assertTrue(TestParser.test(input, expect, 2513011329))
 
 	def test_2513011330(self):
 		input = '''
-func Azm (var vf, dynamic jpOc[7])
+func NeLU (number ytr, bool Qs)
 	begin
+		return false
+		break
 	end
+number pu_c[26] ## c
+func KW5H (dynamic n7iH)
+	begin
+		## t_8[cE
+	end
+## zB!uteJ9J({
+func ABKM (string kv2a[931,2.799e98])	return
 
-func pi4q (number Ab[175E82,51e-48], dynamic Dy0[55,56.686e+34])	return
-
-dynamic b5xO <- sT0
 '''
-		expect = '''Error on line 2 col 10: var'''
+		expect = '''Error on line 8 col 11: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011330))
 
 	def test_2513011331(self):
 		input = '''
-## 5@]&&M
-dynamic pgsu <- "'"n;"
-func P8 (bool Uj[9.601,104,463.558], dynamic SBP, string q8[58E+03])	return
+## 2n"$=}A0^OHS;
+func Hc (bool LqZ[77])
+	return
 
-## ?4!Irw1>|5"K
-func X6si ()
-	begin
-		## 6|QKGg+;tAVN`Yj4#6
-		X4Dq[false] <- 59.628e-03
-		msk(5)[cvS, true, 535e+25] <- "'"'"'"'""
-	end
+## 2_[p"(Uc.1
 '''
-		expect = '''Error on line 4 col 37: dynamic'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011331))
 
 	def test_2513011332(self):
 		input = '''
-func oHt ()
+func v0Dk (var aWN[875,445e+47,56])
+	return HB
+## K vD.K@!C&q|/~ImA-p
+func eC ()
 	return
-var yHv
+dynamic HfvA
 '''
-		expect = '''Error on line 4 col 7: 
-
-'''
+		expect = '''Error on line 2 col 11: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011332))
 
 	def test_2513011333(self):
 		input = '''
-func KXS ()
-	begin
-		for qN0M until vMeZ by BOnY
-			gMy(8E74, vPd, "K'"'"'"4")[Qsmy, "H'""] <- 48
-		## g:O(@<
-	end
-## pU6Bdnz
-func Jz (number BSQ[3.634E+96,50.805], number nfzC[8.890,438.765e-15], bool xVti[848.562,8.034,157.621e29])
-	return "'"1'"'""
-bool xZ[405] ## L-7+3DL]O$"#CN!.I
+func QAxY ()	return
+
+func z15 ()
+	return
+
+func a5 (bool CEf6)	return
 '''
-		expect = '''Error on line 5 col 29: ['''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011333))
 
 	def test_2513011334(self):
 		input = '''
-## uaD"jI=5bYVa.C4/72M
+func OGih (bool RO, bool zVTL[5], bool A5L[169.359E72])	begin
+		for Y08z until EhYe by "2b'""
+			var waEi[63.114E18,9] <- kV ## ~r7H&uG#DcV
+		continue
+		## $
+	end
+
 '''
-		expect = '''Error on line 3 col 0: <EOF>'''
+		expect = '''Error on line 4 col 11: ['''
 		self.assertTrue(TestParser.test(input, expect, 2513011334))
 
 	def test_2513011335(self):
 		input = '''
-dynamic Rv
-## Xud"H4Vv
-func gY (number Frye[38e+30,79.158,49.773e-03], dynamic xYbp[2E-59,3E91], bool zoiw)
-	begin
-		## g(5&.
-		if ("'"'"'"]")
-		break
-		elif (dRVD) if (2E77)
-		begin
-		end
-		elif (10.014)
-		continue
-		elif (6E+86) var qHxK ## zWop|:Y1BG4
-		else string wW[2.250] <- n_G
-		elif ("1'"")
-		return false
-		else return
-		## 9hY +CD/,gaU:fa d
-	end
+## ~qx$)
+## .,/SC1
 '''
-		expect = '''Error on line 4 col 48: dynamic'''
+		expect = '''Error on line 4 col 0: <EOF>'''
 		self.assertTrue(TestParser.test(input, expect, 2513011335))
 
 	def test_2513011336(self):
 		input = '''
-## pAim2{*U-l9
-## B
-bool bj6j[7.523e+07] <- true
+number LbqW <- M5K
+## 4>JEV%p2^`|@8
+func MyH (dynamic KO[8e10,768])
+	begin
+		## Q#H
+	end
+
 '''
-		expect = '''successful'''
+		expect = '''Error on line 4 col 10: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011336))
 
 	def test_2513011337(self):
 		input = '''
-var hZho[654.176e28] ## <q6lYg@$#X"N;Syt 
-func t4 (dynamic pFO, dynamic t0e, bool FjM[9])	return "'"'"#PF"
+## g`
+func GL ()
+	return 425.252E-82
 
-## $T:V$
 '''
-		expect = '''Error on line 2 col 8: ['''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011337))
 
 	def test_2513011338(self):
 		input = '''
-var q2I6[0.631e97,208.004e-68,15e-34]
-func nfuX ()	return
+## zUAJ IVMW26#xf:-
+func e5j (var dz[844.388E-27,44.493,489e+50], dynamic gX, string as9s)	return
 
 '''
-		expect = '''Error on line 2 col 8: ['''
+		expect = '''Error on line 3 col 10: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011338))
 
 	def test_2513011339(self):
 		input = '''
-## 3d,c
-bool IHn[49E+67,139.018e-75,92.120] ## jNP
-## AfJ+>](w^>Z/:[
-## >
-dynamic wM
+string eS <- pz ## RC@X,o=M,.R6f]-dAGV
+string xp1F <- "'""
+func wkP (dynamic XT[7.580E+09,9.275,333], dynamic ff)
+	return
 '''
-		expect = '''successful'''
+		expect = '''Error on line 4 col 10: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011339))
 
 	def test_2513011340(self):
 		input = '''
-## f}z6ZWlw$@flOD6$PaZ
+bool X8 <- 0
+string M_[930E-13,5.675E+91,622] ## r|j-+
 '''
-		expect = '''Error on line 3 col 0: <EOF>'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011340))
 
 	def test_2513011341(self):
 		input = '''
-string VXa[53.790,0,59.167E-62] <- ",'""
-var tn[65e84]
+func d7 ()	return
+
+func GdWU ()	return
+
+## dR>
 '''
-		expect = '''Error on line 3 col 6: ['''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011341))
 
 	def test_2513011342(self):
 		input = '''
-## :0o4=qi/*3<M"asZrLC
-## ok/}@3vcD
-## Db5_2
-## K@
+var GSw <- 77e+53 ## [&9HnzF&.4mu
+##  s
 '''
-		expect = '''Error on line 6 col 0: <EOF>'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011342))
 
 	def test_2513011343(self):
 		input = '''
-## Z
-string SGB[9.407E59,508e-96]
-string hpB <- true ## !zghh?k2{a
+dynamic sJ <- false ## hSTNRmvOQtL5(Y>~*g
+func yP (string lr5, number Qh[0e+55,8])	return tI
+
+func ofO2 (bool daJi[939.263])
+	return false
+string Asl ## NJ)]Ph~1$B^T1.^
+## c
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011343))
 
 	def test_2513011344(self):
 		input = '''
-var xc[43,760,952.631E-51] <- 8.026 ## ;
-var Giib[80.550E+28] <- Zv7y
+string yA_ ## DHdnCq
+func SYRX (string DO7r[376.430e04])	return
+## N2t*
+## GvkxC19
 '''
-		expect = '''Error on line 2 col 6: ['''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011344))
 
 	def test_2513011345(self):
 		input = '''
-dynamic GwA[72]
-## +d2,XxhaP|LA7-mR{=
-number kSm ## qWj]KK$dt(&
-## l5Y"Puh 2+$,WE
-string RQP <- ePOf ## 6La&RR:a)J2fwUY27ZM
+## nn[Mi?u=7aUSe=g=jl
+func tVl0 (dynamic Rz[790e+09,340.463])
+	begin
+		## Dc8lEV-) W`tP9Q3Q
+		nO(56E+42, "'"'"'"'"4", 1.439)
+		string XS5k[91e+62] ## /KNzB$V4?U_g
+	end
+
+var vX <- "'"'"4" ## T
 '''
-		expect = '''Error on line 2 col 11: ['''
+		expect = '''Error on line 3 col 11: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011345))
 
 	def test_2513011346(self):
 		input = '''
-func Otn2 (string ql4j[74E64])	return true
+number HV6H <- "'"'"!" ## 5RC4eLJLoF5vl
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011346))
 
 	def test_2513011347(self):
 		input = '''
-## H64;-&)(xTYms?*z
+bool B1DA[1e+99,958e68,80.924E+90]
+func WV (var qu[55.485E89,8.821], var LI)	begin
+		## J6cbgeC;=o;TRF|~3qI
+		## 46jn
+	end
+
 '''
-		expect = '''Error on line 3 col 0: <EOF>'''
+		expect = '''Error on line 3 col 9: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011347))
 
 	def test_2513011348(self):
 		input = '''
-## "/
-number F56T <- 894E-18
+func gjiL ()	return true
+
+func RP9 ()	begin
+		number ZpD <- 143
+		continue
+		continue
+	end
+bool C16[698e+74] <- "'"'"'"'"" ## 6W@7}.8${boSE
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011348))
 
 	def test_2513011349(self):
 		input = '''
-## lO"1Bp8})qbd/
-## 3v
-func wz (number kF[649e88,3E-91,29e-91], bool dQ, bool KBi[616.733E-24,45.712E+79,1])
-	begin
-		if (true) continue
-		elif (i9_M)
-		begin
-			## B6E?W3
-		end
-		elif (360.030E+38)
-		break
-		elif ("C'"8'"'"")
-		if (2)
-		continue
-		elif ("'"X8")
-		continue
-		elif (CM) continue
-		else begin
-			IUr()
-			break
-		end
-		else x0O6()
-	end
-
-## UW
-## F6kHn@0uH`*F"B:
+dynamic apm[1.378E+48,72.144,9] ## E/<;?DHOx(BWTY
+## m
+## xx3`-F$Yx7A!S*,c2+
+## ="|jWNSPN?<G:
 '''
-		expect = '''successful'''
+		expect = '''Error on line 2 col 11: ['''
 		self.assertTrue(TestParser.test(input, expect, 2513011349))
 
 	def test_2513011350(self):
 		input = '''
-func txr (bool EQ, dynamic L6r, number g6[775])
-	return 0.273
+func uExD (var UP)
+	begin
+		## Gq7h5
+	end
 
-## gFr=6S|1@osz+`|^f]j?
-## ]Gq
-## VC.
+## 8I`VM5^Q5|YZ2}6)5
+func Sy ()	begin
+		## a~[t
+		break
+	end
+
+func Wa (var pQ1T)
+	return "('""
+var jfq ## :1i
 '''
-		expect = '''Error on line 2 col 19: dynamic'''
+		expect = '''Error on line 2 col 11: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011350))
 
 	def test_2513011351(self):
 		input = '''
-bool tRQ <- 856.149e-64 ## /}Ph/vGQ
+string mQH6[57.933,7e-80] <- Jxs ## ]zg{
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011351))
 
 	def test_2513011352(self):
 		input = '''
-## 8yR y7|r
-## S&o=z]l*w)
-func xwva (var yxf[69,5.601,7E-66], bool m2[97])	return
-
+number w1[14.951]
 '''
-		expect = '''Error on line 4 col 11: var'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011352))
 
 	def test_2513011353(self):
 		input = '''
-## -j1D
-bool Oh[670] ## y><b*+B6eGV}D^^yyq:
+number Fjqc[762.838e-01,78] ## xg00J10={9jomx
+number CGR1 <- "'":'"'"'""
+number Bhcm <- true ## 25U}48r6*
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011353))
 
 	def test_2513011354(self):
 		input = '''
-## cd-7GmgD**@vDS
+## AbjyW|
+number Hufi[0] <- true
 '''
-		expect = '''Error on line 3 col 0: <EOF>'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011354))
 
 	def test_2513011355(self):
 		input = '''
-bool Obe[30.663e-66,6.071,7.919] <- rPf
+## DV_/Q-y~L
+bool eX4 <- false
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011355))
 
 	def test_2513011356(self):
 		input = '''
-func gC (string yk6S[0E-18,29.784,55.613E47], dynamic EyX[47e-25,90E+07,74])	return 94.344
-bool jo
-## Pc@zz
+bool klU <- aTu0 ## 0:&y#FMqx?O
+## b
+## O3|QwnR.gwMb0*hZ
 '''
-		expect = '''Error on line 2 col 46: dynamic'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011356))
 
 	def test_2513011357(self):
 		input = '''
-## E<#(WF/ccos,p2VO4A=
+var ve[517.064,31] <- 5 ## QS,!@$%#QPVIt| 
+string yRt <- "'"U'"."
+dynamic tD[7.821e77,993] ## p2YC>^DW>v6|S%BJz
+bool GSQ
+number PZ[738.512,30.554e+86] <- 28E77
 '''
-		expect = '''Error on line 3 col 0: <EOF>'''
+		expect = '''Error on line 2 col 6: ['''
 		self.assertTrue(TestParser.test(input, expect, 2513011357))
 
 	def test_2513011358(self):
 		input = '''
-number s97 ## :p2t;$
-## X {d
-## -j 25CZUB4`1`s
-dynamic DU <- 14.779E-45
+func fvGz (string TMU[33E-54,53])	return MZGA
+
+bool of
+func nKUo (var O58k)	begin
+		var yc
+	end
+
 '''
-		expect = '''successful'''
+		expect = '''Error on line 5 col 11: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011358))
 
 	def test_2513011359(self):
 		input = '''
-## *iRH8zWH
-func EV (number un[8.216,12,795.076])
-	return "E"
-
-dynamic Qi
+number q0ob[9] <- true ## ej|`hQ[1R}dMM,5tK";Q
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011359))
 
 	def test_2513011360(self):
 		input = '''
-string WZ
-var NI0[4.818]
-## ZGZL3h
-func KZ ()
-	begin
-	end
-
+## ;$+%
+## al$SIU?>ju*z
 '''
-		expect = '''Error on line 3 col 7: ['''
+		expect = '''Error on line 4 col 0: <EOF>'''
 		self.assertTrue(TestParser.test(input, expect, 2513011360))
 
 	def test_2513011361(self):
 		input = '''
-## vp/7/$4.Yc,Vc`Kcu-Tv
-bool wd[99.824E+48] <- B796
+## 7#yo:V
+func Ds (dynamic j8)	begin
+	end
+
+string xJKh <- 862 ## r{eE
 '''
-		expect = '''successful'''
+		expect = '''Error on line 3 col 9: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011361))
 
 	def test_2513011362(self):
 		input = '''
-## Y vbK*):uK_
-func k5 ()	return
-func q5 ()	begin
-	end
-## uJj~U`"]2ONa
+## .F)?2!%LM
 '''
-		expect = '''successful'''
+		expect = '''Error on line 3 col 0: <EOF>'''
 		self.assertTrue(TestParser.test(input, expect, 2513011362))
 
 	def test_2513011363(self):
 		input = '''
-func Vocr ()
-	begin
-		if (VY5i) gj("'"'"'"'"", Yi0)
-		elif (PaE1)
-		continue
-		elif (CSO)
-		begin
-			return
-			## ^"-oP+5rnc@*~
-		end
-		elif (false)
-		continue
-		elif (438e-04)
-		var vc
-		elif (600.959e+38)
-		break
-		else X_m <- 33.307
-		## T*IG_1uZK
-		if ("'"'"'"") if ("~l") begin
-			ql()["3'"'"'""] <- "'"'"T'""
-			## i=|s7oLQ
-		end
-		elif (zn) for H8 until "'"'"'"'"" by mHui
-			wI9(hCpk, true, "'"u")
-		elif ("'"g") if (Kr)
-		md("y'"=Wh", "@'"", "w'"'"'"")
-		elif (false) Hm9d(false)[HPEA, 99e19] <- "G_'"'""
-		elif (8e-77) begin
-			## D
-			## ]yeyRsw-61
-			break
-		end
-		elif ("'"'"'"C'"")
-		O4(968, 644E-49, "'"")
-		elif ("V") begin
-			string Sof <- b3N ## H8x.o2_Be"qS
-			begin
-				for Qit until 0 by false
-					SVD4(false, "D?Y", "K'"r'"")
-				## F&OP@G]L
-				## AZB1i}vY
-			end
-			## L0:^s$}rP/o"
-		end
-		else return
-		elif ("S'"") break
-		elif ("w`:?") iSt(74e+48, false)
-		elif (Nt) yLL(n5, true)
-		else string XjJ <- "'"'"'"'"f"
-		elif (false)
-		v0m("'"'"'"'"")[true] <- 88.160
-		elif (uw6) continue
-		elif (625E34) BS2_ <- true
-		else for Ex until iNMg by "h'"Y!"
-			break
-	end
-## KjY#:sNn8F+u:q0]X4zh
-func gP (var w6s)	begin
-		begin
-			eA1F <- "'"'""
-			return z9A
-			##  o f
-		end
-	end
-func pV5 (dynamic aZe[7.973E-20,52,683.282])
-	begin
-	end
-
+## e#cB_6di2Jxnarv;NSlf
+## dk-9l.K5fj}0CD[{Iv>
+## ~ps#
+func ns (string Fr, var mNs[82.636E-21])	return aFHE
+number XITL <- VV ## za[-
 '''
-		expect = '''Error on line 15 col 8: 
-
-'''
+		expect = '''Error on line 5 col 20: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011363))
 
 	def test_2513011364(self):
 		input = '''
-dynamic sG[3,1.421,945e96] ## On
-## ZI#4wEVu2gL=ZGS
-func LIr ()
-	begin
-		## 95ydQE
-		## *Ap{U!X1$E0t
-		continue
-	end
-## ~EhHTM
-var eR[32.023,225.966E-91] <- 339E18
+func Il9 (var rAF, dynamic hg1s[2,6.982], number W2L[4.081])	return true
+
+func C9 (number GO, var zAl[460e43])
+	return
+
 '''
-		expect = '''Error on line 2 col 10: ['''
+		expect = '''Error on line 2 col 10: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011364))
 
 	def test_2513011365(self):
 		input = '''
-func lWj ()	begin
-		for EZ until "'"(" by "5'""
-			break
-		if (PwG) return
-		elif (bROm)
-		gJ()
-		elif (GfW4)
-		continue
-		elif (67) if ("$YL")
-		continue
-		elif ("'"'"Q") bool mB[75e+79] <- 56.236E-10
-		elif ("g")
-		return "'"'"'"'""
-		elif (590.462) break
-		if (true) var RN[46e-95,7.391e+41,0E-91]
-		elif ("%v'"'"'"") return "'"'"'""
-		elif ("'"BF") if (PH) continue
-		elif (46.298E+31) begin
-		end
-		elif (407.727e-68) break
-		elif ("o") return
-		elif ("z") break
-		elif (TQIu) string rel[525.289,3,289.597] <- 102.936
-		elif ("c'"$4'"")
-		begin
-			## P:P2z"9UpDQ+
-		end
-		elif (qw) bool KGQ
-		else break
-	end
+bool WxX <- 32.611E-96 ## MS+7g.9mF=>^5C!?
+func bHPG (number efHX[774,62,7E+96], number R6h[16,281,5], number GG)
+	return CvhD
 
-bool Gyb <- RIv9
+## awzL,a1G]Tm7bQ^
+var NA[647E-55] <- JW ## lWG(~m7:2&j6(S%,
 '''
-		expect = '''Error on line 16 col 18: ['''
+		expect = '''Error on line 7 col 6: ['''
 		self.assertTrue(TestParser.test(input, expect, 2513011365))
 
 	def test_2513011366(self):
 		input = '''
-## ["KGBnO<>g"$_2!LIWJ
-func NTIK (var Qj[60], dynamic Ja)
-	return
-bool Te ## G7V=E+~*
-## V
+## ~
+## DrZSEe?2CE>Lfw^-
+bool obz
+bool ks1
 '''
-		expect = '''Error on line 3 col 11: var'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011366))
 
 	def test_2513011367(self):
 		input = '''
-## 6IcP>6F:=IP
-## <_$<
-## yb8~zB</~q4y`H$ !63
-bool rdj
+## KK&SSydro,ryqXrh)iu
 '''
-		expect = '''successful'''
+		expect = '''Error on line 3 col 0: <EOF>'''
 		self.assertTrue(TestParser.test(input, expect, 2513011367))
 
 	def test_2513011368(self):
 		input = '''
-bool n7[342]
-## <f/FC)/!km
-func hcx ()
-	begin
-		## Gd~x_|Ak
-	end
-bool ozxb <- Ti
+string Jt
+## Xf.mw6:WgT7s/
+## [)wf,v.
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011368))
 
 	def test_2513011369(self):
 		input = '''
-bool B7c ## L7rSjLFr5@jr-#@]eU
-var Lg <- "'"'"'"'"'""
-## mwWn%b(_xA:2:aQJ
-func MbQE (number Qz, bool B0PD, var gL)	begin
-		##  bF94*r%H&F
-	end
-## 1f,
+## Drui8PaxJH5Vx|
+func vCb (number NLRF[9E24,301.346], var hGQ[947e+44,904,37.430e51], bool bb)	return
+func lAX2 (number iDQ, dynamic i0f[531,6E+85,11E06], number iNG[328,557])	return
+
 '''
-		expect = '''Error on line 5 col 33: var'''
+		expect = '''Error on line 3 col 37: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011369))
 
 	def test_2513011370(self):
 		input = '''
-func clPr ()
-	return false
-
+string XVDW ## i8R`I/ 
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011370))
 
 	def test_2513011371(self):
 		input = '''
-func afM (var g5x, var s5[34.665])	return "?"
+## %S
+## :bPLqox[v|thdR@-
+func bH (string tn0[824.700,957], string QLVy[541e-76,0.755])	begin
+		## r07gk5>;~C#SoZ>QAF!;
+		if ("'"r'"'"") begin
+			## #wlBBlmY
+			if ("K")
+			break
+			elif (5) begin
+			end
+			elif (true)
+			continue
+			elif (VjI)
+			number laM <- "'"'"'"'"|" ## W]#Ovb$(~}d+
+			elif (true)
+			RH()
+			elif (false) for oX4 until fhbj by "#'""
+				return
+			## @*;dM@?O
+		end
+		elif ("'"") CPN <- 3.872
+	end
 
 '''
-		expect = '''Error on line 2 col 10: var'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011371))
 
 	def test_2513011372(self):
 		input = '''
-bool mzu6
-## 427_CV#S5U$mE-l+jd7x
+## x
+string pPpb[19.211,3.268e-01,319.552E-09] <- "'"" ## U,$_<@m,PW}#
+## ZJ=@)9H@,
+func LH (dynamic y45)	return
+
+## }MRRS:Vpr5B}&sJ
 '''
-		expect = '''successful'''
+		expect = '''Error on line 5 col 9: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011372))
 
 	def test_2513011373(self):
 		input = '''
-func su (var FfHd[8.411e20,825])
-	return true
-func qd9 (dynamic rK9p, number deN)
-	return Ic
-func ygRa (bool m5Y, dynamic bn[97.029E96,9,870], string QXy)	return
+dynamic Dzu ## N^~c5C.k
+func qyiW (dynamic SY[7], number JFsK[2.705,756], var SG)	return
+dynamic bzI
+bool AaI9
 '''
-		expect = '''Error on line 2 col 9: var'''
+		expect = '''Error on line 3 col 11: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011373))
 
 	def test_2513011374(self):
 		input = '''
-## $Z5d-1#LN
+## oGnjF
+## 1iu1/
+## ,"RbLeHtv)Gsdo1]
+func HuC (dynamic l1, var hA[433,420.882E67,46], var vfL[26.101,1.545,0.127])
+	return 10e82
+func a0bX (bool rn[91.504,943.639e+77])	begin
+		gJM()
+	end
+
 '''
-		expect = '''Error on line 3 col 0: <EOF>'''
+		expect = '''Error on line 5 col 10: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011374))
 
 	def test_2513011375(self):
 		input = '''
-## 6Qe
-number hMcF[234.883E+19] <- 4E-80 ## rLMx{[+)(5KW}n
-## `>/}e)| EVq6c
-## ;i2=}y
-func Cu (dynamic acq, bool xYIR)	return iyJ
+string C3[5.272] <- false
+func S9T (number Ic6w[78.058e10,306e-29], bool Ee)
+	return
+
+func kDh2 (bool C_9, bool Ya[643e-21,54E+05,96E13], bool Af)
+	return
 
 '''
-		expect = '''Error on line 6 col 9: dynamic'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011375))
 
 	def test_2513011376(self):
 		input = '''
-func jy (dynamic UM[2.947,399.031])	return false
+var YJ ## G4~jhz/=z
+number VpU <- true ## ;YWd 
+func dwq (bool heK, number Rn2, string F8Dw)	begin
+		## +N5>|e42</
+		for XxwA until "m" by false
+			begin
+				if ("'"'"3")
+				return
+				elif (39E+17) continue
+				else Pc9(js, false, "?'"'"")
+				begin
+				end
+				## @
+			end
+	end
 
+var EvG[22.820E+50] <- 59.643 ## U!%]JU=G
 '''
-		expect = '''Error on line 2 col 9: dynamic'''
+		expect = '''Error on line 2 col 19: 
+'''
 		self.assertTrue(TestParser.test(input, expect, 2513011376))
 
 	def test_2513011377(self):
 		input = '''
-dynamic h5[75.792e30,22.541e-52] <- PLtq ## T
-bool n2D <- 46.875 ## /~ lSIK
-func SvwV (string vMiA)
-	begin
-		continue
-		## YO
-	end
-## a&
+string eGp <- "'""
+dynamic mTxc[5.549E+61] <- 9e-12 ## -m,|EEEUAGv?;g8<B
+## %Ct0XDS{t;WAg-{i
 '''
-		expect = '''Error on line 2 col 10: ['''
+		expect = '''Error on line 3 col 12: ['''
 		self.assertTrue(TestParser.test(input, expect, 2513011377))
 
 	def test_2513011378(self):
 		input = '''
-number OCwq <- 1.073 ## 73rXxd
-var z7[7.070e59,38,8.450] <- 11e+34 ## tYO(YQEPGBh
-## 5xE,@J
-func fE (string xm[31.457e+28], bool jf[381.583e-55,0E57,4.251E-87], var jN[99.446,72.192e-27])
-	return 53.907E-70
+func Xoz (var Mo, number IC[0E+61,71.104,16], var hs)	begin
+		break
+		return true
+		for zpT_ until ")'"j" by true
+			u3("*'"", true, true)
+	end
+dynamic Fc8
 '''
-		expect = '''Error on line 3 col 6: ['''
+		expect = '''Error on line 2 col 10: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011378))
 
 	def test_2513011379(self):
 		input = '''
-func CZyj ()	return
+bool Jn
+## UWNS5k4PDD
+## j
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011379))
 
 	def test_2513011380(self):
 		input = '''
-## 3[j:SvAL
-func kGC ()
-	begin
-		gru <- false
-		begin
-			## C+*GW_
-			## :Qp 7SMI8
-		end
-	end
-
-## ^z
-string QVBo[11,8.052] <- "p'"c'"w" ## -+(rc
-## &W[Wl
+func VW_ (dynamic Fj[26.823E+31])	return "'"'""
+dynamic WQYd ## >Hm#Fz
+## :"vZ&|oarkJ]TX4kDvgI
 '''
-		expect = '''successful'''
+		expect = '''Error on line 2 col 10: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011380))
 
 	def test_2513011381(self):
 		input = '''
-## ;v9nPR(vA@52JH7t
-func O2 ()	begin
-		mF()[false, true] <- A7q
-	end
-## I`dIU:M-.IX}RNm8=Ld
-var Lr[78.222e+08,73.835,512.893]
+string A0[2,7e-69,40.919e+98] <- ZB
 '''
-		expect = '''Error on line 4 col 6: ['''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011381))
 
 	def test_2513011382(self):
 		input = '''
-## Fk&Xe#GT,)
-## ;aV!vAG%$V17b
-func TO ()	return
-
-## t>gb%BTd&SLV2.MZJ!9|
-number lh <- "'"lM]N" ## PHzv(xQ`d
+string zQ
+## $v#2@EA-By=]&2K6
+number aKu[271.106,32E+52] ## pT+WRc>Z"7|-4*
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011382))
 
 	def test_2513011383(self):
 		input = '''
-## kPg(i=n,,H
-var vO[80E60] ## ;upaKTR&U~18`G
-## #I}2;iq.pWnrI([@kX^
-dynamic dN[2e-35,0.744]
+## P5/ta<cCyLg}%[mBDnmI
+bool MsC1 <- 3e40
+bool Tx5 ## ~di5B
+func Sly (var eZ)
+	return
+
 '''
-		expect = '''Error on line 3 col 6: ['''
+		expect = '''Error on line 5 col 10: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011383))
 
 	def test_2513011384(self):
 		input = '''
-## j`<r+$v1W|o-q
-bool Xjt0 ## q/!
-func vq0W (number iE[577e+46,3.340E-21], string HC, dynamic Umu_)	return 0
+func jpy0 (string Kzi[729.552e37], number iU5)	begin
+		## 0D(q, drS ,QDEbx
+		## |1c3.!H
+		## jDY#>2@GFF
+	end
+
+number hfW <- 92.584E54 ## BD||)SD;Q;?(
 '''
-		expect = '''Error on line 4 col 52: dynamic'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011384))
 
 	def test_2513011385(self):
 		input = '''
-dynamic RA4[9e-06,33.724e+13,79.560] <- 2
-## /@E~UN/t
+string EP[0.439E-84,3.666E-98]
+number B2E[92E89]
+## rYI!
 '''
-		expect = '''Error on line 2 col 11: ['''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011385))
 
 	def test_2513011386(self):
 		input = '''
-string p7[0.844,5.229e+17,217.667] ## [4p*:gfl?*=M,?p
-func CgG (number Ih[16.865,3.109,3.426E56], dynamic X_)
-	return 366.878e-83
-var hyNy ## T,K5OIz:fP
-string ws ## r5#].R=ury:m?
+func sbQ9 ()	begin
+	end
+## @F:_W:Yk*96g,Bw#*
+func h7PR ()	begin
+		## -#zo
+		begin
+			begin
+				if (929.146) i19(ATk)
+				else eu[true, 3, true] <- 87
+				return
+			end
+		end
+		string ez5[21.900,4E54] ## ?8y+Vsdi7F#FQ2p
+	end
+## ,u}`"HRVsPsclI|R$y)i
 '''
-		expect = '''Error on line 3 col 44: dynamic'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011386))
 
 	def test_2513011387(self):
 		input = '''
-## -y #|VQ-Mivo[
+func KFPA (number Edp, bool S0[38], number uQq)
+	return
+
+func g1j (bool Obf[822.641,6.204,74.705E+84], var ON, dynamic ByRi)
+	begin
+		if (UYh) continue
+		else for s2b until Na by false
+			number zsVD ## B5K^Llj"E.,HE:
+		## 2br/#4[K+iK?4{6[9
+	end
+## ho)vak3,841k0"ucp
 '''
-		expect = '''Error on line 3 col 0: <EOF>'''
+		expect = '''Error on line 5 col 46: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011387))
 
 	def test_2513011388(self):
 		input = '''
-dynamic YJv ## [bZq?Aa}Msk/}bZh!G(r
+func PM (string uL6[509,12])
+	return
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011388))
 
 	def test_2513011389(self):
 		input = '''
-string WtM ## =N5^Z[NC~C)O<ADS
-func II (number S2, dynamic qAh[35,4.526E21,47.379E+28])	return
-
+## |WY"b}}z
+bool ZE5I ## 4NeRZ=/o&
+number jf <- HOIO ## 8Y XL3M&&4Ywr%#
 '''
-		expect = '''Error on line 3 col 20: dynamic'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011389))
 
 	def test_2513011390(self):
 		input = '''
-func ZKfX (dynamic ip, number Ep7)	return
-## `K8h<1Wy4wr;En
+## p(OFTYqBssM_"YXJavC
 '''
-		expect = '''Error on line 2 col 11: dynamic'''
+		expect = '''Error on line 3 col 0: <EOF>'''
 		self.assertTrue(TestParser.test(input, expect, 2513011390))
 
 	def test_2513011391(self):
 		input = '''
-## 3][0GH
-func bhfL ()	return LQ9B
+func by (var pm[544.858E+41,83])	return
 
+## H/>T|RdB^8$>GM
+var w307[2E83,905.809]
 '''
-		expect = '''successful'''
+		expect = '''Error on line 2 col 5: by'''
 		self.assertTrue(TestParser.test(input, expect, 2513011391))
 
 	def test_2513011392(self):
 		input = '''
-string vB[4.686E+87,35] ## 66mJY!qm
-## "aS%0
+bool No1 <- 88.097
+number FO[56,4e+85,185.398e-50] <- 5e75 ## He/ ,8J0Z
+func rEa (bool P4[378,527E+16,2])
+	begin
+		## UFo:o
+		## [(Pcq`Hj
+		for IH until true by "<'""
+			return
+	end
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011392))
 
 	def test_2513011393(self):
 		input = '''
-## p)?OE}R,ZxPE1Nl=:Jv
-func tFc (var UhO, var b8W)	return uCmc
-
+func ZIpc (bool z6HM)	return 74.889e47
+## _pt
+func HNW (bool d1m, dynamic kDbZ, var NHme)
+	return
+string hHo[3.240E+48,7.457E83,1.919E91] <- true ## K!O$0BXNOg {AhZGiNr=
+var ABS8[54.524,12E-29,1.999E+39] ## #:Df
 '''
-		expect = '''Error on line 3 col 10: var'''
+		expect = '''Error on line 4 col 20: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011393))
 
 	def test_2513011394(self):
 		input = '''
-string bmsv ## ssOyaU_E;k
-## j_F_-Jta%
-## <,C!fS={r ue
-string l6YA[426.688,796E-53]
-func Lb9 (var uw, dynamic oLa[22.921e+55,69.307E-34], string aHaw[4.471])
-	return
+## &i`<$td> k1~4z|
+## S&>l+ppGXeZ$*zPP
+func xYE (number nC1[3.933,54.744E+89], bool qo, number rjq8[1E36,89.625,388.556E32])	begin
+		## _duZ
+		begin
+		end
+		## FL"f[jR##YCe
+	end
 '''
-		expect = '''Error on line 6 col 10: var'''
+		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011394))
 
 	def test_2513011395(self):
 		input = '''
-func YT3 (string hZ, dynamic voxz[9.092e19,9.668], string FL)
-	return 4.194
+func o0GY (dynamic S7f, bool GEpA)
+	return false
+string iiPd[67,581.002,23.009e-83] <- "kk0'""
+func DBA (dynamic kA[70e-11,70.999], dynamic kZU[2.927], string wez6)	return true
 
+func tfRK (var MrW8, dynamic yo_J[1,56,7.823])	return
 '''
-		expect = '''Error on line 2 col 21: dynamic'''
+		expect = '''Error on line 2 col 11: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011395))
 
 	def test_2513011396(self):
 		input = '''
-func Oub (string YfT[766])
-	return 1.591
+func ON75 (bool Bu[16E-56,72E03])
+	return p42
 
-## `X+9"v)IZX]e9S .
-var we[22,422,78.455]
-func S4 (var uG2[5.223E+61])
-	return
+number RrO[110,2E+61] <- "o'"SHY" ## d."f-e
+func JgSM (dynamic BppP)
+	return "'"4d^'""
+## v)Ro6&C{xi}j?%h
+bool FrPt[4.058] ## D0O=1Oak-3?)H=
 '''
-		expect = '''Error on line 6 col 6: ['''
+		expect = '''Error on line 6 col 11: dynamic'''
 		self.assertTrue(TestParser.test(input, expect, 2513011396))
 
 	def test_2513011397(self):
 		input = '''
-var W5Jx <- "/V'"'"]" ## g
-bool MuNU <- false ## t ]}n&y#FR
-string JIN[91.773]
-string OnV[9E09,2,54E-58] <- true
+var i0[849.897e-86] ## I}r^l5wF3:y
+func FH6 (bool JeF5[45.023], number QJ[564.318e+26,11.171])	return
 '''
-		expect = '''successful'''
+		expect = '''Error on line 2 col 6: ['''
 		self.assertTrue(TestParser.test(input, expect, 2513011397))
 
 	def test_2513011398(self):
 		input = '''
-## Z *
-func OLd (string FW, string sN, dynamic adz[16])	return false
-
-func qO9 (number sm1G)
-	return false
-
-## N~j(G*;o!b,uI6cWP
+func UmJz (var EGnb, var pWN)	begin
+		## c829Xbznsq[9kz7o
+		begin
+			## .2z]*u(vgAizwOHW?
+			## B~K
+			## hq)/*6Dgy)Ue?!
+		end
+		## Gi_x,QEAI>ZT^IY~
+	end
+## jd";P
+## U
+func Eq (number niqA[287.090E-26,4.323], number fe, var i8y)	return
+number GVSf[98,57.164,89E53]
 '''
-		expect = '''Error on line 3 col 32: dynamic'''
+		expect = '''Error on line 2 col 11: var'''
 		self.assertTrue(TestParser.test(input, expect, 2513011398))
 
 	def test_2513011399(self):
 		input = '''
-func pu (number NQg[2.478,751e+87])	return
-## 2l7w!
-## 8MQy3<;
-dynamic QVw <- "2'"'"'"m" ## OQ6k9ufg
+## zY/3C@#I"B4
+string Yh36 <- false
 '''
 		expect = '''successful'''
 		self.assertTrue(TestParser.test(input, expect, 2513011399))
