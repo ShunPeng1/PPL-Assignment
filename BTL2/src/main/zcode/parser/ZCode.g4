@@ -144,7 +144,7 @@ multiplying_expression		: multiplying_expression multiplicative_operator negatio
 negation_expression			: NOT negation_expression // Unary Prefix Right Associative
 							| sign_expression; // Next precedence
 
-sign_expression				: additive_operator sign_expression // Unary Prefix Right Associative
+sign_expression				: MINUS sign_expression // Unary Prefix Right Associative
 							| parenthesis_expression; // Next precedence
 
 parenthesis_expression		: LPAREN expression RPAREN // Parenthesis
