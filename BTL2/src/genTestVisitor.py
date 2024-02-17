@@ -98,7 +98,7 @@ class ZCodeProgram(Visitor):
         else:
             is_array_type = random.randint(0, 1) == 0
             kw = random.choice(keywords) if is_array_type == False else random.choice(keywords[2:])
-            expr = ' <- ' + self.visitZCodeExpression(mode) if random.randint(0, 1) == 1 else ""
+            expr = ' <- ' + self.visitZCodeExpression(mode) if random.randint(0, 1) == 1 or kw == "var" else ""
             if is_array_type:
                 len = random.randint(1, 3)
                 arr = "[{}]".format(

@@ -296,7 +296,8 @@ def main(argv):
     
     elif argv[0] == 'ASTGenSuite':
         ast = ASTGenerator()
-        for test in range(301, 401):
+        for test in range(21530115000, 21530116000):
+            print("Generating test case " + str(test) + " ..." )
             ast.gen(test)
 
 if __name__ == '__main__':

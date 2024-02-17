@@ -2,13 +2,15 @@ from ZCodeVisitor import ZCodeVisitor
 from ZCodeParser import ZCodeParser
 from AST import *
 
-class ASTGeneration(ZCodeVisitor):
+# Student : Banh Tan Thuan
+# Student ID : 2153011
+# Class : CC03
 
-        
+class ASTGeneration(ZCodeVisitor):
     
     # program						: newline_list? declaration_list newline_list? EOF;
     def visitProgram(self, ctx:ZCodeParser.ProgramContext):
-        print("Program ", ctx.declaration_list())
+       #print("Program ", ctx.declaration_list())
         program = Program(self.visit(ctx.declaration_list()))
         return program
 
@@ -37,13 +39,13 @@ class ASTGeneration(ZCodeVisitor):
     
     # local_statement_single		: newline_list? local_statement newline_list?;
     def visitLocal_statement_single(self, ctx:ZCodeParser.Local_statement_singleContext):
-        print("Local Statement Single ", ctx.local_statement())
+       #print("Local Statement Single ", ctx.local_statement())
         return self.visit(ctx.local_statement())
 
     # local_statement_list		    : (newline_list|local_statement) local_statement_list // Recursive
 	#	        					| ; // Empty statement list
     def visitLocal_statement_list(self, ctx:ZCodeParser.Local_statement_listContext):
-        print("Local Statement List ", ctx.local_statement(), ctx.local_statement_list())
+       #print("Local Statement List ", ctx.local_statement(), ctx.local_statement_list())
         
         if ctx.local_statement() and ctx.local_statement_list():
             return [self.visit(ctx.local_statement())] + self.visit(ctx.local_statement_list())
@@ -98,9 +100,9 @@ class ASTGeneration(ZCodeVisitor):
 
     # block_statement				: BEGIN newline_list local_statement_list END newline_list ;
     def visitBlock_statement(self, ctx:ZCodeParser.Block_statementContext):
-        print("Block Statement ", ctx.local_statement_list())
+       #print("Block Statement ", ctx.local_statement_list())
         block = Block(self.visit(ctx.local_statement_list()))
-        print("Block Statement ", block)
+       #print("Block Statement ", block)
         return block
 
     # variable_declaration_statement	: basic_variable_declaration | array_declaration ;
@@ -190,7 +192,7 @@ class ASTGeneration(ZCodeVisitor):
 
     # function_declaration		: FUNC IDENTIFIER LPAREN parameter_part_recursive? RPAREN function_body ; // Declaration onlu or body definition might be empty
     def visitFunction_declaration(self, ctx:ZCodeParser.Function_declarationContext):
-        print("Function Declaration ", ctx.IDENTIFIER(), ctx.parameter_part_recursive(), ctx.function_body())
+       #print("Function Declaration ", ctx.IDENTIFIER(), ctx.parameter_part_recursive(), ctx.function_body())
 
         id = Id(ctx.IDENTIFIER().getText())
         parameter = self.visit(ctx.parameter_part_recursive()) if ctx.parameter_part_recursive() else []
@@ -202,7 +204,7 @@ class ASTGeneration(ZCodeVisitor):
 	#	    				    	| newline_list? block_statement
 	#		    		    		| newline;
     def visitFunction_body(self, ctx:ZCodeParser.Function_bodyContext):
-        print("Function Body ", ctx.return_statement(), ctx.block_statement(), ctx.newline())
+       #print("Function Body ", ctx.return_statement(), ctx.block_statement(), ctx.newline())
         if ctx.return_statement():
             return self.visit(ctx.return_statement())
         elif ctx.block_statement():
@@ -238,13 +240,13 @@ class ASTGeneration(ZCodeVisitor):
         type = self.visit(ctx.basic_type())
         id = Id(ctx.IDENTIFIER().getText())
 
-        print("Basic Parameter Declaration ", ctx.basic_type(), ctx.IDENTIFIER())
+       #print("Basic Parameter Declaration ", ctx.basic_type(), ctx.IDENTIFIER())
 
         return VarDecl(id, type, None, None)
 
     # array_parameter_declaration	: basic_type IDENTIFIER array_dimension;
     def visitArray_parameter_declaration(self, ctx:ZCodeParser.Array_parameter_declarationContext):
-        print("Array Parameter Declaration ", ctx.basic_type(), ctx.IDENTIFIER(), ctx.array_dimension())
+       #print("Array Parameter Declaration ", ctx.basic_type(), ctx.IDENTIFIER(), ctx.array_dimension())
 
         type = self.visit(ctx.basic_type())
         id = Id(ctx.IDENTIFIER().getText())
@@ -258,7 +260,7 @@ class ASTGeneration(ZCodeVisitor):
 	#							(elif_recursive_statement)?
 	#							(else_statement)? ;
     def visitIf_statement(self, ctx:ZCodeParser.If_statementContext):
-        print("If Statement ", ctx.branch_condition(), ctx.branch_body(), ctx.elif_recursive_statement(), ctx.else_statement())
+       #print("If Statement ", ctx.branch_condition(), ctx.branch_body(), ctx.elif_recursive_statement(), ctx.else_statement())
 
         condition = self.visit(ctx.branch_condition())
         body = self.visit(ctx.branch_body())
@@ -266,8 +268,8 @@ class ASTGeneration(ZCodeVisitor):
         elseStmt = self.visit(ctx.else_statement()) if ctx.else_statement() else None
 
         if_statement = If(condition, body, elifStmt, elseStmt) ## TODO : Check again
-        print("If Statement ", condition, body, elifStmt, elseStmt)
-        print("If Statement ", if_statement)
+       #print("If Statement ", condition, body, elifStmt, elseStmt)
+       #print("If Statement ", if_statement)
         return if_statement
 
     # elif_recursive_statement	: elif_statement elif_recursive_statement // Recursive
@@ -287,7 +289,7 @@ class ASTGeneration(ZCodeVisitor):
 
     # else_statement				: ELSE branch_body;
     def visitElse_statement(self, ctx:ZCodeParser.Else_statementContext):
-        print("Else Statement ", ctx.branch_body())
+       #print("Else Statement ", ctx.branch_body())
         return self.visit(ctx.branch_body())
 
     # branch_condition		    	: LPAREN expression RPAREN;
@@ -296,7 +298,7 @@ class ASTGeneration(ZCodeVisitor):
 
     # branch_body					: local_statement_single;
     def visitBranch_body(self, ctx:ZCodeParser.Branch_bodyContext):
-        print("Branch Body ", ctx.local_statement_single())
+       #print("Branch Body ", ctx.local_statement_single())
         return self.visit(ctx.local_statement_single())
 
     # function_call_statement		: IDENTIFIER LPAREN argument_part? RPAREN ;
@@ -350,7 +352,7 @@ class ASTGeneration(ZCodeVisitor):
     # string_expression 			: relational_expression CONCATE relational_expression // Binary Infix None Associative
 	#       						| relational_expression; // Next precedence
     def visitString_expression(self, ctx:ZCodeParser.String_expressionContext):
-        print("String Expression ", ctx.CONCATE(), ctx.relational_expression())
+       #print("String Expression ", ctx.CONCATE(), ctx.relational_expression())
         if ctx.CONCATE():
             left = self.visit(ctx.relational_expression(0))
             right = self.visit(ctx.relational_expression(1))
@@ -363,7 +365,7 @@ class ASTGeneration(ZCodeVisitor):
     # relational_expression	    	: logical_expression relational_operator logical_expression // Binary Infix None Associative
 	#   						    | logical_expression; // Next precedence
     def visitRelational_expression(self, ctx:ZCodeParser.Relational_expressionContext):
-        print("Relational Expression ", ctx.relational_operator(), ctx.logical_expression())
+       #print("Relational Expression ", ctx.relational_operator(), ctx.logical_expression())
         if ctx.relational_operator():
             left = self.visit(ctx.logical_expression(0))
             right = self.visit(ctx.logical_expression(1))
@@ -376,7 +378,7 @@ class ASTGeneration(ZCodeVisitor):
     # logical_expression			: logical_expression logic_operator adding_expression // Binary Infix Left Associative
 	#       						| adding_expression; // Next precedence
     def visitLogical_expression(self, ctx:ZCodeParser.Logical_expressionContext):
-        print("Logical Expression ", ctx.logic_operator(), ctx.adding_expression())
+       #print("Logical Expression ", ctx.logic_operator(), ctx.adding_expression())
         if ctx.logic_operator():
             left = self.visit(ctx.logical_expression())
             right = self.visit(ctx.adding_expression())
@@ -389,7 +391,7 @@ class ASTGeneration(ZCodeVisitor):
     # adding_expression			: adding_expression additive_operator multiplying_expression // Binary Infix Left Associative
 	#   						| multiplying_expression; // Next precedence
     def visitAdding_expression(self, ctx:ZCodeParser.Adding_expressionContext):
-        print("Adding Expression ", ctx.additive_operator(), ctx.multiplying_expression())
+       #print("Adding Expression ", ctx.additive_operator(), ctx.multiplying_expression())
         if ctx.additive_operator():
             left = self.visit(ctx.adding_expression())
             right = self.visit(ctx.multiplying_expression())
@@ -402,7 +404,7 @@ class ASTGeneration(ZCodeVisitor):
     # multiplying_expression		: multiplying_expression multiplicative_operator negation_expression // Binary Infix Left Associative
 	#       						| negation_expression; // Next precedence
     def visitMultiplying_expression(self, ctx:ZCodeParser.Multiplying_expressionContext):
-        print("Multiplying Expression ", ctx.multiplicative_operator(), ctx.negation_expression())
+       #print("Multiplying Expression ", ctx.multiplicative_operator(), ctx.negation_expression())
         if ctx.multiplicative_operator():
             left = self.visit(ctx.multiplying_expression())
             right = self.visit(ctx.negation_expression())
@@ -415,7 +417,7 @@ class ASTGeneration(ZCodeVisitor):
     # negation_expression			: NOT negation_expression // Unary Prefix Right Associative
 	#       						| sign_expression; // Next precedence
     def visitNegation_expression(self, ctx:ZCodeParser.Negation_expressionContext):
-        print("Negation Expression ", ctx.NOT(), ctx.sign_expression())
+       #print("Negation Expression ", ctx.NOT(), ctx.sign_expression())
         if ctx.NOT():
             operand = self.visit(ctx.negation_expression())
             op = ctx.NOT().getText()
@@ -427,7 +429,7 @@ class ASTGeneration(ZCodeVisitor):
     # sign_expression				: additive_operator sign_expression // Unary Prefix Right Associative
 	#       						| parenthesis_expression; // Next precedence
     def visitSign_expression(self, ctx:ZCodeParser.Sign_expressionContext):
-        print("Sign Expression ", ctx.MINUS(), ctx.parenthesis_expression())
+       #print("Sign Expression ", ctx.MINUS(), ctx.parenthesis_expression())
         if ctx.MINUS():
             operand = self.visit(ctx.sign_expression())
             op = ctx.MINUS().getText()
@@ -438,7 +440,7 @@ class ASTGeneration(ZCodeVisitor):
     # parenthesis_expression		: LPAREN expression RPAREN // Parenthesis
 	#       						| operand; // Next precedence
     def visitParenthesis_expression(self, ctx:ZCodeParser.Parenthesis_expressionContext):
-        print("Parenthesis Expression ", ctx.expression(), ctx.operand())
+       #print("Parenthesis Expression ", ctx.expression(), ctx.operand())
         if ctx.expression():
             return self.visit(ctx.expression())
         else:
@@ -449,7 +451,7 @@ class ASTGeneration(ZCodeVisitor):
 	#		        				| IDENTIFIER 
 	#					        	| array_literal;
     def visitOperand(self, ctx:ZCodeParser.OperandContext):
-        print("Operand ", ctx.literal(), ctx.function_call_expression(), ctx.IDENTIFIER(), ctx.array_literal())
+       #print("Operand ", ctx.literal(), ctx.function_call_expression(), ctx.IDENTIFIER(), ctx.array_literal())
         if ctx.literal():
             return self.visit(ctx.literal())
         elif ctx.function_call_expression():
@@ -540,7 +542,7 @@ class ASTGeneration(ZCodeVisitor):
 
     # literal						: NUMBER_LIT | BOOLEAN_LIT | STRING_LIT;
     def visitLiteral(self, ctx:ZCodeParser.LiteralContext):
-        print("Literal ", ctx.NUMBER_LIT(), ctx.BOOLEAN_LIT(), ctx.STRING_LIT())
+       #print("Literal ", ctx.NUMBER_LIT(), ctx.BOOLEAN_LIT(), ctx.STRING_LIT())
         if ctx.NUMBER_LIT():
             return NumberLiteral(float(ctx.NUMBER_LIT().getText())) # NumLit(1.0) 
         elif ctx.BOOLEAN_LIT():
@@ -557,7 +559,7 @@ class ASTGeneration(ZCodeVisitor):
 
     # number_literal 				: NUMBER_LIT ;
     def visitNumber_literal(self, ctx:ZCodeParser.Number_literalContext):
-        print("Number Literal ", ctx.NUMBER_LIT(), ctx.NUMBER_LIT().getText())
+       #print("Number Literal ", ctx.NUMBER_LIT(), ctx.NUMBER_LIT().getText())
         return NumberLiteral(ctx.NUMBER_LIT().getText())
 
 
