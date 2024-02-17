@@ -130,7 +130,7 @@ class ASTGeneration(ZCodeVisitor):
         else :
             modifier = None
         
-        return VarDecl(id, type, None, expression)
+        return VarDecl(id, type, modifier, expression)
         
 
     # basic_type					: (NUMBER_TYPE | STRING_TYPE | BOOLEAN_TYPE) ;
@@ -166,7 +166,7 @@ class ASTGeneration(ZCodeVisitor):
     # array_dimension_list 		: number_literal COMMA array_dimension_list // Recursive
 	#   						| number_literal;
     def visitArray_dimension_list(self, ctx:ZCodeParser.Array_dimension_listContext):
-        size = self.visit(ctx.number_literal()).value
+        size = float(self.visit(ctx.number_literal()).value)
 
         if ctx.array_dimension_list():
             return [size] + self.visit(ctx.array_dimension_list())
@@ -427,10 +427,10 @@ class ASTGeneration(ZCodeVisitor):
     # sign_expression				: additive_operator sign_expression // Unary Prefix Right Associative
 	#       						| parenthesis_expression; // Next precedence
     def visitSign_expression(self, ctx:ZCodeParser.Sign_expressionContext):
-        print("Sign Expression ", ctx.additive_operator(), ctx.parenthesis_expression())
-        if ctx.additive_operator():
+        print("Sign Expression ", ctx.MINUS(), ctx.parenthesis_expression())
+        if ctx.MINUS():
             operand = self.visit(ctx.sign_expression())
-            op = ctx.additive_operator().getText()
+            op = ctx.MINUS().getText()
             return UnaryOp(op, operand)
         else:
             return self.visit(ctx.parenthesis_expression())
@@ -542,8 +542,7 @@ class ASTGeneration(ZCodeVisitor):
     def visitLiteral(self, ctx:ZCodeParser.LiteralContext):
         print("Literal ", ctx.NUMBER_LIT(), ctx.BOOLEAN_LIT(), ctx.STRING_LIT())
         if ctx.NUMBER_LIT():
-            return NumberLiteral((ctx.NUMBER_LIT().getText())) # NumLit(1) 
-            #return NumberLiteral((ctx.NUMBER_LIT().getText())) # NumLit(1.0) 
+            return NumberLiteral(float(ctx.NUMBER_LIT().getText())) # NumLit(1.0) 
         elif ctx.BOOLEAN_LIT():
             return BooleanLiteral(ctx.BOOLEAN_LIT().getText() == "true")
         elif ctx.STRING_LIT():
