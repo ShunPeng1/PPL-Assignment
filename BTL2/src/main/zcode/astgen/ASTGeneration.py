@@ -257,15 +257,15 @@ class ASTGeneration(ZCodeVisitor):
         return VarDecl(id, arrayType, None, None)
 
     # if_statement				: IF branch_condition branch_body 
-	#							(elif_recursive_statement)?
-	#							(else_statement)? ;
+	#							elif_recursive_statement
+	#							else_statement ;
     def visitIf_statement(self, ctx:ZCodeParser.If_statementContext):
        #print("If Statement ", ctx.branch_condition(), ctx.branch_body(), ctx.elif_recursive_statement(), ctx.else_statement())
 
         condition = self.visit(ctx.branch_condition())
         body = self.visit(ctx.branch_body())
-        elifStmt = self.visit(ctx.elif_recursive_statement()) if ctx.elif_recursive_statement() else []
-        elseStmt = self.visit(ctx.else_statement()) if ctx.else_statement() else None
+        elifStmt = self.visit(ctx.elif_recursive_statement())
+        elseStmt = self.visit(ctx.else_statement())
 
         if_statement = If(condition, body, elifStmt, elseStmt) ## TODO : Check again
        #print("If Statement ", condition, body, elifStmt, elseStmt)
@@ -273,12 +273,13 @@ class ASTGeneration(ZCodeVisitor):
         return if_statement
 
     # elif_recursive_statement	: elif_statement elif_recursive_statement // Recursive
-	#   						| elif_statement;
+	#   						| ;
+
     def visitElif_recursive_statement(self, ctx:ZCodeParser.Elif_recursive_statementContext):
-        if ctx.elif_recursive_statement():
+        if ctx.elif_statement():
             return [self.visit(ctx.elif_statement())] + self.visit(ctx.elif_recursive_statement())
         else:
-            return [self.visit(ctx.elif_statement())]
+            return []
 
     # elif_statement				: ELIF branch_condition branch_body;
     def visitElif_statement(self, ctx:ZCodeParser.Elif_statementContext):
@@ -287,11 +288,16 @@ class ASTGeneration(ZCodeVisitor):
 
         return (condition, body)
 
-    # else_statement				: ELSE branch_body;
+    # else_statement				: ELSE branch_body
+	#       						| ; 
+    
     def visitElse_statement(self, ctx:ZCodeParser.Else_statementContext):
        #print("Else Statement ", ctx.branch_body())
-        return self.visit(ctx.branch_body())
-
+        if ctx.branch_body():
+            return self.visit(ctx.branch_body())
+        else:
+            return None
+        
     # branch_condition		    	: LPAREN expression RPAREN;
     def visitBranch_condition(self, ctx:ZCodeParser.Branch_conditionContext):
         return self.visit(ctx.expression())

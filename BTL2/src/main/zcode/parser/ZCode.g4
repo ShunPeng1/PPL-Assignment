@@ -94,15 +94,16 @@ array_parameter_declaration	: basic_type IDENTIFIER array_dimension;
 
 // If-Else
 if_statement				: IF branch_condition branch_body 
-								(elif_recursive_statement)?
-								(else_statement)? ;
+								elif_recursive_statement
+								else_statement ;
 
 elif_recursive_statement	: elif_statement elif_recursive_statement // Recursive
-							| elif_statement;
+							| ;
 
 elif_statement				: ELIF branch_condition branch_body;
-else_statement				: ELSE branch_body;
-
+else_statement				: ELSE branch_body
+							| ;
+							
 branch_condition			: LPAREN expression RPAREN;
 branch_body					: local_statement_single;
 

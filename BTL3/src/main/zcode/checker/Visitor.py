@@ -1,13 +1,11 @@
-from AST import *
-from Visitor import *
-from Utils import Utils
-from StaticError import *
-from functools import reduce
+from abc import ABC, abstractmethod, ABCMeta
 
 
-class StaticChecker(BaseVisitor, Utils):
+class Visitor(ABC):
 
-    
+    def visit(self, ast, param):
+        return ast.accept(self, param)
+
     @abstractmethod
     def visitProgram(self, ast, param):
         pass
@@ -178,4 +176,3 @@ class BaseVisitor(Visitor):
 
     def visitArrayLiteral(self, ast, param):
         pass
-
