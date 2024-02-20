@@ -24,12 +24,16 @@ class StaticChecker(BaseVisitor, Utils):
         self.ast = ast
         self.envi = []
 
+        print("StaticChecker: ", ast)
+
+    def check(self):
+        return self.visit(self.ast, None)
+
+
     def visitProgram(self, ast, param):
         print(ast)
         
-        
-
-    
+            
     def visitVarDecl(self, ast, param):
         pass
 

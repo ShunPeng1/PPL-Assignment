@@ -1,6 +1,9 @@
 {
     "python.analysis.extraPaths": [
-        "./src/test",
-        "./BTL2/src/test"
+        "./BTL3/src/test",
+        "./BTL3/src/main/zcode/parser",
+        "./BTL3/src/main/zcode/astgen",
+        "./BTL3/src/main/zcode/checker",
+        "./BTL3/src/main/zcode/utils",
     ]
 }
