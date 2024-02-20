@@ -5,11 +5,29 @@ from StaticError import *
 from functools import reduce
 
 
+class VariableSymbol:
+    def __init__(self, name : str, type : Type = None):
+        self.name = name
+        self.type = type
+
+
+class FunctionSymbol:
+    def __init__(self, name: str, returnType: Type = None, param: list[VariableSymbol] = None, body:Stmt =None):
+        self.name = name
+        self.returnType = returnType
+        self.param = param
+        self.body = body
+
 class StaticChecker(BaseVisitor, Utils):
 
+    def __init__(self, ast):
+        self.ast = ast
+        self.envi = []
 
     def visitProgram(self, ast, param):
-        pass
+        print(ast)
+        
+        
 
     
     def visitVarDecl(self, ast, param):
