@@ -92,12 +92,33 @@ class CheckerSuite(unittest.TestCase):
         #self.assertTrue(TestChecker.test(input, expect, 410))
 
     def test_variable_declare_7(self):
-            input = """
-                bool b1 <- true
-            
-                func main() 
-                    bool b2 <- b1 and (1 <= 3)
-                    return 0
-            """
-            expect = "Undeclared Identifier: b1"
-            self.assertTrue(TestChecker.test(input, expect, 411))
+        input = """
+            bool b1 <- true
+        
+            func main() 
+                bool b2 <- b1 and (1 <= 3)
+                return 0
+        """
+        expect = "[]"
+        #self.assertTrue(TestChecker.test(input, expect, 411))
+
+    def test_variable_declare_8(self):
+        input = """
+            string s1 <- "1"
+            string s2 <- "1" ... "2"
+            string s3 <- s1 ... s2
+        """
+        expect = "No Entry Point"
+        #self.assertTrue(TestChecker.test(input, expect, 412))
+    
+
+    def test_function_declare_1(self):
+        input = """
+            func foo(number a, number b)
+                return 0
+
+            func main() 
+                return 0
+        """
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 413))

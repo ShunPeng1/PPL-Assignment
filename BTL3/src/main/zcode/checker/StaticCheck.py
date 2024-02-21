@@ -58,18 +58,17 @@ class StaticChecker(BaseVisitor, Utils):
         self.envi : list[Scope] = [] # stack of Scope
 
         global_scope = Scope([ # global scope built-in functions
-            FunctionSymbol("readNumber", NumberType),
-            FunctionSymbol("readString", StringType),
-            FunctionSymbol("readBool", BoolType),
+            FunctionSymbol("readNumber", NumberType()),
+            FunctionSymbol("readString", StringType()),
+            FunctionSymbol("readBool", BoolType()),
 
-            FunctionSymbol("writeNumber", VoidType, [VariableSymbol("n", NumberType)]),
-            FunctionSymbol("writeString", VoidType, [VariableSymbol("s", StringType)]),
-            FunctionSymbol("writeBool", VoidType, [VariableSymbol("b", BoolType)])
+            FunctionSymbol("writeNumber", VoidType(), [VariableSymbol("n", NumberType())]),
+            FunctionSymbol("writeString", VoidType(), [VariableSymbol("s", StringType())]),
+            FunctionSymbol("writeBool", VoidType(), [VariableSymbol("b", BoolType())])
         ])
 
         self.envi.append(global_scope) # global scope
 
-        #print("StaticChecker: ", self.envi)
 
     def checkRedeclared(self, kind : Kind, name: str, lst : Scope):
         #print("checkRedeclared: ", kind, id, lst)
@@ -77,7 +76,7 @@ class StaticChecker(BaseVisitor, Utils):
         symbols = lst.symbols
         if self.lookup(name, symbols, getName):
             raise Redeclared(kind, name)
-        return False
+
     
     def checkDeclared(self, kind : Kind, name : str, current_scope_index : int) -> Symbol:
         #print("checkDeclared: ", id, lst)
@@ -93,11 +92,12 @@ class StaticChecker(BaseVisitor, Utils):
         raise Undeclared(kind, name)
     
 
-    def checkEntry(self, name : str, lst : Scope):
-        #print("checkEntry: ", id, lst)
+    def checkEntry(self):
+        print("checkEntry: ")
+        lst = self.envi[0]        
         symbols = lst.symbols
 
-        if not self.lookup(id, symbols, getName):
+        if not self.lookup("main", symbols, getName):
             raise NoEntryPoint()
         return False
         
@@ -114,18 +114,20 @@ class StaticChecker(BaseVisitor, Utils):
             self.visit(decl, None)
 
         # Check for entry point
-        self.checkEntry("main", self.envi[0])
+        self.checkEntry()
         
         self.envi.pop()
+
+        return []
 
     def visitVarDecl(self, ast, param):
         print(ast)
 
         name = self.visit(ast.name, None)
 
-        if self.checkRedeclared(Variable(), name, self.envi[-1]):
-            return
-
+        # Check for redeclared variable
+        self.checkRedeclared(Variable(), name, self.envi[-1])
+        
         current_scope = self.envi[-1]
         current_scope_index = len(self.envi) - 1
         
@@ -137,34 +139,46 @@ class StaticChecker(BaseVisitor, Utils):
         elif ast.modifier == "dynamic":    
             varInitType = self.visit(ast.varInit, None) if ast.varInit else None
             current_scope.define(VariableSymbol(name, ast.varType))
-        
-        else:
+
+
+        else: # no modifier
             varType = self.visit(ast.varType, None)
             if ast.varInit:
                 varInitType = self.visit(ast.varInit, ExprParam(Variable(), current_scope_index, True))
                 if type(varType) != type(varInitType):
                     raise TypeMismatchInStatement(ast)
 
-            self.envi[-1].define(VariableSymbol(name, varType))
+            symbol = VariableSymbol(name, varType)
+            
+            self.envi[-1].define(symbol)
+            return symbol
 
 
     
     def visitFuncDecl(self, ast, param):
         print(ast)
+
         name = self.visit(ast.name, None)
         
-        if self.checkRedeclared(Function(), name, self.envi[-1]):
-            return
+        # Check for redeclared function
+        self.checkRedeclared(Function(), name, self.envi[-1])
         
+        parameter = []
         if ast.param:
-            self.envi.append(Scope()) # 
+            self.envi.append(Scope()) # new scope for function parameters
             for param in ast.param:
-                self.visit(param, None)
+                parameterSymbol = self.visit(param, None)
+                parameter.append(parameterSymbol)
             
             self.envi.pop()
         
+        body = self.visit(ast.body, None) if ast.body else None
+        functionSymbol = FunctionSymbol(name, None, parameter, body)
+        
         # Add function to current scope
-        self.envi[-1].define(FunctionSymbol(name, None, [], ast.body))
+        self.envi[-1].define(functionSymbol)
+        
+        return functionSymbol
     
     def visitNumberType(self, ast, param):
         return NumberType()
