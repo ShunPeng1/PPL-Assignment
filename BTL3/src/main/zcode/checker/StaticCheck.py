@@ -31,7 +31,7 @@ class FunctionSymbol(Symbol):
         return f"FunctionSymbol({self.name}, {self.returnType}, [{', '.join(str(i) for i in self.param)}], {self.body})"
 
 class Scope:
-    def __init__(self, symbols: list[Symbol] = []):
+    def __init__(self, symbols: list[Symbol] = [Symbol]):
         self.symbols = symbols # list of Symbol
 
     def define(self, symbol : Symbol):
@@ -45,7 +45,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     def __init__(self, ast):
         self.ast = ast
-        self.envi = [] # stack of Scope
+        self.envi = [Scope] # stack of Scope
 
         global_scope = Scope([
             FunctionSymbol("readNumber", NumberType),
@@ -121,20 +121,26 @@ class StaticChecker(BaseVisitor, Utils):
         if self.checkRedeclared(Function(), ast.name, self.envi[-1]):
             return
         
+        if ast.param:
+            self.envi.append(Scope()) # 
+            for param in ast.param:
+                self.visit(param, None)
+            
+            self.envi.pop()
+        
         # Add function to current scope
-        self.envi[-1].append(FunctionSymbol(ast.name.name, ast.returnType, ast.param, ast.body))
-
+        self.envi[-1].define(FunctionSymbol(ast.name.name, None, None, ast.body))
     
     def visitNumberType(self, ast, param):
-        return NumberType
+        return NumberType()
         
     
     def visitBoolType(self, ast, param):
-        return BoolType
+        return BoolType()
 
     
     def visitStringType(self, ast, param):
-        return StringType
+        return StringType()
 
     
     def visitArrayType(self, ast, param):

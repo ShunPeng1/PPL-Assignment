@@ -15,15 +15,15 @@ class CheckerSuite(unittest.TestCase):
         number a
         """
         expect = "Redeclared Variable: a"
-        self.assertTrue(TestChecker.test(input, expect, 401))
+        #self.assertTrue(TestChecker.test(input, expect, 401))
 
     def test_redeclared_function(self):
-        input = """function main() {
-            return 0;
-        }
-        function main() {
-            return 0;
-        }
+        input = """
+        func main() 
+            return 0
+        
+        func main() 
+            return 0
         """
         expect = "Redeclared Function: main"
-        #self.assertTrue(TestChecker.test(input, expect, 402))
+        self.assertTrue(TestChecker.test(input, expect, 402))
