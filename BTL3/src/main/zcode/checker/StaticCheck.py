@@ -32,7 +32,7 @@ class FunctionSymbol(Symbol):
         return f"FunctionSymbol({self.name}, {self.type}, [{', '.join(str(i) for i in self.param)}], {self.body})"
 
 class Scope:
-    def __init__(self, symbols: list[Symbol] = [Symbol]):
+    def __init__(self, symbols: list[Symbol] = []):
         self.symbols = symbols # list of Symbol
 
     def define(self, symbol : Symbol):
@@ -71,7 +71,7 @@ class StaticChecker(BaseVisitor, Utils):
 
 
     def checkRedeclared(self, kind : Kind, name: str, lst : Scope):
-        #print("checkRedeclared: ", kind, id, lst)
+        print("checkRedeclared: ", kind, name, lst)
 
         symbols = lst.symbols
         if self.lookup(name, symbols, getName):
@@ -79,7 +79,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def checkDeclared(self, kind : Kind, name : str, current_scope_index : int) -> Symbol:
-        #print("checkDeclared: ", id, lst)
+        #print("checkDeclared: ", name, lst)
         
         for i in range(current_scope_index, -1, -1): # from current scope to global scope
             print("checkDeclared Scope: ", i, self.envi[i])
@@ -121,7 +121,7 @@ class StaticChecker(BaseVisitor, Utils):
         return []
 
     def visitVarDecl(self, ast, param):
-        print(ast)
+        print("visitVarDecl: ", ast)
 
         name = self.visit(ast.name, None)
 
@@ -163,17 +163,17 @@ class StaticChecker(BaseVisitor, Utils):
         # Check for redeclared function
         self.checkRedeclared(Function(), name, self.envi[-1])
         
-        parameter = []
+        parameters = []
         if ast.param:
             self.envi.append(Scope()) # new scope for function parameters
-            for param in ast.param:
-                parameterSymbol = self.visit(param, None)
-                parameter.append(parameterSymbol)
+            for astParam in ast.param:
+                parameterSymbol = self.visit(astParam, None)
+                parameters.append(parameterSymbol)
             
             self.envi.pop()
         
         body = self.visit(ast.body, None) if ast.body else None
-        functionSymbol = FunctionSymbol(name, None, parameter, body)
+        functionSymbol = FunctionSymbol(name, None, parameters, body)
         
         # Add function to current scope
         self.envi[-1].define(functionSymbol)
