@@ -41,7 +41,7 @@ class Redeclared(StaticError):
         self.name = name
 
     def __str__(self):
-        return f"Redeclared {str(self.kind)}: {self.name})"
+        return f"Redeclared {str(self.kind)}: {self.name}"
 
 
 class Undeclared(StaticError):
@@ -49,7 +49,7 @@ class Undeclared(StaticError):
     # name: str
 
     def __str__(self):
-        return f"Undeclared {str(self.kind)}: {self.name})"
+        return f"Undeclared {str(self.kind)}: {self.name}"
 
 
 class TypeMismatchInExpression(StaticError):
