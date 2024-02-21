@@ -48,6 +48,10 @@ class Undeclared(StaticError):
     # kind: Kind
     # name: str
 
+    def __init__(self, kind, name):
+        self.kind = kind
+        self.name = name
+
     def __str__(self):
         return f"Undeclared {str(self.kind)}: {self.name}"
 
