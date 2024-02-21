@@ -49,7 +49,14 @@ class ExprParam:
 
     def __str__(self) -> str:
         return f"IdParam({self.kind}, {self.scopeIndex}, {self.isDeclared})"
-    
+
+class VarDeclParam:
+    def __init__(self, kind : Kind, scopeIndex : int) -> None:
+        self.kind = kind
+        self.scopeIndex = scopeIndex
+
+    def __str__(self) -> str:
+        return f"VarDeclParam({self.kind}, {self.scopeIndex})"
 
 class StaticChecker(BaseVisitor, Utils):
 
@@ -111,7 +118,10 @@ class StaticChecker(BaseVisitor, Utils):
 
         # Visit all declaration in program
         for decl in ast.decl:
-            self.visit(decl, None)
+            if isinstance(decl, VarDecl):
+                self.visit(decl, VarDeclParam(Variable(), len(self.envi)-1))
+            elif isinstance(decl, FuncDecl):
+                self.visit(decl, None)
 
         # Check for entry point
         self.checkEntry()
@@ -126,7 +136,8 @@ class StaticChecker(BaseVisitor, Utils):
         name = self.visit(ast.name, None)
 
         # Check for redeclared variable
-        self.checkRedeclared(Variable(), name, self.envi[-1])
+        if param:
+            self.checkRedeclared(param.kind, name, self.envi[-1])
         
         current_scope = self.envi[-1]
         current_scope_index = len(self.envi) - 1
@@ -167,7 +178,7 @@ class StaticChecker(BaseVisitor, Utils):
         if ast.param:
             self.envi.append(Scope()) # new scope for function parameters
             for astParam in ast.param:
-                parameterSymbol = self.visit(astParam, None)
+                parameterSymbol = self.visit(astParam, VarDeclParam(Parameter(), len(self.envi)-1))
                 parameters.append(parameterSymbol)
             
             self.envi.pop()
