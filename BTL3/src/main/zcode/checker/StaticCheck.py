@@ -61,18 +61,16 @@ class StaticChecker(BaseVisitor, Utils):
 
         print("StaticChecker: ", ast)
 
-    def checkRedeclared(self, kind : Kind, id : Id, lst : Scope):
+    def checkRedeclared(self, kind : Kind, name: str, lst : Scope):
         print("checkRedeclared: ", kind, id, lst)
 
-        name = id.name
         symbols = lst.symbols
         if self.lookup(name, symbols, getName):
             raise Redeclared(kind, name)
         return False
     
-    def checkEntry(self, id : Id, lst : Scope):
+    def checkEntry(self, name : str, lst : Scope):
         print("checkEntry: ", id, lst)
-        name = id.name
         symbols = lst.symbols
 
         if not self.lookup(id, symbols, getName):
@@ -92,18 +90,20 @@ class StaticChecker(BaseVisitor, Utils):
             self.visit(decl, None)
 
         # Check for entry point
-        self.checkEntry(Id("main"), self.envi[-1])
+        self.checkEntry("main", self.envi[-1])
         
         self.envi.pop()
 
     def visitVarDecl(self, ast, param):
         print(ast)
 
-        if self.checkRedeclared(Variable(), ast.name, self.envi[-1]):
-            return
-
+        name = self.visit(ast.name, None)
         varInit = self.visit(ast.varInit, None) if ast.varInit else None
 
+        if self.checkRedeclared(Variable(), name, self.envi[-1]):
+            return
+
+        
         # Visit variable type
         if ast.modifier == "var":
             pass
@@ -113,12 +113,13 @@ class StaticChecker(BaseVisitor, Utils):
             pass
 
         # Add variable to current scope
-        self.envi[-1].define(VariableSymbol(ast.name.name, ast.varType))
+        self.envi[-1].define(VariableSymbol(name, ast.varType))
     
     def visitFuncDecl(self, ast, param):
         print(ast)
-
-        if self.checkRedeclared(Function(), ast.name, self.envi[-1]):
+        name = self.visit(ast.name, None)
+        
+        if self.checkRedeclared(Function(), name, self.envi[-1]):
             return
         
         if ast.param:
@@ -129,7 +130,7 @@ class StaticChecker(BaseVisitor, Utils):
             self.envi.pop()
         
         # Add function to current scope
-        self.envi[-1].define(FunctionSymbol(ast.name.name, None, None, ast.body))
+        self.envi[-1].define(FunctionSymbol(name, None, [], ast.body))
     
     def visitNumberType(self, ast, param):
         return NumberType()
@@ -160,7 +161,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitId(self, ast, param):
-        pass
+        return ast.name
 
     
     def visitArrayCell(self, ast, param):

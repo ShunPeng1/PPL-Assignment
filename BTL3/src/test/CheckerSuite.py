@@ -8,14 +8,14 @@ class CheckerSuite(unittest.TestCase):
         input = """number a
         """
         expect = "No Entry Point"
-        #self.assertTrue(TestChecker.test(input, expect, 400))
+        self.assertTrue(TestChecker.test(input, expect, 400))
 
     def test_redeclared_variable(self):
         input = """number a
         number a
         """
         expect = "Redeclared Variable: a"
-        #self.assertTrue(TestChecker.test(input, expect, 401))
+        self.assertTrue(TestChecker.test(input, expect, 401))
 
     def test_redeclared_function(self):
         input = """
