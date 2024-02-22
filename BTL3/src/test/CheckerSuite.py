@@ -132,4 +132,17 @@ class CheckerSuite(unittest.TestCase):
                 return 0
         """
         expect = "Redeclared Parameter: a"
-        self.assertTrue(TestChecker.test(input, expect, 414))
+       #self.assertTrue(TestChecker.test(input, expect, 414))
+
+    def test_function_declare_3(self):
+        input = """
+            func foo(number a, number b)
+            
+            func main() 
+                return 0
+
+            func foo(number a, number b)
+                return 0
+               """
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 415))

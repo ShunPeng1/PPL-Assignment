@@ -58,6 +58,14 @@ class VarDeclParam:
     def __str__(self) -> str:
         return f"VarDeclParam({self.kind}, {self.scopeIndex})"
 
+class StmtParam:
+    def __init__(self, isInFunction = False, isInLoop = False) -> None:
+        self.isInFunction = isInFunction
+        self.isInLoop = isInLoop
+        
+    def __str__(self) -> str:
+        return f"StmtParam({self.isInFunction}, {self.isInLoop})"
+
 class StaticChecker(BaseVisitor, Utils):
 
     def __init__(self, ast):
@@ -77,13 +85,27 @@ class StaticChecker(BaseVisitor, Utils):
         self.envi.append(global_scope) # global scope
 
 
-    def checkRedeclared(self, kind : Kind, name: str, lst : Scope):
+    def checkRedeclaredVariable(self, kind : Kind, name: str, lst : Scope):
         print("checkRedeclared: ", kind, name, lst)
 
         symbols = lst.symbols
         if self.lookup(name, symbols, getName):
             raise Redeclared(kind, name)
 
+    def checkRedeclaredFunction(self, name: str, lst : Scope):
+        print("checkRedeclaredFunction: ", name, lst)
+
+        symbols = lst.symbols
+        funcSymbol = self.lookup(name, symbols, getName)
+        
+        if funcSymbol == None:
+            return None
+        
+        if isinstance(funcSymbol, FunctionSymbol):
+            if funcSymbol.body == None:
+                return funcSymbol
+         
+        raise Redeclared(FunctionSymbol(), name)
     
     def checkDeclared(self, kind : Kind, name : str, current_scope_index : int) -> Symbol:
         #print("checkDeclared: ", name, lst)
@@ -137,7 +159,7 @@ class StaticChecker(BaseVisitor, Utils):
 
         # Check for redeclared variable
         if param:
-            self.checkRedeclared(param.kind, name, self.envi[-1])
+            self.checkRedeclaredVariable(param.kind, name, self.envi[-1])
         
         current_scope = self.envi[-1]
         current_scope_index = len(self.envi) - 1
@@ -172,25 +194,37 @@ class StaticChecker(BaseVisitor, Utils):
         name = self.visit(ast.name, None)
         
         # Check for redeclared function
-        self.checkRedeclared(Function(), name, self.envi[-1])
-        
-        parameters = []
-        if ast.param:
-            self.envi.append(Scope()) # new scope for function parameters
-            for astParam in ast.param:
-                parameterSymbol = self.visit(astParam, VarDeclParam(Parameter(), len(self.envi)-1))
-                parameters.append(parameterSymbol)
+        function = self.checkRedeclaredFunction(name, self.envi[-1])
+
+        if function == None: # first declaration of function 
+
+            parameters = []
+            if ast.param:
+                self.envi.append(Scope()) # new scope for function parameters
+                for astParam in ast.param:
+                    parameterSymbol = self.visit(astParam, VarDeclParam(Parameter(), len(self.envi)-1))
+                    parameters.append(parameterSymbol)
+                
+                self.envi.pop()
             
-            self.envi.pop()
+            body = self.visit(ast.body, None) if ast.body else None # declare only or implement function
+            functionSymbol = FunctionSymbol(name, None, parameters, body) # TODO : return type of function
         
-        body = self.visit(ast.body, None) if ast.body else None
-        functionSymbol = FunctionSymbol(name, None, parameters, body)
+            # Add function to current scope
+            self.envi[-1].define(functionSymbol)
         
-        # Add function to current scope
-        self.envi[-1].define(functionSymbol)
-        
-        return functionSymbol
+            return functionSymbol
     
+        else: # implement the body function
+            
+            body = self.visit(ast.body, None)
+            if body == None:
+                raise Redeclared(Function(), name) # redeclared a declared-only function
+
+            function.body = body
+            return function
+
+
     def visitNumberType(self, ast, param):
         return NumberType()
         
@@ -306,7 +340,8 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitCallStmt(self, ast, param):
-        pass
+        print("Call Stmt: ",ast)
+
 
     
     def visitNumberLiteral(self, ast, param):
