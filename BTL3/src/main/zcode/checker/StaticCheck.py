@@ -101,7 +101,7 @@ class StaticChecker(BaseVisitor, Utils):
         if funcSymbol == None:
             return None
         
-        if isinstance(funcSymbol, FunctionSymbol):
+        if type(funcSymbol) == FunctionSymbol:
             if funcSymbol.body == None:
                 return funcSymbol
          
@@ -140,9 +140,9 @@ class StaticChecker(BaseVisitor, Utils):
 
         # Visit all declaration in program
         for decl in ast.decl:
-            if isinstance(decl, VarDecl):
+            if type(decl) == VarDecl:
                 self.visit(decl, VarDeclParam(Variable(), len(self.envi)-1))
-            elif isinstance(decl, FuncDecl):
+            elif type(decl) == FuncDecl:
                 self.visit(decl, None)
 
         # Check for entry point
@@ -246,27 +246,26 @@ class StaticChecker(BaseVisitor, Utils):
         right = self.visit(ast.right, param)
 
         if ast.op in ['+', '-', '*', '/', '%']:
-            if isinstance(left, NumberType) and isinstance(right, NumberType):
+            if (type(left) == NumberType) and (type(right)== NumberType):
                 return NumberType()
             raise TypeMismatchInExpression(ast)
         
         if ast.op in ['>', '>=', '<', '<=', '=', '!=']:
-            if isinstance(left, NumberType) and isinstance(right, NumberType):
-                return BoolType()
+            if (type(left) == NumberType) and (type(right)== NumberType):    return BoolType()
             raise TypeMismatchInExpression(ast)
         
         if ast.op in ['and', 'or']:
-            if isinstance(left, BoolType) and isinstance(right, BoolType):
+            if (type(left) == BoolType) and (type(right) == BoolType):
                 return BoolType()
             raise TypeMismatchInExpression(ast)
         
         if ast.op in ['...']:
-            if isinstance(left, StringType) and isinstance(right, StringType):
+            if (type(left) == StringType) and (type(right) == StringType):
                 return StringType()
             raise TypeMismatchInExpression(ast)
         
         if ast.op in ['==']:
-            if isinstance(left, StringType) and isinstance(right, StringType):
+            if (type(left) == StringType) and (type(right) == StringType):
                 return BoolType()
             raise TypeMismatchInExpression(ast)
 
@@ -277,12 +276,12 @@ class StaticChecker(BaseVisitor, Utils):
         expr = self.visit(ast.operand, param)
 
         if ast.op in ['-']:
-            if isinstance(expr, NumberType):
+            if type(expr) == NumberType:
                 return NumberType()
             raise TypeMismatchInExpression(ast)
         
         if ast.op in ['not']:
-            if isinstance(expr, BoolType):
+            if type(expr) == BoolType:
                 return BoolType()
             raise TypeMismatchInExpression(ast)
 
@@ -296,7 +295,7 @@ class StaticChecker(BaseVisitor, Utils):
     
     def visitId(self, ast, param):
         print("Visit Id: " , ast, param)
-        if isinstance(param, ExprParam):
+        if type(param) == ExprParam:
             if param.isDeclared:
                 symbol = self.checkDeclared(Identifier(), ast.name, param.scopeIndex)
                 

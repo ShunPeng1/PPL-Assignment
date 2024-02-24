@@ -146,3 +146,15 @@ class CheckerSuite(unittest.TestCase):
                """
         expect = "[]"
         self.assertTrue(TestChecker.test(input, expect, 415))
+
+
+
+
+
+
+
+
+
+
+
+
