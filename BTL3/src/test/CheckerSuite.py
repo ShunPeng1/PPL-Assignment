@@ -158,3 +158,135 @@ class CheckerSuite(unittest.TestCase):
 
 
 
+
+
+
+
+
+
+        # KIEN TESTCASES
+    def test441(self):
+        input = """
+number a <- 1 + "Hello"
+func main()
+    return
+"""
+        expect = "Type Mismatch In Expression: BinaryOp(+,NumLit(1.0),StringLit(Hello))"
+        self.assertTrue(TestChecker.test(input, expect, 441))
+    
+    def test442(self):
+        input = """
+func f()
+
+func main()
+begin
+    number x <- g(1, 2, 3)
+end
+"""
+        expect = "Undeclared Function: g"
+        self.assertTrue(TestChecker.test(input, expect, 442))
+    
+    def test443(self):
+        input = """
+number x
+number y
+func f()
+
+func main()
+    return
+"""
+        expect = "No Function Definition: f"
+        self.assertTrue(TestChecker.test(input, expect, 443))
+    
+    def test444(self):
+        input = """
+func f()
+
+number f
+dynamic x
+func main()
+    return
+"""
+        expect = "Redeclared Variable: f"
+        self.assertTrue(TestChecker.test(input, expect, 444))
+    
+    def test445(self):
+        input = """
+func f()
+begin
+
+end
+dynamic a
+number b
+bool c
+string d
+"""
+        expect = "No Entry Point"
+        self.assertTrue(TestChecker.test(input, expect, 445))
+    
+    def test446(self):
+        input = """
+func f(number x)
+begin
+    return f(x)
+end
+
+func main()
+begin
+    dynamic d <- f(10)
+end
+"""
+        expect = "Type Cannot Be Inferred: VarDecl(dynamic,Id(d),CallExpr(Id(f),[NumLit(10.0)]))"
+        self.assertTrue(TestChecker.test(input, expect, 446))
+    
+    def test447(self):
+        input = """
+func f(number x)
+begin
+    return 1
+end
+
+func main()
+begin
+    f(2018)
+end
+"""
+        expect = "Type Mismatch In Statement: Call(Id(f),[NumLit(2018.0)])"
+        self.assertTrue(TestChecker.test(input, expect, 447))
+    
+    def test448(self):
+        input = """
+func main()
+begin
+    continue
+end
+"""
+        expect = "Continue Not In Loop"
+        self.assertTrue(TestChecker.test(input, expect, 448))
+    
+    def test449(self):
+        input = """
+func main()
+begin
+    break
+end
+"""
+        expect = "Break Not In Loop"
+        self.assertTrue(TestChecker.test(input, expect, 449))
+    
+    def test450(self):
+        input = """
+number x
+number y
+func add()
+    return x + y
+
+func main()
+begin
+    x <- readNumber()
+    y <- readNumber()
+    writeNumber(add())
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 450))
