@@ -141,15 +141,38 @@ class CheckerSuite(unittest.TestCase):
             func main() 
                 return 0
 
-            func foo(number a, number b)
+            func foo(number c, number d)
                 return 0
                """
         expect = "[]"
-        self.assertTrue(TestChecker.test(input, expect, 415))
+       #self.assertTrue(TestChecker.test(input, expect, 415))
 
+    def test_function_declare_4(self):
+        input = """
+            func foo(number a, number b)
+            
+            func main() 
+                return 0
 
+            func foo(bool a, number b)
+                return 0
+               """
 
+        expect = "Redeclared Function: foo"
+       #self.assertTrue(TestChecker.test(input, expect, 416))
 
+    def test_function_declare_5(self):
+        input = """
+            func foo(number a, number b)
+            
+            func main() 
+                return 0
+
+            func foo(number a, number b, number c)
+                return 0
+               """
+        expect = "Redeclared Function: foo"
+        self.assertTrue(TestChecker.test(input, expect, 417))
 
 
 

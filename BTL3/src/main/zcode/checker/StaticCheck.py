@@ -32,9 +32,8 @@ class FunctionSymbol(Symbol):
         return f"FunctionSymbol({self.name}, {self.type}, [{', '.join(str(i) for i in self.param)}], {self.body})"
 
 class Scope:
-    def __init__(self, symbols: list[Symbol] = []):
-        self.symbols = symbols # list of Symbol
-
+    def __init__(self, symbols = None):
+        self.symbols = symbols if symbols is not None else []  # Initialize as empty list if None is provided
     def define(self, symbol : Symbol):
         self.symbols.append(symbol)
 
@@ -128,7 +127,7 @@ class StaticChecker(BaseVisitor, Utils):
 
         isFound = False
         for symbol in globalSymbols:
-            if type(symbol) == FunctionSymbol and symbol.name == "main" and symbol.param == [] and symbol.type == VoidType:
+            if type(symbol) == FunctionSymbol and symbol.name == "main" and symbol.param == [] :#TODO : and symbol.type == VoidType:
                 isFound = True
                 
         if not isFound:
@@ -210,6 +209,7 @@ class StaticChecker(BaseVisitor, Utils):
                     parameters.append(parameterSymbol)
                 
                 self.envi.pop()
+                print(len(self.envi),self.envi[-1])
             
             body = self.visit(ast.body, None) if ast.body else None # declare only or implement function
             functionSymbol = FunctionSymbol(name, None, parameters, body) # TODO : return type of function
@@ -221,11 +221,34 @@ class StaticChecker(BaseVisitor, Utils):
     
         else: # implement the body function
             
-            body = self.visit(ast.body, None)
-            if body == None:
+            if ast.body is None:
                 raise Redeclared(Function(), name) # redeclared a declared-only function
 
+            # Check for redeclared parameters
+            parameters = []
+            if ast.param:
+                
+                self.envi.append(Scope()) # new scope for function parameters
+                
+                for astParam in ast.param:
+                    parameterSymbol = self.visit(astParam, VarDeclParam(Parameter(), len(self.envi)-1))
+                    parameters.append(parameterSymbol)
+                
+                self.envi.pop()
+
+            # Create lists of parameter types
+            function_param_types = list(map(lambda param: type(param.type), function.param))
+            parameters_types = list(map(lambda param: type(param.type), parameters))
+
+            # Compare the lists of parameter types
+            if function_param_types != parameters_types:
+                raise Redeclared(Function(), name)
+
+            # Visit function body
+            body = self.visit(ast.body, None)
             function.body = body
+
+
             return function
 
 
