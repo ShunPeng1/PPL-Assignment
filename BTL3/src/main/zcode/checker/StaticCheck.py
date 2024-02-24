@@ -73,13 +73,13 @@ class StaticChecker(BaseVisitor, Utils):
         self.envi : list[Scope] = [] # stack of Scope
 
         global_scope = Scope([ # global scope built-in functions
-            FunctionSymbol("readNumber", NumberType()),
-            FunctionSymbol("readString", StringType()),
-            FunctionSymbol("readBool", BoolType()),
+            FunctionSymbol("readNumber", NumberType(), [], Stmt()),
+            FunctionSymbol("readString", StringType(), [], Stmt()),
+            FunctionSymbol("readBool", BoolType(), [], Stmt()),
 
-            FunctionSymbol("writeNumber", VoidType(), [VariableSymbol("n", NumberType())]),
-            FunctionSymbol("writeString", VoidType(), [VariableSymbol("s", StringType())]),
-            FunctionSymbol("writeBool", VoidType(), [VariableSymbol("b", BoolType())])
+            FunctionSymbol("writeNumber", VoidType(), [VariableSymbol("n", NumberType())], Stmt()),
+            FunctionSymbol("writeString", VoidType(), [VariableSymbol("s", StringType())], Stmt()),
+            FunctionSymbol("writeBool", VoidType(), [VariableSymbol("b", BoolType())], Stmt())
         ])
 
         self.envi.append(global_scope) # global scope
@@ -92,7 +92,7 @@ class StaticChecker(BaseVisitor, Utils):
         if self.lookup(name, symbols, getName):
             raise Redeclared(kind, name)
 
-    def checkRedeclaredFunction(self, name: str, lst : Scope):
+    def checkRedeclaredFunction(self, name: str, lst : Scope) -> FunctionSymbol:
         print("checkRedeclaredFunction: ", name, lst)
 
         symbols = lst.symbols
@@ -123,19 +123,23 @@ class StaticChecker(BaseVisitor, Utils):
 
     def checkEntry(self):
         print("checkEntry: ")
-        lst = self.envi[0]        
-        symbols = lst.symbols
 
-        if not self.lookup("main", symbols, getName):
+        globalSymbols = self.envi[0].symbols
+
+        isFound = False
+        for symbol in globalSymbols:
+            if type(symbol) == FunctionSymbol and symbol.name == "main" and symbol.param == [] and symbol.type == VoidType:
+                isFound = True
+                
+        if not isFound:
             raise NoEntryPoint()
-        return False
         
 
     def check(self):
         return self.visit(self.ast, None)
 
 
-    def visitProgram(self, ast, param):
+    def visitProgram(self, ast : Program, param):
         print(ast)
 
         # Visit all declaration in program
@@ -152,7 +156,7 @@ class StaticChecker(BaseVisitor, Utils):
 
         return []
 
-    def visitVarDecl(self, ast, param):
+    def visitVarDecl(self, ast : VarDecl, param : VarDeclParam):
         print("visitVarDecl: ", ast)
 
         name = self.visit(ast.name, None)
@@ -188,7 +192,7 @@ class StaticChecker(BaseVisitor, Utils):
 
 
     
-    def visitFuncDecl(self, ast, param):
+    def visitFuncDecl(self, ast : FuncDecl, param):
         print(ast)
 
         name = self.visit(ast.name, None)
@@ -225,23 +229,23 @@ class StaticChecker(BaseVisitor, Utils):
             return function
 
 
-    def visitNumberType(self, ast, param):
+    def visitNumberType(self, ast : NumberType, param):
         return NumberType()
         
     
-    def visitBoolType(self, ast, param):
+    def visitBoolType(self, ast : BoolType, param):
         return BoolType()
 
     
-    def visitStringType(self, ast, param):
+    def visitStringType(self, ast : StringType, param):
         return StringType()
 
     
-    def visitArrayType(self, ast, param):
+    def visitArrayType(self, ast : ArrayType, param):
         return ArrayType(ast.size, ast.eleType)
 
     
-    def visitBinaryOp(self, ast, param):
+    def visitBinaryOp(self, ast : BinaryOp, param):
         left = self.visit(ast.left, param)
         right = self.visit(ast.right, param)
 
@@ -272,7 +276,7 @@ class StaticChecker(BaseVisitor, Utils):
         return None # No type can be inferred
 
     
-    def visitUnaryOp(self, ast, param):
+    def visitUnaryOp(self, ast : UnaryOp, param):
         expr = self.visit(ast.operand, param)
 
         if ast.op in ['-']:
@@ -293,7 +297,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     
-    def visitId(self, ast, param):
+    def visitId(self, ast : Id, param):
         print("Visit Id: " , ast, param)
         if type(param) == ExprParam:
             if param.isDeclared:
@@ -306,55 +310,55 @@ class StaticChecker(BaseVisitor, Utils):
             return ast.name
 
     
-    def visitArrayCell(self, ast, param):
+    def visitArrayCell(self, ast : ArrayCell, param):
         pass
 
     
-    def visitBlock(self, ast, param):
+    def visitBlock(self, ast : Block, param):
         pass
 
     
-    def visitIf(self, ast, param):
+    def visitIf(self, ast : If, param):
         pass
 
     
-    def visitFor(self, ast, param):
+    def visitFor(self, ast : For, param):
         pass
 
     
-    def visitContinue(self, ast, param):
+    def visitContinue(self, ast : Continue, param):
         pass
 
     
-    def visitBreak(self, ast, param):
+    def visitBreak(self, ast : Break, param):
         pass
 
     
-    def visitReturn(self, ast, param):
+    def visitReturn(self, ast : Return, param):
         pass
 
     
-    def visitAssign(self, ast, param):
+    def visitAssign(self, ast : Assign, param):
         pass
 
     
-    def visitCallStmt(self, ast, param):
+    def visitCallStmt(self, ast : CallStmt, param):
         print("Call Stmt: ",ast)
 
 
     
-    def visitNumberLiteral(self, ast, param):
+    def visitNumberLiteral(self, ast : NumberLiteral, param):
         return NumberType()
 
     
-    def visitBooleanLiteral(self, ast, param):
+    def visitBooleanLiteral(self, ast : BooleanLiteral, param):
         return BoolType()
 
     
-    def visitStringLiteral(self, ast, param):
+    def visitStringLiteral(self, ast : StringLiteral, param):
         return StringType()
 
     
-    def visitArrayLiteral(self, ast, param):
+    def visitArrayLiteral(self, ast : ArrayLiteral, param):
         pass
 
