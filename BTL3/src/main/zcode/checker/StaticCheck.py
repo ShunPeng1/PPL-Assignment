@@ -70,15 +70,14 @@ class Envi:
         return f"Environtment({self.scope}, {self.isInsideFunction}, {self.isInsideLoop})"
 
 class ExprParam: 
-    def __init__(self, kind : Kind, scopeIndex : int, isDeclared : bool = False,  inferredType : Type = None, inferredSymbol : Symbol = None) -> None:
+    def __init__(self, kind : Kind, isDeclared : bool = False,  inferredType : Type = None, inferredSymbol : Symbol = None) -> None:
         self.kind = kind
-        self.scopeIndex = scopeIndex
-        self.isDeclared = isDeclared
+        self.isRHS = isDeclared
         self.inferredType = inferredType
         self.inferedSymbol = inferredSymbol
 
     def __str__(self) -> str:
-        return f"IdParam({self.kind}, {self.scopeIndex}, {self.isDeclared}, {self.inferredType})"
+        return f"IdParam({self.kind}, {self.scopeIndex}, {self.isRHS}, {self.inferredType})"
 
 class VarDeclParam:
     def __init__(self, kind : Kind, scopeIndex : int) -> None:
@@ -129,7 +128,7 @@ class StaticChecker(BaseVisitor, Utils):
         symbols = lst.symbols
         funcSymbol = self.lookup(name, symbols, getName)
         
-        if funcSymbol == None:
+        if funcSymbol is None:
             return None
         
         if type(funcSymbol) == FunctionSymbol:
@@ -201,13 +200,12 @@ class StaticChecker(BaseVisitor, Utils):
             self.checkRedeclaredVariable(varDeclParam.kind, name, envi.getLast())
         
         current_scope = envi.getLast()
-        current_scope_index = len(envi) - 1
         
         # Visit variable type
         if ast.modifier == "var":
             varInitType = self.visit(ast.varInit, (envi, None)) if ast.varInit else None
             
-            if varInitType == None:
+            if varInitType is None:
                 raise TypeCannotBeInferred(ast)
             
             current_scope.define(VariableSymbol(name, varInitType))
@@ -223,7 +221,7 @@ class StaticChecker(BaseVisitor, Utils):
             symbol = VariableSymbol(name, varType)
             
             if ast.varInit:
-                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), current_scope_index, True, varType, symbol)))
+                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, varType, symbol)))
                 if type(varType) != type(varInitType):
                     raise TypeMismatchInStatement(ast)
             
@@ -257,7 +255,7 @@ class StaticChecker(BaseVisitor, Utils):
         # Check for redeclared function
         function = self.checkRedeclaredFunction(name, envi.getLast())
 
-        if function == None: # first declaration of function 
+        if function is None: # first declaration of function 
 
             parameters = visitFuncParam()
             body = visitFuncBody()
@@ -341,7 +339,9 @@ class StaticChecker(BaseVisitor, Utils):
             inferredOperandType = StringType()
             inferredReturnType = BoolType()
 
-        operandParam = ExprParam(Variable(), exprParam.scopeIndex, exprParam.isDeclared, inferredOperandType)
+        operandParam = None
+        if exprParam:
+            operandParam = ExprParam(Variable(), exprParam.isRHS, inferredOperandType)
 
         left = self.visit(ast.left, (envi, operandParam))
         right = self.visit(ast.right, (envi, operandParam))
@@ -367,7 +367,9 @@ class StaticChecker(BaseVisitor, Utils):
             inferredOperandType = BoolType()
             inferredReturnType = BoolType()
 
-        operandParam = ExprParam(Variable(), exprParam.scopeIndex, exprParam.isDeclared , inferredOperandType)
+        operandParam = None
+        if exprParam:
+            operandParam = ExprParam(Variable(), exprParam.isRHS , inferredOperandType)
         expr = self.visit(ast.operand, (envi, operandParam))
         
         if type(expr) != type(inferredOperandType):
@@ -385,7 +387,7 @@ class StaticChecker(BaseVisitor, Utils):
         print("Visit Id: " , ast, param)
         (envi, exprParam) = param
         if type(exprParam) == ExprParam:
-            if exprParam.isDeclared:
+            if exprParam.isRHS:
                 symbol = self.checkDeclared(Identifier(), ast.name, envi)
                 
                 print("Visit Id Found: ", symbol)
