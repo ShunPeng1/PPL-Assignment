@@ -70,13 +70,15 @@ class Envi:
         return f"Environtment({self.scope}, {self.isInsideFunction}, {self.isInsideLoop})"
 
 class ExprParam: 
-    def __init__(self, kind : Kind, scopeIndex : int, isDeclared : bool = False) -> None:
+    def __init__(self, kind : Kind, scopeIndex : int, isDeclared : bool = False,  inferredType : Type = None, inferredSymbol : Symbol = None) -> None:
         self.kind = kind
         self.scopeIndex = scopeIndex
         self.isDeclared = isDeclared
+        self.inferredType = inferredType
+        self.inferedSymbol = inferredSymbol
 
     def __str__(self) -> str:
-        return f"IdParam({self.kind}, {self.scopeIndex}, {self.isDeclared})"
+        return f"IdParam({self.kind}, {self.scopeIndex}, {self.isDeclared}, {self.inferredType})"
 
 class VarDeclParam:
     def __init__(self, kind : Kind, scopeIndex : int) -> None:
@@ -87,13 +89,13 @@ class VarDeclParam:
         return f"VarDeclParam({self.kind}, {self.scopeIndex})"
 
 class StmtParam:
-    def __init__(self, isInFunction = False, isInLoop = False) -> None:
-        self.isInFunction = isInFunction
-        self.isInLoop = isInLoop
+    def __init__(self):
+        pass
+       
         
     def __str__(self) -> str:
-        return f"StmtParam({self.isInFunction}, {self.isInLoop})"
-
+        pass
+        
 class StaticChecker(BaseVisitor, Utils):
 
     def __init__(self, ast):
@@ -131,10 +133,13 @@ class StaticChecker(BaseVisitor, Utils):
             return None
         
         if type(funcSymbol) == FunctionSymbol:
-            if funcSymbol.body == None:
+            if funcSymbol.body:
+                raise Redeclared(Function(), name)
+            else :
                 return funcSymbol
-         
-        raise Redeclared(Function(), name)
+            
+        raise Redeclared(Function(), name)     
+
     
     def checkDeclared(self, kind : Kind, name : str, envi : Envi) -> Symbol:
         #print("checkDeclared: ", name, lst)
@@ -201,7 +206,11 @@ class StaticChecker(BaseVisitor, Utils):
         # Visit variable type
         if ast.modifier == "var":
             varInitType = self.visit(ast.varInit, (envi, None)) if ast.varInit else None
-            current_scope.define(VariableSymbol(name, ast.varType))
+            
+            if varInitType == None:
+                raise TypeCannotBeInferred(ast)
+            
+            current_scope.define(VariableSymbol(name, varInitType))
         
         elif ast.modifier == "dynamic":    
             varInitType = self.visit(ast.varInit, (envi, None)) if ast.varInit else None
@@ -210,12 +219,13 @@ class StaticChecker(BaseVisitor, Utils):
 
         else: # no modifier
             varType = self.visit(ast.varType, (envi, None))
+            
+            symbol = VariableSymbol(name, varType)
+            
             if ast.varInit:
-                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), current_scope_index, True)))
+                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), current_scope_index, True, varType, symbol)))
                 if type(varType) != type(varInitType):
                     raise TypeMismatchInStatement(ast)
-
-            symbol = VariableSymbol(name, varType)
             
             envi.getLast().define(symbol)
             return symbol
@@ -304,51 +314,66 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitBinaryOp(self, ast : BinaryOp, param : tuple[Envi, ExprParam]):
-        left = self.visit(ast.left, param)
-        right = self.visit(ast.right, param)
+        
+        (envi, exprParam) = param
+
+        inferredOperandType = None
+        inferredReturnType = None
 
         if ast.op in ['+', '-', '*', '/', '%']:
-            if (type(left) == NumberType) and (type(right)== NumberType):
-                return NumberType()
-            raise TypeMismatchInExpression(ast)
+            inferredOperandType = NumberType()
+            inferredReturnType = NumberType()
+           
         
         if ast.op in ['>', '>=', '<', '<=', '=', '!=']:
-            if (type(left) == NumberType) and (type(right)== NumberType):
-                return BoolType()
-            raise TypeMismatchInExpression(ast)
-        
+            inferredOperandType = NumberType()
+            inferredReturnType = BoolType()
+            
         if ast.op in ['and', 'or']:
-            if (type(left) == BoolType) and (type(right) == BoolType):
-                return BoolType()
-            raise TypeMismatchInExpression(ast)
-        
+            inferredOperandType = BoolType()
+            inferredReturnType = BoolType()
+            
         if ast.op in ['...']:
-            if (type(left) == StringType) and (type(right) == StringType):
-                return StringType()
-            raise TypeMismatchInExpression(ast)
-        
+            inferredOperandType = StringType()
+            inferredReturnType = StringType()
+            
         if ast.op in ['==']:
-            if (type(left) == StringType) and (type(right) == StringType):
-                return BoolType()
+            inferredOperandType = StringType()
+            inferredReturnType = BoolType()
+
+        operandParam = ExprParam(Variable(), exprParam.scopeIndex, exprParam.isDeclared, inferredOperandType)
+
+        left = self.visit(ast.left, (envi, operandParam))
+        right = self.visit(ast.right, (envi, operandParam))
+        
+
+        if type(left) != type(right) or type(left) != type(inferredOperandType):
             raise TypeMismatchInExpression(ast)
 
-        return None # No type can be inferred
+        return inferredReturnType # return type of binary operation
 
     
     def visitUnaryOp(self, ast : UnaryOp, param : tuple[Envi, ExprParam]):
-        expr = self.visit(ast.operand, param)
+        (envi, exprParam) = param
+
+        inferredOperandType = None
+        inferredReturnType = None
 
         if ast.op in ['-']:
-            if type(expr) == NumberType:
-                return NumberType()
-            raise TypeMismatchInExpression(ast)
+            inferredOperandType = NumberType()
+            inferredReturnType = NumberType()
         
         if ast.op in ['not']:
-            if type(expr) == BoolType:
-                return BoolType()
+            inferredOperandType = BoolType()
+            inferredReturnType = BoolType()
+
+        operandParam = ExprParam(Variable(), exprParam.scopeIndex, exprParam.isDeclared , inferredOperandType)
+        expr = self.visit(ast.operand, (envi, operandParam))
+        
+        if type(expr) != type(inferredOperandType):
             raise TypeMismatchInExpression(ast)
 
-        return None # No type can be inferred
+        return inferredReturnType # No type can be inferred
 
     
     def visitCallExpr(self, ast, param):
@@ -383,6 +408,9 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitFor(self, ast : For, param):
+
+
+
         return True # TODO : return type of block
 
     
@@ -394,8 +422,16 @@ class StaticChecker(BaseVisitor, Utils):
         return True # TODO : return type of block
 
     
-    def visitReturn(self, ast : Return, param):
-        return True # TODO : return type of block
+    def visitReturn(self, ast : Return, param : tuple[Envi, StmtParam]):
+        
+        (envi, stmtParam) = param
+        if envi.functionScopeCount == 0:
+            raise ReturnNotInFunction()
+
+        if ast.expr:
+            return self.visit(ast.expr, param)
+
+        return VoidType() 
 
     
     def visitAssign(self, ast : Assign, param):
