@@ -167,6 +167,12 @@ class StaticChecker(BaseVisitor, Utils):
         if not isFound:
             raise NoEntryPoint()
         
+    def checkFunctionDefined(self):
+        globalSymbols = self.envi[0].symbols
+
+        for symbol in globalSymbols:
+            if type(symbol) == FunctionSymbol and symbol.body is None:
+                raise NoDefinition(symbol.name)
 
     def check(self):
         return self.visit(self.ast, self.envi)
@@ -184,6 +190,9 @@ class StaticChecker(BaseVisitor, Utils):
 
         # Check for entry point
         self.checkEntry()
+
+        # Check for function defined
+        self.checkFunctionDefined()
         
         self.envi.pop()
 

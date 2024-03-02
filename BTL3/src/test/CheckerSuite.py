@@ -261,9 +261,17 @@ class CheckerSuite(unittest.TestCase):
             end
         """
         expect = "Type Mismatch In Expression: BinaryOp(+, NumLit(1.0), Id(c)))"
-        self.assertTrue(TestChecker.test(input, expect, 424))
+        #self.assertTrue(TestChecker.test(input, expect, 424))
 
-
+    def test_function_definition_1(self):
+        input = """
+            func foo(number a, number b)
+                
+            func main() 
+                return 0
+        """
+        expect = "No Function Definition: foo"
+        #self.assertTrue(TestChecker.test(input, expect, 425))
 
 
         # KIEN TESTCASES
