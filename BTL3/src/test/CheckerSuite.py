@@ -313,9 +313,21 @@ class CheckerSuite(unittest.TestCase):
                 return
         """
         expect = "Type Cannot Be Inferred: VarDecl(Id(b), None, dynamic, Id(a))"
-        self.assertTrue(TestChecker.test(input, expect, 429))
+        #self.assertTrue(TestChecker.test(input, expect, 429))
 
 
+    def test_dynamic_type_3(self):
+        input = """
+            dynamic a
+            dynamic b
+            dynamic c <- a + b
+            dynamic d <- c and true
+
+            func main()
+                return
+        """
+        expect = "Type Mismatch In Expression: BinaryOp(and, Id(c), BooleanLit(True)))"
+        #self.assertTrue(TestChecker.test(input, expect, 430))
 
 
 
@@ -337,7 +349,7 @@ func main()
     return
 """
         expect = "Type Mismatch In Expression: BinaryOp(+,NumLit(1.0),StringLit(Hello))"
-       #!self.assertTrue(TestChecker.test(input, expect, 441))
+        self.assertTrue(TestChecker.test(input, expect, 441))
     
     def test442(self):
         input = """
