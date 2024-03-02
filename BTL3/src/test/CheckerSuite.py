@@ -294,6 +294,39 @@ class CheckerSuite(unittest.TestCase):
         expect = "[]"
         #self.assertTrue(TestChecker.test(input, expect, 427))
 
+    def test_dynamic_type_1(self):
+        input = """
+            dynamic a
+            dynamic b
+            dynamic c <- a + b
+            func main()
+                return
+        """
+        expect = "[]"
+        #self.assertTrue(TestChecker.test(input, expect, 428))
+
+    def test_dynamic_type_2(self):
+        input = """
+            dynamic a
+            dynamic b <- a
+            func main()
+                return
+        """
+        expect = "Type Cannot Be Inferred: VarDecl(Id(b), None, dynamic, Id(a))"
+        self.assertTrue(TestChecker.test(input, expect, 429))
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 
         # KIEN TESTCASES

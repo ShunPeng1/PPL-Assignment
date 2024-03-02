@@ -407,8 +407,13 @@ class StaticChecker(BaseVisitor, Utils):
             if exprParam.isRHS:
                 symbol = self.checkDeclared(Identifier(), ast.name, envi)
                 
-                print("Visit Id Found: ", symbol)
-                return symbol.type
+                if symbol.type :                  
+                    return symbol.type
+                elif exprParam.inferredType : # Inferred type
+                    symbol.type = exprParam.inferredType
+                    return symbol.type
+                else :
+                    return None # No type can be inferred, will raise error in parent node
         
         else:
             return ast.name
