@@ -210,10 +210,17 @@ class StaticChecker(BaseVisitor, Utils):
             
             current_scope.define(VariableSymbol(name, varInitType))
         
-        elif ast.modifier == "dynamic":    
-            varInitType = self.visit(ast.varInit, (envi, None)) if ast.varInit else None
-            current_scope.define(VariableSymbol(name, ast.varType))
-
+        elif ast.modifier == "dynamic":  
+            varSymbol = VariableSymbol(name, None)  
+            if ast.varInit:
+                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True)))
+                
+                if varInitType is None:
+                    raise TypeCannotBeInferred(ast)
+                
+                varSymbol = VariableSymbol(name, varInitType)
+                
+            current_scope.define(varSymbol)
 
         else: # no modifier
             varType = self.visit(ast.varType, (envi, None))
@@ -347,7 +354,7 @@ class StaticChecker(BaseVisitor, Utils):
         right = self.visit(ast.right, (envi, operandParam))
         
 
-        if type(left) != type(right) or type(left) != type(inferredOperandType):
+        if type(right) != type(inferredOperandType) or type(left) != type(inferredOperandType):
             raise TypeMismatchInExpression(ast)
 
         return inferredReturnType # return type of binary operation

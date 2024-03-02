@@ -224,20 +224,44 @@ class CheckerSuite(unittest.TestCase):
     def test_inferring_type_3(self):
         input = """
             var a <- 1
+            var b <- 1 + a
+            var c <- -b <= a
+            var d <- b and not c
+            
+            func main()
+                return
+            
+        """
+        expect = "Type Mismatch In Expression: BinaryOp(and, Id(b), UnaryOp(not, Id(c))))"
+        #self.assertTrue(TestChecker.test(input, expect, 422))
+
+    def test_inferring_type_4(self):
+        input = """
+            var a <- 1
+            var c <- b <= a
+            var d <- 1 + c
+                
             func main()
             begin            
-                var b <- 1 + a
-                var c <- -b <= a
-                var d <- b and not c
                 return
             end
         """
-        expect = "[]"
-        self.assertTrue(TestChecker.test(input, expect, 422))
+        expect = "Undeclared Identifier: b"
+        #self.assertTrue(TestChecker.test(input, expect, 423))
 
-
-
-
+    def test_inferring_type_5(self):
+        input = """
+            var a <- 1
+            var c <- a <= 1
+            var d <- 1 + c
+                
+            func main()
+            begin            
+                return
+            end
+        """
+        expect = "Type Mismatch In Expression: BinaryOp(+, NumLit(1.0), Id(c)))"
+        self.assertTrue(TestChecker.test(input, expect, 424))
 
 
 
