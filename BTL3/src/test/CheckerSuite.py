@@ -221,6 +221,22 @@ class CheckerSuite(unittest.TestCase):
         expect = "Type Mismatch In Expression: BinaryOp(+, NumLit(1.0), BooleanLit(True)))"
         #self.assertTrue(TestChecker.test(input, expect, 421))
 
+    def test_inferring_type_3(self):
+        input = """
+            var a <- 1
+            func main()
+            begin            
+                var b <- 1 + a
+                var c <- -b <= a
+                var d <- b and not c
+                return
+            end
+        """
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 422))
+
+
+
 
 
 

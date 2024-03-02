@@ -70,9 +70,9 @@ class Envi:
         return f"Environtment({self.scope}, {self.isInsideFunction}, {self.isInsideLoop})"
 
 class ExprParam: 
-    def __init__(self, kind : Kind, isDeclared : bool = False,  inferredType : Type = None, inferredSymbol : Symbol = None) -> None:
+    def __init__(self, kind : Kind, isRHS : bool = False,  inferredType : Type = None, inferredSymbol : Symbol = None) -> None:
         self.kind = kind
-        self.isRHS = isDeclared
+        self.isRHS = isRHS
         self.inferredType = inferredType
         self.inferedSymbol = inferredSymbol
 
@@ -203,7 +203,7 @@ class StaticChecker(BaseVisitor, Utils):
         
         # Visit variable type
         if ast.modifier == "var":
-            varInitType = self.visit(ast.varInit, (envi, None)) if ast.varInit else None
+            varInitType = self.visit(ast.varInit, (envi, ExprParam(Identifier, True))) if ast.varInit else None
             
             if varInitType is None:
                 raise TypeCannotBeInferred(ast)
