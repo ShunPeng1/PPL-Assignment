@@ -41,18 +41,21 @@ class Scope:
         return f"Scope([{', '.join(str(i) for i in self.symbols)}])"
 
 class Envi:
-    def __init__(self, scope : None, isInsideFunction = False, isInsideLoop = False):
+    def __init__(self, scope : None):
         if scope is None:
             scope = []
-        self.scope = scope
-        self.isInsideFunction = isInsideFunction
-        self.isInsideLoop = isInsideLoop
+        self.scope : list[Scope] = scope
+        self.functionScopeCount = 0
+        self.isInsideLoop = 0
 
     def append(self, scope : Scope):
         self.scope.append(scope)
 
     def pop(self):
         self.scope.pop()
+
+    def getLast(self) -> Scope:
+        return self.scope[-1]
 
     def __getitem__(self, index : int):
         return self.scope[index]
@@ -190,9 +193,9 @@ class StaticChecker(BaseVisitor, Utils):
 
         # Check for redeclared variable
         if varDeclParam:
-            self.checkRedeclaredVariable(varDeclParam.kind, name, envi[-1])
+            self.checkRedeclaredVariable(varDeclParam.kind, name, envi.getLast())
         
-        current_scope = envi[-1]
+        current_scope = envi.getLast()
         current_scope_index = len(envi) - 1
         
         # Visit variable type
@@ -214,10 +217,8 @@ class StaticChecker(BaseVisitor, Utils):
 
             symbol = VariableSymbol(name, varType)
             
-            envi[-1].define(symbol)
+            envi.getLast().define(symbol)
             return symbol
-
-
     
     def visitFuncDecl(self, ast : FuncDecl, param : tuple[Envi, None]):
         print(ast)
@@ -225,11 +226,7 @@ class StaticChecker(BaseVisitor, Utils):
         (envi, _) = param
         name = self.visit(ast.name, (envi, None))
         
-        # Check for redeclared function
-        function = self.checkRedeclaredFunction(name, envi[-1])
-
-        if function == None: # first declaration of function 
-
+        def visitFuncParam():
             parameters = []
             if ast.param:
                 envi.append(Scope()) # new scope for function parameters
@@ -238,13 +235,27 @@ class StaticChecker(BaseVisitor, Utils):
                     parameters.append(parameterSymbol)
                 
                 envi.pop()
-                print(len(envi),envi[-1])
-            
+                print(len(envi),envi.getLast())
+            return parameters
+
+        def visitFuncBody():
+            envi.functionScopeCount += 1
             body = self.visit(ast.body, (envi, None)) if ast.body else None # declare only or implement function
+            envi.functionScopeCount -= 1
+            return body
+
+        # Check for redeclared function
+        function = self.checkRedeclaredFunction(name, envi.getLast())
+
+        if function == None: # first declaration of function 
+
+            parameters = visitFuncParam()
+            body = visitFuncBody()
+
             functionSymbol = FunctionSymbol(name, None, parameters, body) # TODO : return type of function
         
             # Add function to current scope
-            envi[-1].define(functionSymbol)
+            envi.getLast().define(functionSymbol)
         
             return functionSymbol
     
@@ -254,16 +265,7 @@ class StaticChecker(BaseVisitor, Utils):
                 raise Redeclared(Function(), name) # redeclared a declared-only function
 
             # Check for redeclared parameters
-            parameters = []
-            if ast.param:
-                
-                envi.append(Scope()) # new scope for function parameters
-                
-                for astParam in ast.param:
-                    parameterSymbol = self.visit(astParam, (envi, VarDeclParam(Parameter(), len(envi)-1)))
-                    parameters.append(parameterSymbol)
-                
-                envi.pop()
+            parameters = visitFuncParam()
 
             # Create lists of parameter types
             function_param_types = list(map(lambda param: type(param.type), function.param))
@@ -278,7 +280,7 @@ class StaticChecker(BaseVisitor, Utils):
                 raise Redeclared(Function(), name)
 
             # Visit function body
-            body = self.visit(ast.body, (envi, None))
+            body = visitFuncBody()
             function.body = body
 
 
@@ -311,7 +313,8 @@ class StaticChecker(BaseVisitor, Utils):
             raise TypeMismatchInExpression(ast)
         
         if ast.op in ['>', '>=', '<', '<=', '=', '!=']:
-            if (type(left) == NumberType) and (type(right)== NumberType):    return BoolType()
+            if (type(left) == NumberType) and (type(right)== NumberType):
+                return BoolType()
             raise TypeMismatchInExpression(ast)
         
         if ast.op in ['and', 'or']:

@@ -139,7 +139,7 @@ class CheckerSuite(unittest.TestCase):
             func foo(number a, number b)
             
             func main() 
-                return 0
+                return
 
             func foo(number c, number d)
                 return 0
@@ -190,8 +190,19 @@ class CheckerSuite(unittest.TestCase):
         expect = "Redeclared Function: foo"
         #self.assertTrue(TestChecker.test(input, expect, 418))
 
+    def test_function_declare_7(self):
+        input = """
+            func foo(number a, number b)
+            
+            func main() 
+                return 0
 
+            func foo(number a, number b)
+               """
+        expect = "Redeclared Function: foo"
+        #self.assertTrue(TestChecker.test(input, expect, 419))
 
+    
 
 
 
