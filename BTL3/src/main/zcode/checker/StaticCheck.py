@@ -41,7 +41,9 @@ class Scope:
         return f"Scope([{', '.join(str(i) for i in self.symbols)}])"
 
 class Envi:
-    def __init__(self, scope : list[Scope] = [], isInsideFunction = False, isInsideLoop = False):
+    def __init__(self, scope : None, isInsideFunction = False, isInsideLoop = False):
+        if scope is None:
+            scope = []
         self.scope = scope
         self.isInsideFunction = isInsideFunction
         self.isInsideLoop = isInsideLoop
@@ -93,7 +95,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     def __init__(self, ast):
         self.ast = ast
-        self.envi : Envi = Envi() # global scope
+        self.envi : Envi = Envi([]) # global scope
 
         global_scope = Scope([ # global scope built-in functions
             FunctionSymbol("readNumber", NumberType(), [], Stmt()),
@@ -129,12 +131,12 @@ class StaticChecker(BaseVisitor, Utils):
             if funcSymbol.body == None:
                 return funcSymbol
          
-        raise Redeclared(FunctionSymbol(), name)
+        raise Redeclared(Function(), name)
     
     def checkDeclared(self, kind : Kind, name : str, envi : Envi) -> Symbol:
         #print("checkDeclared: ", name, lst)
         
-        for i in range(len(envi), -1, -1): # from current scope to global scope
+        for i in range(len(envi) - 1, -1, -1): # from current scope to global scope
             print("checkDeclared Scope: ", i, envi[i])
             symbols = envi[i].symbols # list of Symbol in scope
            
@@ -146,7 +148,7 @@ class StaticChecker(BaseVisitor, Utils):
     
 
     def checkEntry(self):
-        print("checkEntry: ")
+        print("checkEntry: ", self.envi[0].symbols)
 
         globalSymbols = self.envi[0].symbols
 
@@ -271,6 +273,10 @@ class StaticChecker(BaseVisitor, Utils):
             if function_param_types != parameters_types:
                 raise Redeclared(Function(), name)
 
+            # Already Have a function declared the body or the body supposed to have is None
+            if function.body or ast.body is None:
+                raise Redeclared(Function(), name)
+
             # Visit function body
             body = self.visit(ast.body, (envi, None))
             function.body = body
@@ -347,11 +353,12 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     
-    def visitId(self, ast : Id, param):
+    def visitId(self, ast : Id, param : tuple[Envi, ExprParam]):
         print("Visit Id: " , ast, param)
-        if type(param) == ExprParam:
-            if param.isDeclared:
-                symbol = self.checkDeclared(Identifier(), ast.name, param.scopeIndex)
+        (envi, exprParam) = param
+        if type(exprParam) == ExprParam:
+            if exprParam.isDeclared:
+                symbol = self.checkDeclared(Identifier(), ast.name, envi)
                 
                 print("Visit Id Found: ", symbol)
                 return symbol.type
@@ -365,35 +372,36 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitBlock(self, ast : Block, param):
-        pass
+        return True # TODO : return type of block
 
     
     def visitIf(self, ast : If, param):
-        pass
+        return True # TODO : return type of block
 
     
     def visitFor(self, ast : For, param):
-        pass
+        return True # TODO : return type of block
 
     
     def visitContinue(self, ast : Continue, param):
-        pass
+        return True # TODO : return type of block
 
     
     def visitBreak(self, ast : Break, param):
-        pass
+        return True # TODO : return type of block
 
     
     def visitReturn(self, ast : Return, param):
-        pass
+        return True # TODO : return type of block
 
     
     def visitAssign(self, ast : Assign, param):
-        pass
+        return True # TODO : return type of block
 
     
     def visitCallStmt(self, ast : CallStmt, param):
         print("Call Stmt: ",ast)
+        return True # TODO : return type of block
 
 
     
