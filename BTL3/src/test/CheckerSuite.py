@@ -95,9 +95,11 @@ class CheckerSuite(unittest.TestCase):
         input = """
             bool b1 <- true
         
-            func main() 
+            func main()
+            begin 
                 bool b2 <- b1 and (1 <= 3)
                 return
+            end
         """
         expect = "[]"
         #self.assertTrue(TestChecker.test(input, expect, 411))
@@ -273,6 +275,26 @@ class CheckerSuite(unittest.TestCase):
         expect = "No Function Definition: foo"
         #self.assertTrue(TestChecker.test(input, expect, 425))
 
+    def test_function_definition_2(self):
+        input = """
+            func main() 
+            
+        """
+        expect = "No Function Definition: main"
+        #self.assertTrue(TestChecker.test(input, expect, 426))
+
+
+    def test_function_definition_3(self):
+        input = """
+            func main()
+            
+            func main() 
+                return 0
+        """
+        expect = "[]"
+        #self.assertTrue(TestChecker.test(input, expect, 427))
+
+    
 
         # KIEN TESTCASES
     def test441(self):

@@ -188,12 +188,13 @@ class StaticChecker(BaseVisitor, Utils):
             elif type(decl) == FuncDecl:
                 self.visit(decl, (self.envi, None))
 
-        # Check for entry point
-        self.checkEntry()
-
+        
         # Check for function defined
         self.checkFunctionDefined()
         
+        # Check for entry point
+        self.checkEntry()
+
         self.envi.pop()
 
         return []
