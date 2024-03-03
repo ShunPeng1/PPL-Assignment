@@ -67,7 +67,7 @@ class Envi:
         return len(self.scope)
 
     def __str__(self) -> str:
-        return f"Environtment({self.scope}, {self.isInsideFunction}, {self.isInsideLoop})"
+        return f"Environtment({self.scope})"
 
 class ExprParam: 
     def __init__(self, kind : Kind, isRHS : bool = False, isDeclared : bool = False, inferredType : Type = None, inferredSymbol : Symbol = None) -> None:
@@ -162,11 +162,21 @@ class StaticChecker(BaseVisitor, Utils):
                 raise NoDefinition(symbol.name)
 
 
-    def getSymbol(self, name : str, lst : Scope) -> Symbol:
-        print("getSymbol: ", name, lst)
+    def getSymbol(self, name : str, isOnlyLastScope : bool, envi : Envi) -> Symbol:
+        print("getSymbol: ", name, envi)
 
-        symbols = lst.symbols
-        return self.lookup(name, symbols, getName)
+        if isOnlyLastScope:
+            return self.lookup(name, envi.getLast().symbols, getName)
+
+        for i in range(len(envi) - 1, -1, -1): # from current scope to global scope
+            print("checkDeclared Scope: ", i, envi[i])
+            symbols = envi[i].symbols # list of Symbol in scope
+           
+            for symbol in symbols:
+                if name == getName(symbol):
+                    return symbol
+
+        return None # No symbol found
 
 
     def check(self):
@@ -244,7 +254,7 @@ class StaticChecker(BaseVisitor, Utils):
 
         # Get function symbol
         name = ast.name.name
-        function = self.getSymbol(name, envi.getLast())
+        function = self.getSymbol(name, True, envi)
         self.visit(ast.name, (envi, ExprParam(Function(), False, function is not None)))
         
         def visitFuncParam():
@@ -429,28 +439,43 @@ class StaticChecker(BaseVisitor, Utils):
         pass
 
     
-    def visitBlock(self, ast : Block, param):
-        return True # TODO : return type of block
+    def visitBlock(self, ast : Block, param : tuple[Envi, StmtParam]):
+        print("Visit Block: ", ast)
+        
+        (envi, stmtParam) = param
+
+        envi.append(Scope())
+
+        for stmt in ast.stmt:
+            self.visit(stmt, (envi, StmtParam()))
+
+        envi.pop()
+
+
+        return True # TODO : return of a statement
 
     
     def visitIf(self, ast : If, param):
-        return True # TODO : return type of block
+        return True # TODO : return of a statement
 
     
     def visitFor(self, ast : For, param):
+        print("Visit For: ", ast)
+
+        (envi, stmtParam) = param
 
 
 
-        return True # TODO : return type of block
+
+        return True # TODO : return of a statement
 
     
     def visitContinue(self, ast : Continue, param):
-        return True # TODO : return type of block
+        return True # TODO : return of a statement
 
     
     def visitBreak(self, ast : Break, param):
-        return True # TODO : return type of block
-
+        return True # TODO : return of a statement
     
     def visitReturn(self, ast : Return, param : tuple[Envi, StmtParam]):
         
@@ -464,33 +489,33 @@ class StaticChecker(BaseVisitor, Utils):
         return VoidType() 
 
     
-    def visitAssign(self, ast : Assign, param):
-        """
+    def visitAssign(self, ast : Assign, param : tuple[Envi, StmtParam]):
+        
         (envi, stmtParam) = param
 
-        symbol = self.checkDeclared(Identifier(), ast.lhs.name, envi)
+        lhsType = self.visit(ast.lhs, (envi, ExprParam(Variable(), False, True)))
+        symbol = self.getSymbol(ast.lhs.name, False, envi)
 
-        lhsType = self.visit(ast.lhs, (envi, ExprParam(Variable(), False)))
-        
-        if symbol.type:
-            rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, symbol.type, symbol)))
+        if lhsType: # LHS is declared and has type
+            rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True, lhsType, symbol)))
 
-            if type(symbol.type) != type(ast.rhs):
+            if type(lhsType) != type(rhsType):
                 raise TypeMismatchInStatement(ast)
-        else:
+        else: # LHS first use
+            rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True, None, symbol)))
+            
+            if rhsType is None:
+                raise TypeCannotBeInferred(ast)
+
             symbol.type = rhsType
 
-
-"""
         
-
-
-        return True # TODO : return type of block
+        return True # TODO : return of a statement
 
     
     def visitCallStmt(self, ast : CallStmt, param):
         print("Call Stmt: ",ast)
-        return True # TODO : return type of block
+        return True # TODO : return of a statement
 
 
     

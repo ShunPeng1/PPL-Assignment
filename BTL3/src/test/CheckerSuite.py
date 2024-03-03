@@ -330,11 +330,75 @@ class CheckerSuite(unittest.TestCase):
         #self.assertTrue(TestChecker.test(input, expect, 430))
 
 
+    def test_assign_statement_1(self):
+        input = """
+            number a
+            number b
+            func main()
+            begin
+                a <- b
+                return
+            end
+        """
+        expect = "[]"
+        #self.assertTrue(TestChecker.test(input, expect, 431))
 
+    def test_assign_statement_2(self):
+        input = """
+            number a
+            number b
+            func main()
+            begin
+                a <- 1 + 1
+                a <- true
+                return
+            end
+        """
+        expect = "Type Mismatch In Statement: AssignStmt(Id(a), BooleanLit(True))"
+        #self.assertTrue(TestChecker.test(input, expect, 432))
 
+    def test_assign_statement_3(self):
+        input = """
+            dynamic a
+            dynamic b
+            func main()
+            begin
+                a <- 1 + 1
+                a <- b
+                return
+            end
+        """
+        expect = "[]"
+        #self.assertTrue(TestChecker.test(input, expect, 433))
 
+    def test_assign_statement_4(self):
+        input = """
+            dynamic a
+            dynamic b
+            func main()
+            begin
+                a <- 1 + 1
+                a <- b
+                b <- true
+                return
+            end
+        """
+        expect = "Type Mismatch In Statement: AssignStmt(Id(b), BooleanLit(True))"
+        #self.assertTrue(TestChecker.test(input, expect, 434))
 
-
+    def test_assign_statement_5(self):
+        input = """
+            dynamic a
+            dynamic b
+            dynamic c
+            func main()
+            begin
+                c <- a + b 
+                return
+            end
+        """
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 435))
 
 
 
