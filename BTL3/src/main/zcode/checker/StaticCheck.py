@@ -528,11 +528,25 @@ class StaticChecker(BaseVisitor, Utils):
         return True # TODO : return of a statement
 
     
-    def visitContinue(self, ast : Continue, param):
+    def visitContinue(self, ast : Continue, param : tuple[Envi, StmtParam]):
+        print("Visit Continue: ", ast)
+
+        (envi, stmtParam) = param
+
+        if stmtParam.insideLoopCount == 0:
+            raise MustInLoop(ast)
+        
         return True # TODO : return of a statement
 
     
     def visitBreak(self, ast : Break, param):
+        print("Visit Break: ", ast)
+
+        (envi, stmtParam) = param
+
+        if stmtParam.insideLoopCount == 0:
+            raise MustInLoop(ast)
+
         return True # TODO : return of a statement
     
     def visitReturn(self, ast : Return, param : tuple[Envi, StmtParam]):
