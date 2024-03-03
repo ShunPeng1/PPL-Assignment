@@ -447,7 +447,10 @@ class StaticChecker(BaseVisitor, Utils):
         envi.append(Scope())
 
         for stmt in ast.stmt:
-            self.visit(stmt, (envi, StmtParam()))
+            if type(stmt) == VarDecl:
+                self.visit(stmt, (envi, VarDeclParam(Variable(), len(self.envi)-1)))
+            else:
+                self.visit(stmt, (envi, StmtParam()))
 
         envi.pop()
 
@@ -455,7 +458,29 @@ class StaticChecker(BaseVisitor, Utils):
         return True # TODO : return of a statement
 
     
-    def visitIf(self, ast : If, param):
+    def visitIf(self, ast : If, param : tuple[Envi, StmtParam]):
+        print("Visit If: ", ast)
+
+        (envi, stmtParam) = param
+
+        ifConditionType = self.visit(ast.expr, (envi, ExprParam(Variable(), True, True, BoolType())))
+
+        if type(ifConditionType) != BoolType:
+            raise TypeMismatchInStatement(ast)
+        
+        self.visit(ast.thenStmt, (envi, StmtParam()))
+
+        for (elifExpr, elifStmt) in ast.elifStmt:
+            elifConditionType = self.visit(elifExpr, (envi, ExprParam(Variable(), True, True, BoolType())))
+            
+            if type(elifConditionType) != BoolType:
+                raise TypeMismatchInStatement(ast)
+
+            self.visit(elifStmt, (envi, StmtParam()))
+        
+        if ast.elseStmt:
+            self.visit(ast.elseStmt, (envi, StmtParam()))
+
         return True # TODO : return of a statement
 
     
@@ -480,9 +505,8 @@ class StaticChecker(BaseVisitor, Utils):
     def visitReturn(self, ast : Return, param : tuple[Envi, StmtParam]):
         
         (envi, stmtParam) = param
-        if envi.functionScopeCount == 0:
-            raise ReturnNotInFunction()
-
+        
+        
         if ast.expr:
             return self.visit(ast.expr, param)
 
