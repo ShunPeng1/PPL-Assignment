@@ -541,11 +541,11 @@ class CheckerSuite(unittest.TestCase):
             begin
                 bool a <- foo()
             end
-        """
-        expect = "Type Mismatch In Expression: CallExpr(Id(foo), [])"
-        #expect = "Type Mismatch In Statement: VarDecl(Id(a), BoolType, CallExpr(Id(foo),[]))"
+        """        
+        
+        expect = "Type Mismatch In Statement: VarDecl(Id(a), BoolType, None, CallExpr(Id(foo), []))"
         #self.assertTrue(TestChecker.test(input, expect, 445))
-
+    
     def test_callepxr_4(self):
         input = """
             func foo()
@@ -566,15 +566,15 @@ class CheckerSuite(unittest.TestCase):
         input = """
             func foo()
                 return 0
+            func foo2()
+                return true
             func main()
             begin
-                var a <- foo()
-                var b <- a + foo()
-
+                dynamic c <- foo2() + foo()
 
             end
         """
-        expect = "[]"
+        expect = "Type Mismatch In Expression: BinaryOp(+, CallExpr(Id(foo2), []), CallExpr(Id(foo), []))"
         #self.assertTrue(TestChecker.test(input, expect, 447))
 
 

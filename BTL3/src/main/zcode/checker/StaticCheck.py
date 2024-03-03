@@ -444,8 +444,8 @@ class StaticChecker(BaseVisitor, Utils):
 
         else: # function declared and have the return type
             if exprParam.inferredType and type(functionSymbol.type) != type(exprParam.inferredType): # inferred type is different from declared type and exist
-                raise TypeMismatchInExpression(ast)    
-            
+                #raise TypeMismatchInExpression(ast)    
+                pass
         return functionSymbol.type 
 
 
