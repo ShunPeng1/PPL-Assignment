@@ -577,12 +577,31 @@ class StaticChecker(BaseVisitor, Utils):
         
         (envi, stmtParam) = param
 
+        if stmtParam.currentFunctionSymbol.type is None: # function type is not declared
+            if ast.expr:
+                returnType = self.visit(ast.expr, (envi, ExprParam(Variable(), True, True, stmtParam.currentFunctionSymbol.type)))
+                
+                if returnType is None:
+                    raise TypeCannotBeInferred(ast)
+                
+                stmtParam.currentFunctionSymbol.type = returnType
 
+            else:
+                stmtParam.currentFunctionSymbol.type = VoidType()
+        
+        else: # function type is declared
+            if ast.expr:
+                returnType = self.visit(ast.expr, (envi, ExprParam(Variable(), True, True, stmtParam.currentFunctionSymbol.type)))
+                
+                if type(returnType) != type(stmtParam.currentFunctionSymbol.type):
+                    raise TypeMismatchInStatement(ast)
+            else:
+                if type(stmtParam.currentFunctionSymbol.type) != VoidType:
+                    raise TypeMismatchInStatement(ast)
 
-        if ast.expr:
-            return self.visit(ast.expr, param)
+        
+        return True # TODO : return of a statement
 
-        return VoidType() 
 
     
     def visitAssign(self, ast : Assign, param : tuple[Envi, StmtParam]):
