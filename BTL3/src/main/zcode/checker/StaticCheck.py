@@ -68,12 +68,11 @@ class Envi:
         return f"Environtment({self.scope})"
 
 class ExprParam: 
-    def __init__(self, kind : Kind, isRHS : bool = False, isDeclared : bool = False, inferredType : Type = None, inferredSymbol : Symbol = None) -> None:
+    def __init__(self, kind : Kind, isRHS : bool = False, isDeclared : bool = False, inferredType : Type = None) -> None:
         self.kind = kind
         self.isRHS = isRHS
         self.isDeclared = isDeclared
         self.inferredType = inferredType
-        self.inferedSymbol = inferredSymbol
 
     def __str__(self) -> str:
         return f"IdParam({self.kind}, {self.scopeIndex}, {self.isRHS}, {self.inferredType})"
@@ -217,7 +216,7 @@ class StaticChecker(BaseVisitor, Utils):
         
         # Visit variable type
         if ast.modifier == "var":
-            varInitType = self.visit(ast.varInit, (envi, ExprParam(Identifier, True, True))) if ast.varInit else None
+            varInitType = self.visit(ast.varInit, (envi, ExprParam(Identifier(), True, True))) if ast.varInit else None
             
             if varInitType is None:
                 raise TypeCannotBeInferred(ast)
@@ -242,7 +241,7 @@ class StaticChecker(BaseVisitor, Utils):
             symbol = VariableSymbol(name, varType)
             
             if ast.varInit:
-                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, True, varType, symbol)))
+                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, True, varType)))
                 if type(varType) != type(varInitType):
                     raise TypeMismatchInStatement(ast)
             
@@ -427,7 +426,7 @@ class StaticChecker(BaseVisitor, Utils):
 
         for i in range(len(ast.args)):
             symbolParamType = symbol.param[i].type
-            callParamType = self.visit(ast.args[i], (envi, ExprParam(Variable(), True, True, symbolParamType, symbol.param[i])))
+            callParamType = self.visit(ast.args[i], (envi, ExprParam(Variable(), True, True, symbolParamType)))
             if type(callParamType) != type(symbolParamType):
                 raise TypeMismatchInExpression(ast)
 
@@ -450,7 +449,7 @@ class StaticChecker(BaseVisitor, Utils):
                 
                 if symbol.type :                  
                     return symbol.type
-                elif exprParam.inferredType : # Inferred type
+                elif exprParam.inferredType : # No type in symbol yet so inferred type
                     symbol.type = exprParam.inferredType
                     return symbol.type
                 else :
@@ -521,30 +520,17 @@ class StaticChecker(BaseVisitor, Utils):
         print("Visit For: ", ast)
 
         (envi, stmtParam) = param
-
-        # Copy from visitAssign        
+    
         lhsType = self.visit(ast.name, (envi, ExprParam(Variable(), False, True, NumberType())))
         symbol = self.getSymbol(ast.name.name, False, envi)
-        updType = self.visit(ast.updExpr, (envi, ExprParam(Variable(), True, True, NumberType(), symbol)))
+        updType = self.visit(ast.updExpr, (envi, ExprParam(Variable(), True, True, NumberType())))
 
-        
-
-        if type(lhsType) != NumberType or type(updType) != NumberType:
-            raise TypeMismatchInStatement(ast)
-        
-
-
-        if lhsType: # LHS is declared and has type
-            
-            if type(lhsType) != type(updType):
+        if type(lhsType) is None: # LHS first use so infer type
+            symbol.type = NumberType()
+        else:
+            if type(lhsType) != NumberType or type(updType) != NumberType:
                 raise TypeMismatchInStatement(ast)
-        else: # LHS first use
-            updType = self.visit(ast.updExpr, (envi, ExprParam(Variable(), True, True, None, symbol)))
             
-            if updType is None:
-                raise TypeCannotBeInferred(ast)
-
-            symbol.type = updType
 
         # Visit condition of for loop
         condType = self.visit(ast.condExpr, (envi, ExprParam(Variable(), True, True, BoolType())))
@@ -619,12 +605,12 @@ class StaticChecker(BaseVisitor, Utils):
         symbol = self.getSymbol(ast.lhs.name, False, envi)
 
         if lhsType: # LHS is declared and has type
-            rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True, lhsType, symbol)))
+            rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True, lhsType)))
 
             if type(lhsType) != type(rhsType):
                 raise TypeMismatchInStatement(ast)
         else: # LHS first use
-            rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True, None, symbol)))
+            rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True, None)))
             
             if rhsType is None:
                 raise TypeCannotBeInferred(ast)
@@ -655,7 +641,7 @@ class StaticChecker(BaseVisitor, Utils):
 
         for i in range(len(ast.args)):
             symbolParamType = symbol.param[i].type
-            callParamType = self.visit(ast.args[i], (envi, ExprParam(Variable(), True, True, symbolParamType, symbol.param[i])))
+            callParamType = self.visit(ast.args[i], (envi, ExprParam(Variable(), True, True, symbolParamType)))
             if type(callParamType) != type(symbolParamType):
                 raise TypeMismatchInStatement(ast)
 
