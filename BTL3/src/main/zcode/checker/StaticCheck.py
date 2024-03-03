@@ -273,7 +273,12 @@ class StaticChecker(BaseVisitor, Utils):
         def visitFuncBody(functionSymbol : FunctionSymbol = None):
             stmtParam = StmtParam(functionSymbol, 0)
             body = self.visit(ast.body, (envi, stmtParam)) if ast.body else None # declare only or implement function
-            stmtParam.isInsideFunction = False
+            
+            if body: # function has body so it must have a type
+                if functionSymbol.type is None:
+                    functionSymbol.type = VoidType()
+            
+            stmtParam.currentFunctionSymbol = None
             return body
 
         

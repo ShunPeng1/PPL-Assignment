@@ -533,6 +533,18 @@ class CheckerSuite(unittest.TestCase):
         expect = "Type Mismatch In Statement: AssignStmt(Id(a), BooleanLit(True))"
         #self.assertTrue(TestChecker.test(input, expect, 444))
 
+    def test_callepxr_3(self):
+        input = """
+            func foo()
+                return 0
+            func main()
+            begin
+                dynamic a <- foo()
+                a <- 1
+            end
+        """
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 445))
 
 
 
