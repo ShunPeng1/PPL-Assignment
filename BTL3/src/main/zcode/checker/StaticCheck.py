@@ -537,8 +537,30 @@ class StaticChecker(BaseVisitor, Utils):
         return True # TODO : return of a statement
 
     
-    def visitCallStmt(self, ast : CallStmt, param):
+    def visitCallStmt(self, ast : CallStmt, param : tuple[Envi, StmtParam]):
         print("Call Stmt: ",ast)
+
+        (envi, stmtParam) = param
+
+        name = ast.name.name
+        self.visit(ast.name, (envi, ExprParam(Function(), True, True)))
+        symbol = self.checkDeclared(Function(), name, envi)
+
+        if symbol is None:
+            raise Undeclared(Function(), ast.name)
+
+        if type(symbol) != FunctionSymbol:
+            raise TypeMismatchInStatement(ast)
+        
+        if len(ast.args) != len(symbol.param):
+            raise TypeMismatchInStatement(ast)
+
+        for i in range(len(ast.args)):
+            symbolParamType = symbol.param[i].type
+            callParamType = self.visit(ast.args[i], (envi, ExprParam(Variable(), True, True, symbolParamType, symbol.param[i])))
+            if type(callParamType) != type(symbolParamType):
+                raise TypeMismatchInStatement(ast)
+
         return True # TODO : return of a statement
 
 
