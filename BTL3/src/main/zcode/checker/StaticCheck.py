@@ -522,8 +522,32 @@ class StaticChecker(BaseVisitor, Utils):
 
         (envi, stmtParam) = param
 
+        # Copy from visitAssign        
+        lhsType = self.visit(ast.name, (envi, ExprParam(Variable(), False, True)))
+        symbol = self.getSymbol(ast.name.name, False, envi)
 
+        if lhsType: # LHS is declared and has type
+            rhsType = self.visit(ast.updExpr, (envi, ExprParam(Variable(), True, True, lhsType, symbol)))
 
+            if type(lhsType) != type(rhsType):
+                raise TypeMismatchInStatement(ast)
+        else: # LHS first use
+            rhsType = self.visit(ast.updExpr, (envi, ExprParam(Variable(), True, True, None, symbol)))
+            
+            if rhsType is None:
+                raise TypeCannotBeInferred(ast)
+
+            symbol.type = rhsType
+
+        # Visit condition of for loop
+        condType = self.visit(ast.condExpr, (envi, ExprParam(Variable(), True, True, BoolType())))
+        if type(condType) != BoolType:
+            raise TypeMismatchInStatement(ast)
+        
+        # Visit body of for loop
+        stmtParam.insideLoopCount += 1
+        self.visit(ast.body, (envi, stmtParam))
+        stmtParam.insideLoopCount -= 1
 
         return True # TODO : return of a statement
 
