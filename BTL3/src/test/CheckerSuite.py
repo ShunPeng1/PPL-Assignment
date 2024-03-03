@@ -507,8 +507,31 @@ class CheckerSuite(unittest.TestCase):
         expect = "Type Mismatch In Statement: CallStmt(Id(foo), [Id(a)])"
         #self.assertTrue(TestChecker.test(input, expect, 442))
     
-    
+    def test_callepxr_1(self):
+        input = """
+            func foo()
+                return 0
+            func main()
+            begin
+                foo()
+                return
+            end
+        """
+        expect = "Type Mismatch In Statement: CallStmt(Id(foo), [])"
+        #self.assertTrue(TestChecker.test(input, expect, 443))
 
+    def test_callepxr_2(self):
+        input = """
+            func foo()
+                return 0
+            func main()
+            begin
+                dynamic a <- foo()
+                a <- true
+            end
+        """       
+        expect = "Type Mismatch In Statement: AssignStmt(Id(a), BooleanLit(True))"
+        #self.assertTrue(TestChecker.test(input, expect, 444))
 
 
 

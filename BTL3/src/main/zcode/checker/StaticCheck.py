@@ -406,36 +406,42 @@ class StaticChecker(BaseVisitor, Utils):
         return inferredReturnType # No type can be inferred
 
     
-    def visitCallExpr(self, ast, param : tuple[Envi, ExprParam]):
-        print("Call Stmt: ",ast)
+    def visitCallExpr(self, ast : CallExpr, param : tuple[Envi, ExprParam]):
+        print("Call Expr: ",ast)
 
         (envi, exprParam) = param
 
         name = ast.name.name
         self.visit(ast.name, (envi, ExprParam(Function(), True, True)))
-        symbol = self.getSymbol(name, False, envi)
+        functionSymbol = self.getSymbol(name, False, envi)
 
-        if symbol is None:
+        if functionSymbol is None:
             raise Undeclared(Function(), ast.name)
 
-        if type(symbol) != FunctionSymbol:
+        if type(functionSymbol) != FunctionSymbol:
             raise TypeMismatchInExpression(ast)
 
-        if len(ast.args) != len(symbol.param):
+        if len(ast.args) != len(functionSymbol.param):
             raise TypeMismatchInExpression(ast)
 
         for i in range(len(ast.args)):
-            symbolParamType = symbol.param[i].type
+            symbolParamType = functionSymbol.param[i].type
             callParamType = self.visit(ast.args[i], (envi, ExprParam(Variable(), True, True, symbolParamType)))
             if type(callParamType) != type(symbolParamType):
                 raise TypeMismatchInExpression(ast)
 
-        if symbol.body is None: # function declared-only
-            symbol.type = exprParam.inferredType
-        elif type(symbol.type) != exprParam.inferredType: # this must be a void function
-            raise TypeMismatchInExpression(ast)    
+        if functionSymbol.body is None: # function declared-only
+            if exprParam.inferredType:
+                functionSymbol.type = exprParam.inferredType
+            else:
+                # TODO : the function is declared only and no type can be inferred from the call 
+                pass
+
+        else: # function declared and have the return type
+            if exprParam.inferredType and type(functionSymbol.type) != exprParam.inferredType: # inferred type is different from declared type and exist
+                raise TypeMismatchInExpression(ast)    
             
-        return symbol.type # TODO : return of a statement
+        return functionSymbol.type 
 
 
     
@@ -628,28 +634,28 @@ class StaticChecker(BaseVisitor, Utils):
 
         name = ast.name.name
         self.visit(ast.name, (envi, ExprParam(Function(), True, True)))
-        symbol = self.getSymbol(name, False, envi)
+        functionSymbol = self.getSymbol(name, False, envi)
 
-        if symbol is None:
+        if functionSymbol is None:
             raise Undeclared(Function(), ast.name)
 
-        if type(symbol) != FunctionSymbol:
+        if type(functionSymbol) != FunctionSymbol:
             raise TypeMismatchInStatement(ast)
 
-        if len(ast.args) != len(symbol.param):
+        if len(ast.args) != len(functionSymbol.param):
             raise TypeMismatchInStatement(ast)
 
         for i in range(len(ast.args)):
-            symbolParamType = symbol.param[i].type
+            symbolParamType = functionSymbol.param[i].type
             callParamType = self.visit(ast.args[i], (envi, ExprParam(Variable(), True, True, symbolParamType)))
             if type(callParamType) != type(symbolParamType):
                 raise TypeMismatchInStatement(ast)
 
-        if symbol.body is None: # function declared-only
-            symbol.type = VoidType()
-        elif type(symbol.type) != VoidType: # this must be a void function
+        if functionSymbol.body is None: # function declared-only
+            functionSymbol.type = VoidType()
+        elif type(functionSymbol.type) != VoidType: # this must be a void function
             raise TypeMismatchInStatement(ast)    
-            
+           
         return True # TODO : return of a statement
 
 
