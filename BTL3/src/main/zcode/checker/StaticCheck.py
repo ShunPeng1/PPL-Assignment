@@ -45,8 +45,6 @@ class Envi:
         if scope is None:
             scope = []
         self.scope : list[Scope] = scope
-        self.functionScopeCount = 0
-        self.isInsideLoop = 0
 
     def append(self, scope : Scope):
         self.scope.append(scope)
@@ -89,7 +87,11 @@ class VarDeclParam:
         return f"VarDeclParam({self.kind}, {self.scopeIndex})"
 
 class StmtParam:
-    def __init__(self):
+    def __init__(self, currentFunctionSymbol : FunctionSymbol = None, insideLoopCount : int = 0) -> None:
+        if currentFunctionSymbol is None:
+            currentFunctionSymbol = None
+        self.currentFunctionSymbol = currentFunctionSymbol
+        self.insideLoopCount = 0
         pass
        
         
@@ -254,8 +256,8 @@ class StaticChecker(BaseVisitor, Utils):
 
         # Get function symbol
         name = ast.name.name
-        function = self.getSymbol(name, True, envi)
-        self.visit(ast.name, (envi, ExprParam(Function(), False, function is not None)))
+        functionSymbol = self.getSymbol(name, True, envi)
+        self.visit(ast.name, (envi, ExprParam(Function(), False, functionSymbol is not None)))
         
         def visitFuncParam():
             parameters = []
@@ -269,26 +271,29 @@ class StaticChecker(BaseVisitor, Utils):
                 print(len(envi),envi.getLast())
             return parameters
 
-        def visitFuncBody():
-            envi.functionScopeCount += 1
-            body = self.visit(ast.body, (envi, None)) if ast.body else None # declare only or implement function
-            envi.functionScopeCount -= 1
+        def visitFuncBody(functionSymbol : FunctionSymbol = None):
+            stmtParam = StmtParam(functionSymbol, 0)
+            body = self.visit(ast.body, (envi, stmtParam)) if ast.body else None # declare only or implement function
+            stmtParam.isInsideFunction = False
             return body
 
         
-        if function is None: # first declaration of function 
-
+        if functionSymbol is None: # first declaration of function 
+            
+            functionSymbol = FunctionSymbol(name, None, [], None) # TODO : return type of function
+        
+            # Visit function parameters and body
             parameters = visitFuncParam()
-            body = visitFuncBody()
-
-            functionSymbol = FunctionSymbol(name, None, parameters, body) # TODO : return type of function
+            functionSymbol.param = parameters
+            body = visitFuncBody(functionSymbol)
+            functionSymbol.body = body
         
             # Add function to current scope
             envi.getLast().define(functionSymbol)
         
             return functionSymbol
     
-        elif type(function) == FunctionSymbol: # implement the body function
+        elif type(functionSymbol) == FunctionSymbol: # implement the body function
             
             if ast.body is None:
                 raise Redeclared(Function(), name) # redeclared a declared-only function
@@ -297,7 +302,7 @@ class StaticChecker(BaseVisitor, Utils):
             parameters = visitFuncParam()
 
             # Create lists of parameter types
-            function_param_types = list(map(lambda param: type(param.type), function.param))
+            function_param_types = list(map(lambda param: type(param.type), functionSymbol.param))
             parameters_types = list(map(lambda param: type(param.type), parameters))
 
             # Compare the lists of parameter types
@@ -305,17 +310,16 @@ class StaticChecker(BaseVisitor, Utils):
                 raise Redeclared(Function(), name)
 
             # Already Have a function declared the body 
-            if function.body :
+            if functionSymbol.body :
                 raise Redeclared(Function(), name)
             elif ast.body is None : # already have a declared-only function and redeclared with no body
                 raise Redeclared(Function(), name)
 
             # Visit function body
-            body = visitFuncBody()
-            function.body = body
+            body = visitFuncBody(functionSymbol)
+            functionSymbol.body = body
 
-
-            return function
+            return functionSymbol
     
         else:
             raise Redeclared(Function(), name)
@@ -450,7 +454,7 @@ class StaticChecker(BaseVisitor, Utils):
             if type(stmt) == VarDecl:
                 self.visit(stmt, (envi, VarDeclParam(Variable(), len(self.envi)-1)))
             else:
-                self.visit(stmt, (envi, StmtParam()))
+                self.visit(stmt, (envi, stmtParam))
 
         envi.pop()
 
@@ -468,7 +472,7 @@ class StaticChecker(BaseVisitor, Utils):
         if type(ifConditionType) != BoolType:
             raise TypeMismatchInStatement(ast)
         
-        self.visit(ast.thenStmt, (envi, StmtParam()))
+        self.visit(ast.thenStmt, (envi, stmtParam))
 
         for (elifExpr, elifStmt) in ast.elifStmt:
             elifConditionType = self.visit(elifExpr, (envi, ExprParam(Variable(), True, True, BoolType())))
@@ -476,10 +480,10 @@ class StaticChecker(BaseVisitor, Utils):
             if type(elifConditionType) != BoolType:
                 raise TypeMismatchInStatement(ast)
 
-            self.visit(elifStmt, (envi, StmtParam()))
+            self.visit(elifStmt, (envi, stmtParam))
         
         if ast.elseStmt:
-            self.visit(ast.elseStmt, (envi, StmtParam()))
+            self.visit(ast.elseStmt, (envi, stmtParam))
 
         return True # TODO : return of a statement
 
@@ -544,14 +548,14 @@ class StaticChecker(BaseVisitor, Utils):
 
         name = ast.name.name
         self.visit(ast.name, (envi, ExprParam(Function(), True, True)))
-        symbol = self.checkDeclared(Function(), name, envi)
+        symbol = self.getSymbol(name, False, envi)
 
         if symbol is None:
             raise Undeclared(Function(), ast.name)
 
         if type(symbol) != FunctionSymbol:
             raise TypeMismatchInStatement(ast)
-        
+
         if len(ast.args) != len(symbol.param):
             raise TypeMismatchInStatement(ast)
 
