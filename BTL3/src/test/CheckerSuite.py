@@ -120,7 +120,7 @@ class CheckerSuite(unittest.TestCase):
                 return 0
 
             func main() 
-                return 0
+                return 
         """
         expect = "[]"
         #self.assertTrue(TestChecker.test(input, expect, 413))
@@ -289,7 +289,7 @@ class CheckerSuite(unittest.TestCase):
             func main()
             
             func main() 
-                return 0
+                return 
         """
         expect = "[]"
         #self.assertTrue(TestChecker.test(input, expect, 427))
@@ -507,9 +507,7 @@ class CheckerSuite(unittest.TestCase):
         expect = "Type Mismatch In Statement: CallStmt(Id(foo), [Id(a)])"
         #self.assertTrue(TestChecker.test(input, expect, 442))
     
-
-
-
+    
 
 
 

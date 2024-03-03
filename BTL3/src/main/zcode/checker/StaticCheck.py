@@ -149,7 +149,7 @@ class StaticChecker(BaseVisitor, Utils):
 
         isFound = False
         for symbol in globalSymbols:
-            if type(symbol) == FunctionSymbol and symbol.name == "main" and symbol.param == [] :#TODO : and symbol.type == VoidType:
+            if type(symbol) == FunctionSymbol and symbol.name == "main" and symbol.param == [] and type(symbol.type) == VoidType :#TODO : and symbol.type == VoidType:
                 isFound = True
                 
         if not isFound:
