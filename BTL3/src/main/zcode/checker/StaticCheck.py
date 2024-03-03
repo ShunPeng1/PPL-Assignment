@@ -407,8 +407,37 @@ class StaticChecker(BaseVisitor, Utils):
         return inferredReturnType # No type can be inferred
 
     
-    def visitCallExpr(self, ast, param):
-        pass
+    def visitCallExpr(self, ast, param : tuple[Envi, ExprParam]):
+        print("Call Stmt: ",ast)
+
+        (envi, exprParam) = param
+
+        name = ast.name.name
+        self.visit(ast.name, (envi, ExprParam(Function(), True, True)))
+        symbol = self.getSymbol(name, False, envi)
+
+        if symbol is None:
+            raise Undeclared(Function(), ast.name)
+
+        if type(symbol) != FunctionSymbol:
+            raise TypeMismatchInExpression(ast)
+
+        if len(ast.args) != len(symbol.param):
+            raise TypeMismatchInExpression(ast)
+
+        for i in range(len(ast.args)):
+            symbolParamType = symbol.param[i].type
+            callParamType = self.visit(ast.args[i], (envi, ExprParam(Variable(), True, True, symbolParamType, symbol.param[i])))
+            if type(callParamType) != type(symbolParamType):
+                raise TypeMismatchInExpression(ast)
+
+        if symbol.body is None: # function declared-only
+            symbol.type = exprParam.inferredType
+        elif type(symbol.type) != exprParam.inferredType: # this must be a void function
+            raise TypeMismatchInExpression(ast)    
+            
+        return symbol.type # TODO : return of a statement
+
 
     
     
@@ -509,8 +538,9 @@ class StaticChecker(BaseVisitor, Utils):
     def visitReturn(self, ast : Return, param : tuple[Envi, StmtParam]):
         
         (envi, stmtParam) = param
-        
-        
+
+
+
         if ast.expr:
             return self.visit(ast.expr, param)
 
@@ -565,6 +595,11 @@ class StaticChecker(BaseVisitor, Utils):
             if type(callParamType) != type(symbolParamType):
                 raise TypeMismatchInStatement(ast)
 
+        if symbol.body is None: # function declared-only
+            symbol.type = VoidType()
+        elif type(symbol.type) != VoidType: # this must be a void function
+            raise TypeMismatchInStatement(ast)    
+            
         return True # TODO : return of a statement
 
 
