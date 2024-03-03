@@ -70,9 +70,10 @@ class Envi:
         return f"Environtment({self.scope}, {self.isInsideFunction}, {self.isInsideLoop})"
 
 class ExprParam: 
-    def __init__(self, kind : Kind, isRHS : bool = False,  inferredType : Type = None, inferredSymbol : Symbol = None) -> None:
+    def __init__(self, kind : Kind, isRHS : bool = False, isDeclared : bool = False, inferredType : Type = None, inferredSymbol : Symbol = None) -> None:
         self.kind = kind
         self.isRHS = isRHS
+        self.isDeclared = isDeclared
         self.inferredType = inferredType
         self.inferedSymbol = inferredSymbol
 
@@ -115,29 +116,15 @@ class StaticChecker(BaseVisitor, Utils):
         self.envi.append(global_scope) # global scope
 
 
-    def checkRedeclaredVariable(self, kind : Kind, name: str, lst : Scope):
+    def checkRedeclared(self, kind : Function | Variable | Parameter, name: str, lst : Scope):
         print("checkRedeclared: ", kind, name, lst)
 
         symbols = lst.symbols
-        if self.lookup(name, symbols, getName):
+        symbol = self.lookup(name, symbols, getName)
+        if symbol:
             raise Redeclared(kind, name)
 
-    def checkRedeclaredFunction(self, name: str, lst : Scope) -> FunctionSymbol:
-        print("checkRedeclaredFunction: ", name, lst)
-
-        symbols = lst.symbols
-        funcSymbol = self.lookup(name, symbols, getName)
-        
-        if funcSymbol is None:
-            return None
-        
-        if type(funcSymbol) == FunctionSymbol:
-            if funcSymbol.body:
-                raise Redeclared(Function(), name)
-            else :
-                return funcSymbol
-            
-        raise Redeclared(Function(), name)     
+        return None # No symbol found
 
     
     def checkDeclared(self, kind : Kind, name : str, envi : Envi) -> Symbol:
@@ -174,6 +161,14 @@ class StaticChecker(BaseVisitor, Utils):
             if type(symbol) == FunctionSymbol and symbol.body is None:
                 raise NoDefinition(symbol.name)
 
+
+    def getSymbol(self, name : str, lst : Scope) -> Symbol:
+        print("getSymbol: ", name, lst)
+
+        symbols = lst.symbols
+        return self.lookup(name, symbols, getName)
+
+
     def check(self):
         return self.visit(self.ast, self.envi)
 
@@ -203,17 +198,14 @@ class StaticChecker(BaseVisitor, Utils):
         print("visitVarDecl: ", ast)
 
         (envi, varDeclParam) = param
-        name = self.visit(ast.name, (envi, None))
-
-        # Check for redeclared variable
-        if varDeclParam:
-            self.checkRedeclaredVariable(varDeclParam.kind, name, envi.getLast())
+        name = ast.name.name
+        self.visit(ast.name, (envi, ExprParam(varDeclParam.kind, False, False)))
         
         current_scope = envi.getLast()
         
         # Visit variable type
         if ast.modifier == "var":
-            varInitType = self.visit(ast.varInit, (envi, ExprParam(Identifier, True))) if ast.varInit else None
+            varInitType = self.visit(ast.varInit, (envi, ExprParam(Identifier, True, True))) if ast.varInit else None
             
             if varInitType is None:
                 raise TypeCannotBeInferred(ast)
@@ -223,7 +215,7 @@ class StaticChecker(BaseVisitor, Utils):
         elif ast.modifier == "dynamic":  
             varSymbol = VariableSymbol(name, None)  
             if ast.varInit:
-                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True)))
+                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, True)))
                 
                 if varInitType is None:
                     raise TypeCannotBeInferred(ast)
@@ -238,18 +230,22 @@ class StaticChecker(BaseVisitor, Utils):
             symbol = VariableSymbol(name, varType)
             
             if ast.varInit:
-                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, varType, symbol)))
+                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, True, varType, symbol)))
                 if type(varType) != type(varInitType):
                     raise TypeMismatchInStatement(ast)
             
-            envi.getLast().define(symbol)
+            current_scope.define(symbol)
             return symbol
     
     def visitFuncDecl(self, ast : FuncDecl, param : tuple[Envi, None]):
         print(ast)
 
         (envi, _) = param
-        name = self.visit(ast.name, (envi, None))
+
+        # Get function symbol
+        name = ast.name.name
+        function = self.getSymbol(name, envi.getLast())
+        self.visit(ast.name, (envi, ExprParam(Function(), False, function is not None)))
         
         def visitFuncParam():
             parameters = []
@@ -269,9 +265,7 @@ class StaticChecker(BaseVisitor, Utils):
             envi.functionScopeCount -= 1
             return body
 
-        # Check for redeclared function
-        function = self.checkRedeclaredFunction(name, envi.getLast())
-
+        
         if function is None: # first declaration of function 
 
             parameters = visitFuncParam()
@@ -284,7 +278,7 @@ class StaticChecker(BaseVisitor, Utils):
         
             return functionSymbol
     
-        else: # implement the body function
+        elif type(function) == FunctionSymbol: # implement the body function
             
             if ast.body is None:
                 raise Redeclared(Function(), name) # redeclared a declared-only function
@@ -300,8 +294,10 @@ class StaticChecker(BaseVisitor, Utils):
             if function_param_types != parameters_types:
                 raise Redeclared(Function(), name)
 
-            # Already Have a function declared the body or the body supposed to have is None
-            if function.body or ast.body is None:
+            # Already Have a function declared the body 
+            if function.body :
+                raise Redeclared(Function(), name)
+            elif ast.body is None : # already have a declared-only function and redeclared with no body
                 raise Redeclared(Function(), name)
 
             # Visit function body
@@ -310,7 +306,9 @@ class StaticChecker(BaseVisitor, Utils):
 
 
             return function
-
+    
+        else:
+            raise Redeclared(Function(), name)
 
     def visitNumberType(self, ast : NumberType, param):
         return NumberType()
@@ -358,7 +356,7 @@ class StaticChecker(BaseVisitor, Utils):
 
         operandParam = None
         if exprParam:
-            operandParam = ExprParam(Variable(), exprParam.isRHS, inferredOperandType)
+            operandParam = ExprParam(Variable(), True, True, inferredOperandType)
 
         left = self.visit(ast.left, (envi, operandParam))
         right = self.visit(ast.right, (envi, operandParam))
@@ -386,7 +384,7 @@ class StaticChecker(BaseVisitor, Utils):
 
         operandParam = None
         if exprParam:
-            operandParam = ExprParam(Variable(), exprParam.isRHS , inferredOperandType)
+            operandParam = ExprParam(Variable(), True, True, inferredOperandType)
         expr = self.visit(ast.operand, (envi, operandParam))
         
         if type(expr) != type(inferredOperandType):
@@ -415,6 +413,14 @@ class StaticChecker(BaseVisitor, Utils):
                 else :
                     return None # No type can be inferred, will raise error in parent node
         
+            else : # LHS
+                if exprParam.isDeclared:
+                    symbol = self.checkDeclared(Identifier(), ast.name, envi)
+                    return symbol.type
+                else : # not declared
+                    self.checkRedeclared(exprParam.kind, ast.name, envi.getLast())
+                    return None # No type can be inferred, will raise error in parent node
+
         else:
             return ast.name
 
@@ -459,6 +465,26 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitAssign(self, ast : Assign, param):
+        """
+        (envi, stmtParam) = param
+
+        symbol = self.checkDeclared(Identifier(), ast.lhs.name, envi)
+
+        lhsType = self.visit(ast.lhs, (envi, ExprParam(Variable(), False)))
+        
+        if symbol.type:
+            rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, symbol.type, symbol)))
+
+            if type(symbol.type) != type(ast.rhs):
+                raise TypeMismatchInStatement(ast)
+        else:
+            symbol.type = rhsType
+
+
+"""
+        
+
+
         return True # TODO : return type of block
 
     
