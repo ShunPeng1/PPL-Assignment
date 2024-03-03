@@ -539,16 +539,43 @@ class CheckerSuite(unittest.TestCase):
                 return 0
             func main()
             begin
+                bool a <- foo()
+            end
+        """
+        expect = "Type Mismatch In Expression: CallExpr(Id(foo), [])"
+        #expect = "Type Mismatch In Statement: VarDecl(Id(a), BoolType, CallExpr(Id(foo),[]))"
+        #self.assertTrue(TestChecker.test(input, expect, 445))
+
+    def test_callepxr_4(self):
+        input = """
+            func foo()
+            
+            func main()
+            begin
                 dynamic a <- foo()
                 a <- 1
             end
+
+            func foo()
+                return 0
+        """
+        expect = "Type Cannot Be Inferred: VarDecl(Id(a), None, dynamic, CallExpr(Id(foo), []))"
+        #self.assertTrue(TestChecker.test(input, expect, 446))
+
+    def test_callepxr_5(self):
+        input = """
+            func foo()
+                return 0
+            func main()
+            begin
+                var a <- foo()
+                var b <- a + foo()
+
+
+            end
         """
         expect = "[]"
-        self.assertTrue(TestChecker.test(input, expect, 445))
-
-
-
-
+        #self.assertTrue(TestChecker.test(input, expect, 447))
 
 
 

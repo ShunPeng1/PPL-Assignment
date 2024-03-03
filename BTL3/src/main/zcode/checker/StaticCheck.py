@@ -129,10 +129,10 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def checkDeclared(self, kind : Kind, name : str, envi : Envi) -> Symbol:
-        #print("checkDeclared: ", name, lst)
+        print("checkDeclared: ", kind, name, envi)
         
         for i in range(len(envi) - 1, -1, -1): # from current scope to global scope
-            print("checkDeclared Scope: ", i, envi[i])
+            #print("checkDeclared Scope: ", i, envi[i])
             symbols = envi[i].symbols # list of Symbol in scope
            
             for symbol in symbols:
@@ -170,7 +170,7 @@ class StaticChecker(BaseVisitor, Utils):
             return self.lookup(name, envi.getLast().symbols, getName)
 
         for i in range(len(envi) - 1, -1, -1): # from current scope to global scope
-            print("checkDeclared Scope: ", i, envi[i])
+            #print("checkDeclared Scope: ", i, envi[i])
             symbols = envi[i].symbols # list of Symbol in scope
            
             for symbol in symbols:
@@ -443,7 +443,7 @@ class StaticChecker(BaseVisitor, Utils):
                 pass
 
         else: # function declared and have the return type
-            if exprParam.inferredType and type(functionSymbol.type) != exprParam.inferredType: # inferred type is different from declared type and exist
+            if exprParam.inferredType and type(functionSymbol.type) != type(exprParam.inferredType): # inferred type is different from declared type and exist
                 raise TypeMismatchInExpression(ast)    
             
         return functionSymbol.type 
