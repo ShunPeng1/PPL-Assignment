@@ -791,6 +791,94 @@ class CheckerSuite(unittest.TestCase):
         expect = "Break Not In Loop"
         #self.assertTrue(TestChecker.test(input, expect, 459))
 
+    def test_for_6(self):
+        input = """
+            func foo()
+            func foo2()
+            func foo3()
+
+            func main()
+            begin
+                dynamic i
+                dynamic j
+                dynamic k
+                dynamic l
+                for i until j >= k by l
+                begin
+                    continue
+                end
+                var a <- i + j + k + l
+
+                for i until foo by foo2
+                begin
+                    foo3()
+                end
+
+                number b <- foo2()
+                bool c <- foo()
+                
+            end
+
+            func foo()
+                return true
+            func foo2()
+                return 1
+            func foo3()
+                return 0
+        """
+        expect = "Type Mismatch In Statement: Return(NumLit(0.0))"
+        #self.assertTrue(TestChecker.test(input, expect, 460))
+
+
+    def test_if_1(self):
+        input = """
+            func main()
+            begin
+                if (true)
+                    return 0
+                else
+                    return true
+            end
+        """
+        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
+        #self.assertTrue(TestChecker.test(input, expect, 461))
+
+    def test_if_2(self):
+        input = """
+            func foo()
+                return 0
+            
+            func main()
+            begin
+                if (foo())
+                    return 0
+                else
+                    return 1
+            end
+        """
+        expect = "Type Mismatch In Statement: If(CallExpr(Id(foo), []),[Return(NumLit(0.0))],[Return(NumLit(1.0))])"
+        #self.assertTrue(TestChecker.test(input, expect, 462))
+    
+    def test_if_3(self):
+        input = """
+            func foo()
+            
+            func main()
+            begin
+                dynamic a
+                if (foo())
+                    return true
+                elif (a)
+                    return a
+                else
+                    return foo()
+            end
+
+            func foo()
+                return 0
+        """
+        expect = "Type Mismatch In Statement: If(CallExpr(Id(foo), []),[Return(BooleanLit(True))],[Return(CallExpr(Id(foo), []))])"
+        #self.assertTrue(TestChecker.test(input, expect, 463))
 
 
 
