@@ -856,7 +856,7 @@ class CheckerSuite(unittest.TestCase):
                     return 1
             end
         """
-        expect = "Type Mismatch In Statement: If(CallExpr(Id(foo), []),[Return(NumLit(0.0))],[Return(NumLit(1.0))])"
+        expect = "Type Mismatch In Statement: If((CallExpr(Id(foo), []), Return(NumLit(0.0))), [], Return(NumLit(1.0)))"
         #self.assertTrue(TestChecker.test(input, expect, 462))
     
     def test_if_3(self):
@@ -877,7 +877,7 @@ class CheckerSuite(unittest.TestCase):
             func foo()
                 return 0
         """
-        expect = "Type Mismatch In Statement: If(CallExpr(Id(foo), []),[Return(BooleanLit(True))],[Return(CallExpr(Id(foo), []))])"
+        expect = "Type Mismatch In Statement: Return(NumLit(0.0))"
         #self.assertTrue(TestChecker.test(input, expect, 463))
 
 
