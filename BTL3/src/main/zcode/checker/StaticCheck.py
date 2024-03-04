@@ -542,9 +542,12 @@ class StaticChecker(BaseVisitor, Utils):
         symbol = self.getSymbol(ast.name.name, False, envi)
         updType = self.visit(ast.updExpr, (envi, ExprParam(Variable(), True, True, NumberType())))
 
-        if type(lhsType) is None: # LHS first use so infer type
-            symbol.type = NumberType()
+        
+        if lhsType is None: # LHS first use so infer type
+            lhsType = NumberType()
+            symbol.type = lhsType
         else:
+        
             if type(lhsType) != NumberType or type(updType) != NumberType:
                 raise TypeMismatchInStatement(ast)
             
@@ -672,6 +675,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitNumberLiteral(self, ast : NumberLiteral, param):
+        print("Number Literal: ", ast)
         return NumberType()
 
     

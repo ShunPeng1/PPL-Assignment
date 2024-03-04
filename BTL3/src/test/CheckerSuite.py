@@ -646,6 +646,152 @@ class CheckerSuite(unittest.TestCase):
         #self.assertTrue(TestChecker.test(input, expect, 451))
 
 
+    def test_callepxr_10(self):
+        input = """
+            func foo(number a)
+
+            func main()
+            begin
+                number a <- foo(5)
+            end
+
+            func foo(number a)
+            begin
+                if (a > 0)
+                    return foo(a - 1)
+                elif (a = 0)
+                    return 0    
+                else
+                    return true
+
+            end
+
+        """
+        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
+        #self.assertTrue(TestChecker.test(input, expect, 452))
+
+    def test_callepxr_11(self):
+        input = """
+            func foo(number a)
+
+            func main()
+            begin
+                dynamic a <- foo(5) and true
+            end
+
+            func foo(number a)
+            begin
+                if (a > 0)
+                    return foo(a - 1)
+                elif (a = 0)
+                    return true    
+                else
+                    return 0
+
+            end
+
+        """
+        expect = "Type Mismatch In Statement: Return(NumLit(0.0))"
+        #self.assertTrue(TestChecker.test(input, expect, 453))
+
+    def test_callepxr_12(self):
+        input = """
+            func foo(number a)
+            begin
+                dynamic b
+                dynamic c <- foo(b) + 1
+                b <- 1 + c
+                if (a > 0)
+                    return b
+                elif (a = 0)
+                    return c
+                elif (a < 0)
+                    return 0    
+                else
+                    return true
+            end
+
+            func main()
+            begin
+                dynamic a <- foo(5) 
+            end
+        """
+        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
+        #self.assertTrue(TestChecker.test(input, expect, 454))
+
+    def test_for_1(self):
+        input = """
+            func main()
+            begin
+                var i <- 0
+                for i until i >= 10 by 1
+                    return 0
+            end
+        """
+
+        expect = "No Entry Point"
+        #self.assertTrue(TestChecker.test(input, expect, 455))
+
+    def test_for_2(self):
+        input = """
+            func main()
+            begin
+                dynamic i
+                for i until i >= 10 by 1
+                    return 
+                break
+            end
+        """
+        expect = "Break Not In Loop"
+        #self.assertTrue(TestChecker.test(input, expect, 456))
+
+    def test_for_3(self):
+        input = """
+            func main()
+            begin
+                for i until i >= 10 by 1
+                    break
+            end
+        """
+        expect = "Undeclared Identifier: i"
+        #self.assertTrue(TestChecker.test(input, expect, 457))
+
+
+    def test_for_4(self):
+        input = """
+            func main()
+            begin
+                dynamic i
+                for i until i >= 10 by 1
+                    continue
+                continue
+            end
+        """
+        expect = "Continue Not In Loop"
+        #self.assertTrue(TestChecker.test(input, expect, 458))
+
+    def test_for_5(self):
+        input = """
+            func main()
+            begin
+                dynamic i
+                for i until i >= 10 by 1
+                begin
+                    for i until i >= 10 by 1
+                    begin
+                        continue
+                        break
+                    end
+                    continue
+                    break
+                end
+                break                
+            end
+        """
+        expect = "Break Not In Loop"
+        #self.assertTrue(TestChecker.test(input, expect, 459))
+
+
 
 
 
