@@ -132,7 +132,7 @@ class StaticChecker(BaseVisitor, Utils):
         print("checkDeclared: ", kind, name, envi)
         
         for i in range(len(envi) - 1, -1, -1): # from current scope to global scope
-            #print("checkDeclared Scope: ", i, envi[i])
+            print("checkDeclared Scope: ", i, envi[i])
             symbols = envi[i].symbols # list of Symbol in scope
            
             for symbol in symbols:
@@ -260,13 +260,15 @@ class StaticChecker(BaseVisitor, Utils):
         
         def visitFuncParam():
             parameters = []
+
+            print(len(envi),envi.getLast())
+            envi.append(Scope()) # new scope for function parameters
+
             if ast.param:
-                envi.append(Scope()) # new scope for function parameters
                 for astParam in ast.param:
                     parameterSymbol = self.visit(astParam, (envi, VarDeclParam(Parameter(), len(envi)-1)))
                     parameters.append(parameterSymbol)
                 
-                envi.pop()
                 print(len(envi),envi.getLast())
             return parameters
 
@@ -278,22 +280,26 @@ class StaticChecker(BaseVisitor, Utils):
                 if functionSymbol.type is None:
                     functionSymbol.type = VoidType()
             
-            stmtParam.currentFunctionSymbol = None
+            
+            stmtParam.currentFunctionSymbol = None # pop the scope of function 
+            envi.pop() # pop the scope of function parameters
+
             return body
 
         
         if functionSymbol is None: # first declaration of function 
             
             functionSymbol = FunctionSymbol(name, None, [], None) # TODO : return type of function
-        
+
+            # Add function to current scope, add it soon because of recursive call
+            envi.getLast().define(functionSymbol) 
+
             # Visit function parameters and body
             parameters = visitFuncParam()
             functionSymbol.param = parameters
             body = visitFuncBody(functionSymbol)
             functionSymbol.body = body
         
-            # Add function to current scope
-            envi.getLast().define(functionSymbol)
         
             return functionSymbol
     

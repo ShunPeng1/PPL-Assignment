@@ -578,6 +578,74 @@ class CheckerSuite(unittest.TestCase):
         #self.assertTrue(TestChecker.test(input, expect, 447))
 
 
+    def test_callepxr_6(self):
+        input = """
+            func foo(number a)
+            
+            func main()
+            begin
+                number a <- foo(1)
+            end
+
+            func foo(number a)
+                return true
+        """
+        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
+        #self.assertTrue(TestChecker.test(input, expect, 448))
+
+
+    def test_callepxr_7(self):
+        input = """
+            func foo()
+            begin
+                if (true) 
+                    return 0
+                else 
+                    return true
+            end
+            func main()
+            begin
+                dynamic a <- foo()
+            end
+        """
+        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
+        #self.assertTrue(TestChecker.test(input, expect, 449))
+
+    
+    def test_callepxr_8(self):
+        input = """
+            func foo()
+            begin
+                return foo()
+            end
+            func main()
+            begin
+                number a <- foo()
+            end
+        """
+        expect = "Type Cannot Be Inferred: Return(CallExpr(Id(foo), []))"
+        #self.assertTrue(TestChecker.test(input, expect, 450))
+
+
+    def test_callepxr_9(self):
+        input = """
+            func foo(number a)
+            begin
+                if (a = 0)
+                    return 0
+                else
+                    return foo(a - 1)        
+            end
+
+            func main()
+            begin
+                var a <- foo(5)
+            end
+        """
+        expect = "[]"
+        #self.assertTrue(TestChecker.test(input, expect, 451))
+
+
 
 
 
