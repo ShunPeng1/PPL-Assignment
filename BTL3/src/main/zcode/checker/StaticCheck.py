@@ -138,7 +138,8 @@ class StaticChecker(BaseVisitor, Utils):
             for symbol in symbols:
                 if name == getName(symbol):
                     return symbol
-                
+
+        kind = kind if type(kind) == Function else Identifier()        
         raise Undeclared(kind, name)
     
 
@@ -226,7 +227,8 @@ class StaticChecker(BaseVisitor, Utils):
 
         self.envi.pop()
 
-        return []
+        return 
+        yield
 
     def visitVarDecl(self, ast : VarDecl, param : tuple[Envi, VarDeclParam]):
         print("visitVarDecl: ", ast)
