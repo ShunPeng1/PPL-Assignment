@@ -430,7 +430,6 @@ class StaticChecker(BaseVisitor, Utils):
 
         (envi, exprParam) = param
 
-        name = ast.name.name
         self.visit(ast.name, (envi, ExprParam(Function(), True, True)))
         functionSymbol = self.getSymbol(ast.name, False, envi)
 
@@ -734,18 +733,25 @@ class StaticChecker(BaseVisitor, Utils):
             if type(inferredType) != ArrayType: # inferred type is not an array
                 return None # TODO : check again and raise error
                 
+
             # Get inner type of array
             innerType = ArrayType(inferredType.size, inferredType.eleType) # copy of array type
-            if len(innerType.size) > 0:
+            if len(inferredType.size) > 1:
+                if (inferredType.size[0] != len(ast.value)):
+                    return None # Error is raised in the parent node
+                
                 innerType = ArrayType( inferredType.size[1:] , inferredType.eleType)
+
             else :
                 innerType = inferredType.eleType
 
             # Check for type of each value in array
             for value in ast.value:
                 valueType = self.visit(value, (envi, ExprParam(Variable(), True, True, innerType)))
+                print("Array Literal Value: ", valueType, innerType, valueType!=innerType )
+
                 if valueType != innerType: # type of value is different from inferred type
-                    raise TypeMismatchInExpression(ast)
+                    return None # Error is raised in the parent node
 
             return ArrayType(inferredType.size , inferredType.eleType)
 
@@ -753,15 +759,16 @@ class StaticChecker(BaseVisitor, Utils):
         else : # No inferred type
             # TODO : What happen if the first is not inferred
             firstType = self.visit(ast.value[0], (envi, ExprParam(Variable(), True, True, None))) if len(ast.value) > 0 else None
-            
+            #print("Array Literal First Type: ", firstType)
             if firstType is None:
                 return None # TODO : check again and raise error
             
             # Check for type of each value in array
             for value in ast.value:
                 valueType = self.visit(value, (envi, ExprParam(Variable(), True, True, firstType)))
+                #print("Array Literal Value: ", valueType, firstType, valueType!=firstType )
                 if valueType != firstType:
-                    raise TypeMismatchInExpression(ast)
+                    return None
                 
 
             if type(firstType) == ArrayType: # the first element is an array type

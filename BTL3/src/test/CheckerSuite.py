@@ -891,12 +891,188 @@ class CheckerSuite(unittest.TestCase):
                 a[3] <- 4
                 a[4] <- 5
                 a[5] <- 6
+                a[6] <- true
             end
         """
-        expect = "[]"
+        expect = "Type Mismatch In Statement: AssignStmt(ArrayCell(Id(a), [NumLit(6.0)]), BooleanLit(True))"
         #self.assertTrue(TestChecker.test(input, expect, 464))
 
+    def test_array_2(self):
+        input = """
+            func main()
+            begin
+                number a[5]
+                a[0] <- 1
+                a[1] <- 2
+                a[2] <- 3
+                a[3] <- 4
+                a[4] <- 5
+                a[5] <- 6
+                a <- 1
+            end
+        """
+        expect = "Type Mismatch In Statement: AssignStmt(Id(a), NumLit(1.0))"
+        #self.assertTrue(TestChecker.test(input, expect, 465))
 
+    def test_array_3(self):
+        input = """
+            func main()
+            begin
+                dynamic b
+                number a[5]
+                a[0] <- 1
+                a[1] <- 2
+                a[2] <- 3
+                a[3] <- 4
+                a[4] <- 5
+                a[5] <- 6
+                b <- a[5]
+                b <- true
+            end
+        """
+        expect = "Type Mismatch In Statement: AssignStmt(Id(b), BooleanLit(True))"
+        #self.assertTrue(TestChecker.test(input, expect, 466))
+
+    def test_array_4(self):
+        input = """
+            func main()
+            begin
+                dynamic b
+                number a[5]
+                a[0] <- 1
+                a[1] <- 2
+                a[2] <- 3
+                a[3] <- 4
+                a[4] <- 5
+                a[5] <- 6
+                b <- a
+                b <- 1
+            end
+        """
+        expect = "Type Mismatch In Statement: AssignStmt(Id(b), NumLit(1.0))"
+        #self.assertTrue(TestChecker.test(input, expect, 467))
+
+    def test_array_5(self):
+        input = """
+            func foo()
+            func foo2()
+            func main()
+            begin
+                dynamic b
+                number a[5]
+                a[0] <- foo()
+                b <- a
+                b <- foo2()
+            end
+
+            func foo()
+                return 0
+            func foo2()
+                return true
+        """
+        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
+        #self.assertTrue(TestChecker.test(input, expect, 468))
+
+    def test_array_6(self):
+        input = """
+            func foo()
+            func foo2()
+                return [1,2,3,4,5]
+            func main()
+            begin
+                dynamic b
+                number a[5]
+                b <- a
+                b <- foo2()
+                b[1] <- foo()
+
+            end
+
+            func foo()
+                return foo2()
+
+        """
+        expect = "Type Mismatch In Statement: Return(CallExpr(Id(foo2), []))"
+        #self.assertTrue(TestChecker.test(input, expect, 469))
+
+    def test_array_7(self):
+        input = """
+            func foo(number a[5])
+                return a[5]
+            func main()
+            begin
+                number a[5]
+                dynamic b <- foo(a)
+                b <- true
+            end
+
+        """
+        expect = "Type Mismatch In Statement: AssignStmt(Id(b), BooleanLit(True))"
+        #self.assertTrue(TestChecker.test(input, expect, 470))
+
+    def test_array_8(self):
+        input = """
+        
+            func main()
+            begin
+                number a[5] <- [1,2,3,4]
+ 
+            end
+
+        """
+        expect = "Type Mismatch In Statement: VarDecl(Id(a), ArrayType([5.0], NumberType), None, ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0), NumLit(4.0)))"
+        #self.assertTrue(TestChecker.test(input, expect, 471))
+
+    def test_array_9(self):
+        input = """
+            func main()
+            begin
+                number a <- [1,2,3,4,5]
+                
+            end
+
+        """
+        expect = "Type Mismatch In Statement: VarDecl(Id(a), NumberType, None, ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0), NumLit(4.0), NumLit(5.0)))"
+        #self.assertTrue(TestChecker.test(input, expect, 472))
+
+    def test_array_10(self):
+        input = """
+            func main()
+            begin
+                dynamic a <- [1,2,3,4,5]
+                number b[5] <- [1,2,3,4,5]
+                dynamic c <- b 
+            end
+
+        """
+        expect = "Type Mismatch In Statement: VarDecl(Id(a), None, dynamic, ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0), NumLit(4.0), NumLit(5.0)))"
+        #self.assertTrue(TestChecker.test(input, expect, 473))
+
+    def test_array_11(self):
+        input = """
+            func foo(number a[5])
+                return 2
+            func main()
+            begin
+                number a[6] <- [1,2,3,4,5,6]
+                a[3] <- foo(a) 
+            end
+
+        """
+        expect = "Type Mismatch In Statement: AssignStmt(ArrayCell(Id(a), [NumLit(3.0)]), CallExpr(Id(foo), [Id(a)]))"
+        #self.assertTrue(TestChecker.test(input, expect, 474))
+
+    def test_array_12(self):
+        input = """
+            func foo(number a[5])
+                return 2
+            func main()
+            begin
+                number a[5] <- [1,2,3,4,5]
+                a[3] <- foo(a) 
+            end
+
+        """
 
         # KIEN TESTCASES
     def test441(self):
