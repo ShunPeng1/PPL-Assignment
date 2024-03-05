@@ -492,8 +492,35 @@ class StaticChecker(BaseVisitor, Utils):
             return ast.name
 
     
-    def visitArrayCell(self, ast : ArrayCell, param):
-        pass
+    def visitArrayCell(self, ast : ArrayCell, param : tuple[Envi, ExprParam]):
+        print("Array Cell: ", ast)
+
+        (envi, exprParam) = param
+
+        arrType = self.visit(ast.arr, (envi, ExprParam(Variable(), exprParam.isRHS, exprParam.isDeclared))) # visit array type
+        
+        if type(arrType) != ArrayType:
+            raise TypeMismatchInExpression(ast)
+        
+        if len(ast.idx) > len(arrType.size): # index out of range
+            raise TypeMismatchInExpression(ast)
+
+        innerType = ArrayType(arrType.size, arrType.eleType) # copy of array type       
+        for i in range(len(ast.idx)):
+            idx = ast.idx[i]
+            idxType = self.visit(idx, (envi, ExprParam(Variable(), True, True, NumberType())))
+
+            if type(idxType) != NumberType:
+                raise TypeMismatchInExpression(ast)
+
+            if len(innerType.size) > 1: # inner type of the array is the array (a[3,2] inner is a[2])
+                innerType.size = innerType.size[1:]
+            else : # inner type of the array is the element type 
+                innerType = innerType.eleType
+
+
+        return innerType # return type of array cell        
+        
 
     
     def visitBlock(self, ast : Block, param : tuple[Envi, StmtParam]):
