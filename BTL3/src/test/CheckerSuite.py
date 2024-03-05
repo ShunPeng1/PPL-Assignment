@@ -1039,7 +1039,7 @@ class CheckerSuite(unittest.TestCase):
         input = """
             func main()
             begin
-                dynamic a <- [1,2,3,4,5]
+                
                 number b[5] <- [1,2,3,4,5]
                 dynamic c <- b 
             end
@@ -1050,21 +1050,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_array_11(self):
         input = """
-            func foo(number a[5])
-                return 2
-            func main()
-            begin
-                number a[6] <- [1,2,3,4,5,6]
-                a[3] <- foo(a) 
-            end
-
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(ArrayCell(Id(a), [NumLit(3.0)]), CallExpr(Id(foo), [Id(a)]))"
-        #self.assertTrue(TestChecker.test(input, expect, 474))
-
-    def test_array_12(self):
-        input = """
-            func foo(number a[5])
+            func foo(number a[3])
                 return 2
             func main()
             begin
@@ -1073,6 +1059,32 @@ class CheckerSuite(unittest.TestCase):
             end
 
         """
+        expect = "Type Mismatch In Expression: CallExpr(Id(foo), [Id(a)])"
+        #self.assertTrue(TestChecker.test(input, expect, 474))
+
+    def test_array_12(self):
+        input = """
+            func foo()
+                return 2
+            func foo2()
+            func foo3()
+            func main()
+            begin
+                dynamic b
+                number a[5] <- [1+1,foo(), foo2(), b, foo3()]
+                a[3] <- b
+            end
+
+            func foo2()
+                return 0
+            func foo3()
+                return true
+        """
+        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
+        #self.assertTrue(TestChecker.test(input, expect, 475))
+
+    
+
 
         # KIEN TESTCASES
     def test441(self):

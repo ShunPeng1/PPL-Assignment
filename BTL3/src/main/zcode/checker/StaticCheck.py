@@ -445,8 +445,20 @@ class StaticChecker(BaseVisitor, Utils):
         for i in range(len(ast.args)):
             symbolParamType = functionSymbol.param[i].type
             callParamType = self.visit(ast.args[i], (envi, ExprParam(Variable(), True, True, symbolParamType)))
-            if type(callParamType) != type(symbolParamType):
+            
+            if type(callParamType) != type(symbolParamType): 
                 raise TypeMismatchInExpression(ast)
+            
+            #print("Call Expr Param Type: ", callParamType, symbolParamType)
+            if type(callParamType) == ArrayType and type(symbolParamType) == ArrayType: # check for array type
+                if len(callParamType.size) != len(symbolParamType.size) or callParamType.eleType != symbolParamType.eleType:
+                    raise TypeMismatchInExpression(ast)
+
+                for i in range(len(callParamType.size)):
+                    if callParamType.size[i] != symbolParamType.size[i]:
+                        raise TypeMismatchInExpression(ast)
+                    
+            
 
         if functionSymbol.body is None: # function declared-only
             if exprParam.inferredType:
@@ -695,8 +707,18 @@ class StaticChecker(BaseVisitor, Utils):
         for i in range(len(ast.args)):
             symbolParamType = functionSymbol.param[i].type
             callParamType = self.visit(ast.args[i], (envi, ExprParam(Variable(), True, True, symbolParamType)))
+            
             if type(callParamType) != type(symbolParamType):
                 raise TypeMismatchInStatement(ast)
+            
+            #print("Call Expr Param Type: ", callParamType, symbolParamType)
+            if type(callParamType) == ArrayType and type(symbolParamType) == ArrayType: # check for array type
+                if len(callParamType.size) != len(symbolParamType.size) or callParamType.eleType != symbolParamType.eleType:
+                    raise TypeMismatchInExpression(ast)
+
+                for i in range(len(callParamType.size)):
+                    if callParamType.size[i] != symbolParamType.size[i]:
+                        raise TypeMismatchInExpression(ast)
 
         if functionSymbol.body is None: # function declared-only
             functionSymbol.type = VoidType()
