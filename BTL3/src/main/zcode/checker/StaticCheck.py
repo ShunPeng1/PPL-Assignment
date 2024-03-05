@@ -75,7 +75,7 @@ class ExprParam:
         self.inferredType = inferredType
 
     def __str__(self) -> str:
-        return f"IdParam({self.kind}, {self.scopeIndex}, {self.isRHS}, {self.inferredType})"
+        return f"IdParam({self.kind}, {self.isRHS}, {self.inferredType})"
 
 class VarDeclParam:
     def __init__(self, kind : Kind, scopeIndex : int) -> None:
@@ -458,7 +458,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitCallExpr(self, ast : CallExpr, param : tuple[Envi, ExprParam]):
-        print("Call Expr: ",ast)
+        print("Call Expr: ",ast, param[1])
 
         (envi, exprParam) = param
 
@@ -483,18 +483,18 @@ class StaticChecker(BaseVisitor, Utils):
                     
             
 
-        if functionSymbol.body is None: # function declared-only
+        if functionSymbol.type is None: # function with not yet assigned type
             if exprParam.inferredType:
                 functionSymbol.type = exprParam.inferredType
             else:
-                # TODO : the function is declared only and no type can be inferred from the call 
-                pass
+                return None # Will raise error in parent node
 
         else: # function declared and have the return type
             #if exprParam.inferredType and type(functionSymbol.type) != type(exprParam.inferredType): # inferred type is different from declared type and exist
             if exprParam.inferredType and self.compareType(functionSymbol.type, exprParam.inferredType) == False: # inferred type is different from declared type and exist
                 #raise TypeMismatchInExpression(ast)    
-                pass
+                return None # Will raise error in parent node
+            
         return functionSymbol.type 
 
 
@@ -553,7 +553,7 @@ class StaticChecker(BaseVisitor, Utils):
             else : # inner type of the array is the element type 
                 innerType = innerType.eleType
 
-
+        #print("Array Cell Inner Type: ", innerType)
         return innerType # return type of array cell        
         
 
@@ -738,7 +738,7 @@ class StaticChecker(BaseVisitor, Utils):
                 raise TypeMismatchInStatement(ast)
             
 
-        if functionSymbol.body is None: # function declared-only
+        if functionSymbol.type is None: # function declared-only
             functionSymbol.type = VoidType()
         elif type(functionSymbol.type) != VoidType: # this must be a void function
             raise TypeMismatchInStatement(ast)    

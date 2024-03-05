@@ -1111,6 +1111,59 @@ class CheckerSuite(unittest.TestCase):
         expect = "Type Mismatch In Statement: VarDecl(Id(a), ArrayType([3.0, 2.0], NumberType), None, ArrayLit(ArrayLit(NumLit(1.0), NumLit(2.0)), ArrayLit(NumLit(3.0), NumLit(4.0)), ArrayLit(NumLit(6.0))))"
         #self.assertTrue(TestChecker.test(input, expect, 477))
 
+
+    def test_array_15(self):
+        input = """
+            func foo()
+            func main()
+            begin
+                number a[3,2] <- [foo(), foo(), foo()]
+                a[1] <- foo()
+            end
+
+            func foo()
+                return [1,2,4]
+        """
+        expect = "Type Mismatch In Statement: Return(ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(4.0)))"
+        #self.assertTrue(TestChecker.test(input, expect, 478))
+
+    def test_array_16(self):
+        input = """
+            func foo()
+            func main()
+            begin
+                number a[3,2] <- [foo(), [3,4], [5,6]]
+                a[1,1] <- foo()
+            end
+
+            func foo()
+                return [1,2]
+        """
+        expect = "Type Mismatch In Statement: AssignStmt(ArrayCell(Id(a), [NumLit(1.0), NumLit(1.0)]), CallExpr(Id(foo), []))"
+        #self.assertTrue(TestChecker.test(input, expect, 479))
+
+    def test_array_17(self):
+        input = """
+            func foo()
+            func main()
+            begin
+                dynamic b
+                number a[3,2] <- [foo(), b, [5,6]]
+                b <- a[3]
+                a[1,1] <- b
+            end
+
+            func foo()
+                return [1,2,3]
+        """
+        expect = "Type Mismatch In Statement: AssignStmt(ArrayCell(Id(a), [NumLit(1.0), NumLit(1.0)]), Id(b))"
+        #self.assertTrue(TestChecker.test(input, expect, 480))
+
+
+
+
+
+
         # KIEN TESTCASES
     def test441(self):
         input = """
@@ -1131,7 +1184,7 @@ begin
 end
 """
         expect = "Undeclared Function: g"
-       #!self.assertTrue(TestChecker.test(input, expect, 442))
+        #!self.assertTrue(TestChecker.test(input, expect, 442))
     
     def test443(self):
         input = """
@@ -1143,7 +1196,7 @@ func main()
     return
 """
         expect = "No Function Definition: f"
-       #!self.assertTrue(TestChecker.test(input, expect, 443))
+        #!self.assertTrue(TestChecker.test(input, expect, 443))
     
     def test444(self):
         input = """
@@ -1155,7 +1208,7 @@ func main()
     return
 """
         expect = "Redeclared Variable: f"
-       #!self.assertTrue(TestChecker.test(input, expect, 444))
+        #!self.assertTrue(TestChecker.test(input, expect, 444))
     
     def test445(self):
         input = """
@@ -1169,7 +1222,7 @@ bool c
 string d
 """
         expect = "No Entry Point"
-       #!self.assertTrue(TestChecker.test(input, expect, 445))
+        #!self.assertTrue(TestChecker.test(input, expect, 445))
     
     def test446(self):
         input = """
@@ -1184,7 +1237,7 @@ begin
 end
 """
         expect = "Type Cannot Be Inferred: VarDecl(dynamic,Id(d),CallExpr(Id(f),[NumLit(10.0)]))"
-       #!self.assertTrue(TestChecker.test(input, expect, 446))
+        #!self.assertTrue(TestChecker.test(input, expect, 446))
     
     def test447(self):
         input = """
@@ -1199,7 +1252,7 @@ begin
 end
 """
         expect = "Type Mismatch In Statement: Call(Id(f),[NumLit(2018.0)])"
-       #!self.assertTrue(TestChecker.test(input, expect, 447))
+        #!self.assertTrue(TestChecker.test(input, expect, 447))
     
     def test448(self):
         input = """
@@ -1209,7 +1262,7 @@ begin
 end
 """
         expect = "Continue Not In Loop"
-       #!self.assertTrue(TestChecker.test(input, expect, 448))
+        #!self.assertTrue(TestChecker.test(input, expect, 448))
     
     def test449(self):
         input = """
@@ -1219,7 +1272,7 @@ begin
 end
 """
         expect = "Break Not In Loop"
-       #!self.assertTrue(TestChecker.test(input, expect, 449))
+        #!self.assertTrue(TestChecker.test(input, expect, 449))
     
     def test450(self):
         input = """
@@ -1236,4 +1289,4 @@ begin
 end
 """
         expect = ""
-       #!self.assertTrue(TestChecker.test(input, expect, 450))
+        #!self.assertTrue(TestChecker.test(input, expect, 450))
