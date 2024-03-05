@@ -168,7 +168,7 @@ class CheckerSuite(unittest.TestCase):
             func foo(number a, number b)
             
             func main() 
-                return 0
+                return 
 
             func foo(number a, number b, number c)
                 return 0
@@ -1037,15 +1037,19 @@ class CheckerSuite(unittest.TestCase):
 
     def test_array_10(self):
         input = """
+            func foo()
+                return [1,2,3,4,5]
             func main()
             begin
                 
+                dynamic a <- [1,2,3,4,5]
                 number b[5] <- [1,2,3,4,5]
                 dynamic c <- b 
+                dynamic d <- foo()
             end
-
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(a), None, dynamic, ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0), NumLit(4.0), NumLit(5.0)))"
+        
+        expect = "[]"
         #self.assertTrue(TestChecker.test(input, expect, 473))
 
     def test_array_11(self):

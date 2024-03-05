@@ -349,6 +349,9 @@ class StaticChecker(BaseVisitor, Utils):
             function_param_types = list(map(lambda param: param.type, functionSymbol.param))
             parameters_types = list(map(lambda param: param.type, parameters))
 
+            if len(function_param_types) != len(parameters_types):
+                raise Redeclared(Function(), name)
+
             for i in range(len(function_param_types)):
                 if self.compareType(function_param_types[i], parameters_types[i]) == False:
                     raise Redeclared(Function(), name)
@@ -770,18 +773,19 @@ class StaticChecker(BaseVisitor, Utils):
             if type(inferredType) != ArrayType: # inferred type is not an array
                 return None # TODO : check again and raise error
                 
-
-            # Get inner type of array
-            innerType = ArrayType(inferredType.size, inferredType.eleType) # copy of array type
-            print("Array Literal Inferred Type: ", inferredType.size, len(ast.value), inferredType.eleType, len(inferredType.size) > 1, inferredType.size[0] != len(ast.value))
+            # Check for size of array
+            print("Array Literal Inferred Type: ", inferredType.size, len(ast.value), inferredType.eleType, len(inferredType.size) > 0, inferredType.size[0] != len(ast.value))
             if len(inferredType.size) > 0:
                 if (inferredType.size[0] != len(ast.value)):
                     return None # Error is raised in the parent node
-                
-                innerType = ArrayType( inferredType.size[1:] , inferredType.eleType)
 
-            else :
+            # Get inner type of array
+            innerType = ArrayType(inferredType.size, inferredType.eleType) # copy of array type
+                
+            if len(inferredType.size) <= 1:
                 innerType = inferredType.eleType
+            else :
+                innerType = ArrayType( inferredType.size[1:] , inferredType.eleType)
 
             # Check for type of each value in array
             for value in ast.value:
