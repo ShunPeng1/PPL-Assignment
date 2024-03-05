@@ -191,16 +191,16 @@ class StaticChecker(BaseVisitor, Utils):
         print("compareType: ", type1, type2)
         
         if type(type1) != type(type2): # type of value is different from inferred type
-            return False # Error is raised in the parent node
+            return False # Type cannot be inferred, will raise error in parent node
                 
         if type(type1) == ArrayType and type(type2) == ArrayType: # the value is an array type
             
             if len(type1.size) != len(type2.size) or type1.eleType != type2.eleType:
-                return False # Error is raised in the parent node
+                return False # Type cannot be inferred, will raise error in parent node
 
             for i in range(len(type1.size)):
                 if type1.size[i] != type2.size[i]:
-                    return False # Error is raised in the parent node
+                    return False # Type cannot be inferred, will raise error in parent node
 
         return True
 
@@ -425,6 +425,9 @@ class StaticChecker(BaseVisitor, Utils):
         left = self.visit(ast.left, (envi, operandParam))
         right = self.visit(ast.right, (envi, operandParam))
         
+        if left is None or right is None:
+            return None # Type cannot be inferred, will raise error in parent node
+
         #if type(right) != type(inferredOperandType) or type(left) != type(inferredOperandType):
         if self.compareType(left, inferredOperandType) == False or self.compareType(right, inferredOperandType) == False:
             raise TypeMismatchInExpression(ast)
@@ -450,10 +453,14 @@ class StaticChecker(BaseVisitor, Utils):
         operandParam = None
         if exprParam:
             operandParam = ExprParam(Variable(), True, True, inferredOperandType)
-        expr = self.visit(ast.operand, (envi, operandParam))
         
+        exprType = self.visit(ast.operand, (envi, operandParam))
+        
+        if exprType is None:
+            return None # Type cannot be inferred, will raise error in parent node
+
         #if type(expr) != type(inferredOperandType):
-        if self.compareType(expr, inferredOperandType) == False:
+        if self.compareType(exprType, inferredOperandType) == False:
             raise TypeMismatchInExpression(ast)
 
         return inferredReturnType # No type can be inferred
@@ -536,8 +543,8 @@ class StaticChecker(BaseVisitor, Utils):
 
         arrType = self.visit(ast.arr, (envi, ExprParam(Variable(), exprParam.isRHS, exprParam.isDeclared))) # visit array type
         
-        if type(arrType) != ArrayType:
-            raise TypeMismatchInExpression(ast)
+        if type(arrType) != ArrayType: # cannot know if ArrayCell a[1,2,3] is array of [?,?,?] size
+            return None # Type cannot be inferred, will raise error in parent node
         
         if len(ast.idx) > len(arrType.size): # index out of range
             raise TypeMismatchInExpression(ast)
@@ -779,7 +786,7 @@ class StaticChecker(BaseVisitor, Utils):
             print("Array Literal Inferred Type: ", inferredType.size, len(ast.value), inferredType.eleType, len(inferredType.size) > 0, inferredType.size[0] != len(ast.value))
             if len(inferredType.size) > 0:
                 if (inferredType.size[0] != len(ast.value)):
-                    return None # Error is raised in the parent node
+                    return None # Type cannot be inferred, will raise error in parent node
 
             # Get inner type of array
             innerType = ArrayType(inferredType.size, inferredType.eleType) # copy of array type

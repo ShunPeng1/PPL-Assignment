@@ -573,7 +573,7 @@ class CheckerSuite(unittest.TestCase):
                 dynamic c <- foo2() + foo()
 
             end
-        """
+        """       
         expect = "Type Mismatch In Expression: BinaryOp(+, CallExpr(Id(foo2), []), CallExpr(Id(foo), []))"
         self.assertTrue(TestChecker.test(input, expect, 447))
 
@@ -1237,7 +1237,7 @@ begin
 end
 """     
         expect = "Type Cannot Be Inferred: Return(CallExpr(Id(f), [Id(x)]))"
-        expect = "Type Cannot Be Inferred: VarDecl(Id(d), None, dynamic, CallExpr(Id(f), [NumLit(10.0)]))"
+        #expect = "Type Cannot Be Inferred: VarDecl(Id(d), None, dynamic, CallExpr(Id(f), [NumLit(10.0)]))"
         self.assertTrue(TestChecker.test(input, expect, 486))
     
     def test447(self):
@@ -1309,3 +1309,142 @@ end
 """               
         expect = "Type Cannot Be Inferred: VarDecl(Id(d), None, dynamic, CallExpr(Id(f), [NumLit(10.0)]))"
         self.assertTrue(TestChecker.test(input, expect, 491))
+
+    def test492(self):
+
+        input = """
+
+func max(number x, number y)
+begin
+    if (x <= y) return y
+    return x
+end
+func main()
+begin
+    number x <- readNumber()
+    number y <- readNumber()
+    number z <- readNumber()
+    writeNumber(max(max(x,y),z))
+end
+
+"""
+
+        expect = "[]"
+
+        self.assertTrue(TestChecker.test(input, expect, 492))
+
+
+    def test493(self):
+        input = """
+func f(number x)
+begin
+    if (x = 0) return 0
+    elif (x = 1) return 1
+    else return f(x - 1) + f(x - 2)
+end
+
+func main()
+begin 
+    dynamic a
+    number x<- f(a)
+    a[0] <- [1,2,3]
+end
+"""               
+        expect = "Type Mismatch In Expression: ArrayCell(Id(a), [NumLit(0.0)])"
+        self.assertTrue(TestChecker.test(input, expect, 493))
+
+    def test494(self):
+        input = """
+func main()
+begin 
+    dynamic a
+    dynamic b
+    dynamic c
+    number x[3,3] <- [a,b,c]
+    a <- [1,2,3]
+    b <- [4,5,6]
+    c <- [7,8,9]
+    writeNumber(a[0] + b[0] + c[0])
+end
+"""               
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 494))
+
+
+    def test495(self):
+        input = """
+func add(number x, number y)
+
+func main()
+begin
+    number x <- readNumber()
+    number y <- readNumber()
+    writeNumber(pow(x,y))
+end
+
+func add(number x, number y)
+begin
+    return x + y
+end
+"""               
+        expect = "Undeclared Function: pow"
+        self.assertTrue(TestChecker.test(input, expect, 495))
+
+    def test496(self):
+        input = """
+func main()
+begin
+    dynamic a
+    dynamic b
+    dynamic c
+    number x[2,2] <- [a,[b,2]]
+    a <- 2
+    b <- 3
+    c <- true
+end
+"""               
+        expect = "Type Mismatch In Statement: AssignStmt(Id(a), NumLit(2.0))"
+        self.assertTrue(TestChecker.test(input, expect, 496))
+
+    def test497(self):
+        input = """
+number x
+number y
+func add()
+    return x + y
+
+func main()
+begin
+    x <- readNumber()
+    y <- readNumber()
+    writeNumber(add())
+end
+"""
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 497))
+
+    def test498(self):
+        input = """
+func f()
+begin
+    return 1
+end
+
+func main()
+begin
+    f(2018)
+end
+"""               
+        expect = "Type Mismatch In Statement: CallStmt(Id(f), [NumLit(2018.0)])"
+        self.assertTrue(TestChecker.test(input, expect, 498))
+
+    def test499(self):
+        input = """
+dynamic x
+func main()
+begin
+    var y <- x[0,0] + 1
+end
+"""               
+        expect = "Type Cannot Be Inferred: VarDecl(Id(y), None, var, BinaryOp(+, ArrayCell(Id(x), [NumLit(0.0), NumLit(0.0)]), NumLit(1.0)))"
+        self.assertTrue(TestChecker.test(input, expect, 499))
