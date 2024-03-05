@@ -1083,8 +1083,29 @@ class CheckerSuite(unittest.TestCase):
         expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
         #self.assertTrue(TestChecker.test(input, expect, 475))
 
-    
+    def test_array_13(self):
+        input = """
+            func main()
+            begin
+                number a[3,2] <- [[1,2],[3,4],[5,6]]
+                a[1,1] <- 1
+                a[1] <- [1,2]
+                a[2] <- 1
+            end
+        """
+        expect = "Type Mismatch In Statement: AssignStmt(ArrayCell(Id(a), [NumLit(2.0)]), NumLit(1.0))"
+        #self.assertTrue(TestChecker.test(input, expect, 476))
 
+    def test_array_14(self):
+        input = """
+            func main()
+            begin
+                number a[3,2] <- [[1,2],[3,4],[6]]
+                
+            end
+        """
+        expect = "Type Mismatch In Statement: VarDecl(Id(a), ArrayType([3.0, 2.0], NumberType), None, ArrayLit(ArrayLit(NumLit(1.0), NumLit(2.0)), ArrayLit(NumLit(3.0), NumLit(4.0)), ArrayLit(NumLit(6.0))))"
+        #self.assertTrue(TestChecker.test(input, expect, 477))
 
         # KIEN TESTCASES
     def test441(self):

@@ -186,6 +186,22 @@ class StaticChecker(BaseVisitor, Utils):
 
         return None # No symbol found
 
+    def compareType(self, type1 : Type, type2 : Type) -> bool:
+        print("compareType: ", type1, type2)
+        
+        if type(type1) != type(type2): # type of value is different from inferred type
+            return False # Error is raised in the parent node
+                
+        if type(type1) == ArrayType and type(type2) == ArrayType: # the value is an array type
+            
+            if len(type1.size) != len(type2.size) or type1.eleType != type2.eleType:
+                return False # Error is raised in the parent node
+
+            for i in range(len(type1.size)):
+                if type1.size[i] != type2.size[i]:
+                    return False # Error is raised in the parent node
+
+        return True
 
     def check(self):
         return self.visit(self.ast, self.envi)
@@ -249,7 +265,9 @@ class StaticChecker(BaseVisitor, Utils):
             
             if ast.varInit:
                 varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, True, varType)))
-                if type(varType) != type(varInitType):
+                
+                #if type(varType) != type(varInitType):
+                if self.compareType(varType, varInitType) == False:
                     raise TypeMismatchInStatement(ast)
             
             current_scope.define(symbol)
@@ -320,13 +338,22 @@ class StaticChecker(BaseVisitor, Utils):
             parameters = visitFuncParam()
 
             # Create lists of parameter types
-            function_param_types = list(map(lambda param: type(param.type), functionSymbol.param))
-            parameters_types = list(map(lambda param: type(param.type), parameters))
+            #function_param_types = list(map(lambda param: type(param.type), functionSymbol.param))
+            #parameters_types = list(map(lambda param: type(param.type), parameters))
 
             # Compare the lists of parameter types
-            if function_param_types != parameters_types:
-                raise Redeclared(Function(), name)
+            #if function_param_types != parameters_types:
+            #    raise Redeclared(Function(), name)
 
+
+            function_param_types = list(map(lambda param: param.type, functionSymbol.param))
+            parameters_types = list(map(lambda param: param.type, parameters))
+
+            for i in range(len(function_param_types)):
+                if self.compareType(function_param_types[i], parameters_types[i]) == False:
+                    raise Redeclared(Function(), name)
+
+            
             # Already Have a function declared the body 
             if functionSymbol.body :
                 raise Redeclared(Function(), name)
@@ -393,10 +420,11 @@ class StaticChecker(BaseVisitor, Utils):
         left = self.visit(ast.left, (envi, operandParam))
         right = self.visit(ast.right, (envi, operandParam))
         
-
-        if type(right) != type(inferredOperandType) or type(left) != type(inferredOperandType):
+        #if type(right) != type(inferredOperandType) or type(left) != type(inferredOperandType):
+        if self.compareType(left, inferredOperandType) == False or self.compareType(right, inferredOperandType) == False:
             raise TypeMismatchInExpression(ast)
 
+        
         return inferredReturnType # return type of binary operation
 
     
@@ -419,7 +447,8 @@ class StaticChecker(BaseVisitor, Utils):
             operandParam = ExprParam(Variable(), True, True, inferredOperandType)
         expr = self.visit(ast.operand, (envi, operandParam))
         
-        if type(expr) != type(inferredOperandType):
+        #if type(expr) != type(inferredOperandType):
+        if self.compareType(expr, inferredOperandType) == False:
             raise TypeMismatchInExpression(ast)
 
         return inferredReturnType # No type can be inferred
@@ -446,17 +475,8 @@ class StaticChecker(BaseVisitor, Utils):
             symbolParamType = functionSymbol.param[i].type
             callParamType = self.visit(ast.args[i], (envi, ExprParam(Variable(), True, True, symbolParamType)))
             
-            if type(callParamType) != type(symbolParamType): 
+            if self.compareType(callParamType, symbolParamType) == False:
                 raise TypeMismatchInExpression(ast)
-            
-            #print("Call Expr Param Type: ", callParamType, symbolParamType)
-            if type(callParamType) == ArrayType and type(symbolParamType) == ArrayType: # check for array type
-                if len(callParamType.size) != len(symbolParamType.size) or callParamType.eleType != symbolParamType.eleType:
-                    raise TypeMismatchInExpression(ast)
-
-                for i in range(len(callParamType.size)):
-                    if callParamType.size[i] != symbolParamType.size[i]:
-                        raise TypeMismatchInExpression(ast)
                     
             
 
@@ -468,7 +488,8 @@ class StaticChecker(BaseVisitor, Utils):
                 pass
 
         else: # function declared and have the return type
-            if exprParam.inferredType and type(functionSymbol.type) != type(exprParam.inferredType): # inferred type is different from declared type and exist
+            #if exprParam.inferredType and type(functionSymbol.type) != type(exprParam.inferredType): # inferred type is different from declared type and exist
+            if exprParam.inferredType and self.compareType(functionSymbol.type, exprParam.inferredType) == False: # inferred type is different from declared type and exist
                 #raise TypeMismatchInExpression(ast)    
                 pass
         return functionSymbol.type 
@@ -652,7 +673,8 @@ class StaticChecker(BaseVisitor, Utils):
             if ast.expr:
                 returnType = self.visit(ast.expr, (envi, ExprParam(Variable(), True, True, stmtParam.currentFunctionSymbol.type)))
                 
-                if type(returnType) != type(stmtParam.currentFunctionSymbol.type):
+                #if type(returnType) != type(stmtParam.currentFunctionSymbol.type):
+                if self.compareType(returnType, stmtParam.currentFunctionSymbol.type) == False:
                     raise TypeMismatchInStatement(ast)
             else:
                 if type(stmtParam.currentFunctionSymbol.type) != VoidType:
@@ -673,7 +695,8 @@ class StaticChecker(BaseVisitor, Utils):
         if lhsType: # LHS is declared and has type
             rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True, lhsType)))
 
-            if type(lhsType) != type(rhsType):
+            #if type(lhsType) != type(rhsType):
+            if self.compareType(lhsType, rhsType) == False:
                 raise TypeMismatchInStatement(ast)
         else: # LHS first use
             rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True, None)))
@@ -708,17 +731,9 @@ class StaticChecker(BaseVisitor, Utils):
             symbolParamType = functionSymbol.param[i].type
             callParamType = self.visit(ast.args[i], (envi, ExprParam(Variable(), True, True, symbolParamType)))
             
-            if type(callParamType) != type(symbolParamType):
+            if self.compareType(callParamType, symbolParamType) == False:
                 raise TypeMismatchInStatement(ast)
             
-            #print("Call Expr Param Type: ", callParamType, symbolParamType)
-            if type(callParamType) == ArrayType and type(symbolParamType) == ArrayType: # check for array type
-                if len(callParamType.size) != len(symbolParamType.size) or callParamType.eleType != symbolParamType.eleType:
-                    raise TypeMismatchInExpression(ast)
-
-                for i in range(len(callParamType.size)):
-                    if callParamType.size[i] != symbolParamType.size[i]:
-                        raise TypeMismatchInExpression(ast)
 
         if functionSymbol.body is None: # function declared-only
             functionSymbol.type = VoidType()
@@ -758,7 +773,8 @@ class StaticChecker(BaseVisitor, Utils):
 
             # Get inner type of array
             innerType = ArrayType(inferredType.size, inferredType.eleType) # copy of array type
-            if len(inferredType.size) > 1:
+            print("Array Literal Inferred Type: ", inferredType.size, len(ast.value), inferredType.eleType, len(inferredType.size) > 1, inferredType.size[0] != len(ast.value))
+            if len(inferredType.size) > 0:
                 if (inferredType.size[0] != len(ast.value)):
                     return None # Error is raised in the parent node
                 
@@ -770,10 +786,11 @@ class StaticChecker(BaseVisitor, Utils):
             # Check for type of each value in array
             for value in ast.value:
                 valueType = self.visit(value, (envi, ExprParam(Variable(), True, True, innerType)))
-                print("Array Literal Value: ", valueType, innerType, valueType!=innerType )
-
-                if valueType != innerType: # type of value is different from inferred type
-                    return None # Error is raised in the parent node
+                
+                
+                if self.compareType(valueType, innerType) == False:
+                    return None
+                
 
             return ArrayType(inferredType.size , inferredType.eleType)
 
@@ -788,8 +805,8 @@ class StaticChecker(BaseVisitor, Utils):
             # Check for type of each value in array
             for value in ast.value:
                 valueType = self.visit(value, (envi, ExprParam(Variable(), True, True, firstType)))
-                #print("Array Literal Value: ", valueType, firstType, valueType!=firstType )
-                if valueType != firstType:
+                
+                if self.compareType(valueType, firstType) == False:
                     return None
                 
 
