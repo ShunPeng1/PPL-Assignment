@@ -694,6 +694,52 @@ class StaticChecker(BaseVisitor, Utils):
         return StringType()
 
     
-    def visitArrayLiteral(self, ast : ArrayLiteral, param):
-        pass
+    def visitArrayLiteral(self, ast : ArrayLiteral, param : tuple[Envi, ExprParam]):
+        print("Array Literal: ", ast)
+
+        (envi, exprParam) = param
+
+        if len(ast.value) == 0:
+            return ArrayType(0, None)
+        
+        inferredType = exprParam.inferredType
+        if inferredType: 
+            if type(inferredType) != ArrayType: # inferred type is not an array
+                return None # TODO : check again and raise error
+                
+            # Get inner type of array
+            innerType = ArrayType(inferredType.size, inferredType.eleType) # copy of array type
+            if len(innerType.size) > 0:
+                innerType = ArrayType( inferredType.size[1:] , inferredType.eleType)
+            else :
+                innerType = inferredType.eleType
+
+            # Check for type of each value in array
+            for value in ast.value:
+                valueType = self.visit(value, (envi, ExprParam(Variable(), True, True, innerType)))
+                if valueType != innerType: # type of value is different from inferred type
+                    raise TypeMismatchInExpression(ast)
+
+            return ArrayType(inferredType.size , inferredType.eleType)
+
+
+        else : # No inferred type
+            # TODO : What happen if the first is not inferred
+            firstType = self.visit(ast.value[0], (envi, ExprParam(Variable(), True, True, None))) if len(ast.value) > 0 else None
+            
+            if firstType is None:
+                return None # TODO : check again and raise error
+            
+            # Check for type of each value in array
+            for value in ast.value:
+                valueType = self.visit(value, (envi, ExprParam(Variable(), True, True, firstType)))
+                if valueType != firstType:
+                    raise TypeMismatchInExpression(ast)
+                
+
+            if type(firstType) == ArrayType: # the first element is an array type
+                return ArrayType([len(ast.value)] + firstType.size, firstType.eleType)
+            
+            else: # inferred type is not an array, maybe NumberType, StringType, BoolType, VoidType
+                return ArrayType([len(ast.value)], firstType)
 
