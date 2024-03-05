@@ -880,6 +880,21 @@ class CheckerSuite(unittest.TestCase):
         expect = "Type Mismatch In Statement: Return(NumLit(0.0))"
         #self.assertTrue(TestChecker.test(input, expect, 463))
 
+    def test_array_1(self):
+        input = """
+            func main()
+            begin
+                number a[5]
+                a[0] <- 1
+                a[1] <- 2
+                a[2] <- 3
+                a[3] <- 4
+                a[4] <- 5
+                a[5] <- 6
+            end
+        """
+        expect = "[]"
+        #self.assertTrue(TestChecker.test(input, expect, 464))
 
 
 
