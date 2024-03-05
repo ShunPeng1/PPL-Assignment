@@ -1155,7 +1155,7 @@ class CheckerSuite(unittest.TestCase):
 
             func foo()
                 return [1,2,3]
-        """
+        """       
         expect = "Type Mismatch In Statement: AssignStmt(ArrayCell(Id(a), [NumLit(1.0), NumLit(1.0)]), Id(b))"
         #self.assertTrue(TestChecker.test(input, expect, 480))
 
@@ -1170,9 +1170,9 @@ class CheckerSuite(unittest.TestCase):
 number a <- 1 + "Hello"
 func main()
     return
-"""
-        expect = "Type Mismatch In Expression: BinaryOp(+,NumLit(1.0),StringLit(Hello))"
-        #!self.assertTrue(TestChecker.test(input, expect, 441))
+"""               
+        expect = "Type Mismatch In Expression: BinaryOp(+, NumLit(1.0), StringLit(Hello))"
+        #self.assertTrue(TestChecker.test(input, expect, 481))
     
     def test442(self):
         input = """
@@ -1184,7 +1184,7 @@ begin
 end
 """
         expect = "Undeclared Function: g"
-        #!self.assertTrue(TestChecker.test(input, expect, 442))
+        #self.assertTrue(TestChecker.test(input, expect, 482))
     
     def test443(self):
         input = """
@@ -1196,7 +1196,7 @@ func main()
     return
 """
         expect = "No Function Definition: f"
-        #!self.assertTrue(TestChecker.test(input, expect, 443))
+        #self.assertTrue(TestChecker.test(input, expect, 483))
     
     def test444(self):
         input = """
@@ -1208,7 +1208,7 @@ func main()
     return
 """
         expect = "Redeclared Variable: f"
-        #!self.assertTrue(TestChecker.test(input, expect, 444))
+        #self.assertTrue(TestChecker.test(input, expect, 484))
     
     def test445(self):
         input = """
@@ -1222,7 +1222,7 @@ bool c
 string d
 """
         expect = "No Entry Point"
-        #!self.assertTrue(TestChecker.test(input, expect, 445))
+        #self.assertTrue(TestChecker.test(input, expect, 485))
     
     def test446(self):
         input = """
@@ -1235,9 +1235,11 @@ func main()
 begin
     dynamic d <- f(10)
 end
-"""
-        expect = "Type Cannot Be Inferred: VarDecl(dynamic,Id(d),CallExpr(Id(f),[NumLit(10.0)]))"
-        #!self.assertTrue(TestChecker.test(input, expect, 446))
+"""     
+        expect = "Type Cannot Be Inferred: VarDecl(Id(d), None, dynamic, CallExpr(Id(f), [NumLit(10.0)]))"
+        expect = "Type Cannot Be Inferred: Return(CallExpr(Id(f), [Id(x)]))"
+        
+        #self.assertTrue(TestChecker.test(input, expect, 486))
     
     def test447(self):
         input = """
@@ -1251,8 +1253,8 @@ begin
     f(2018)
 end
 """
-        expect = "Type Mismatch In Statement: Call(Id(f),[NumLit(2018.0)])"
-        #!self.assertTrue(TestChecker.test(input, expect, 447))
+        expect = "Type Mismatch In Statement: CallStmt(Id(f), [NumLit(2018.0)])"
+        #self.assertTrue(TestChecker.test(input, expect, 487))
     
     def test448(self):
         input = """
@@ -1262,7 +1264,7 @@ begin
 end
 """
         expect = "Continue Not In Loop"
-        #!self.assertTrue(TestChecker.test(input, expect, 448))
+        #self.assertTrue(TestChecker.test(input, expect, 488))
     
     def test449(self):
         input = """
@@ -1272,7 +1274,7 @@ begin
 end
 """
         expect = "Break Not In Loop"
-        #!self.assertTrue(TestChecker.test(input, expect, 449))
+        #self.assertTrue(TestChecker.test(input, expect, 489))
     
     def test450(self):
         input = """
@@ -1288,5 +1290,23 @@ begin
     writeNumber(add())
 end
 """
-        expect = ""
-        #!self.assertTrue(TestChecker.test(input, expect, 450))
+        expect = "[]"
+        #self.assertTrue(TestChecker.test(input, expect, 490))
+
+
+    def test451(self):
+        input = """
+func f(number x)
+
+func main()
+begin
+    dynamic d <- f(10)
+end
+
+func f(number x)
+begin
+    return f(x)
+end
+"""               
+        expect = "Type Cannot Be Inferred: VarDecl(Id(d), None, dynamic, CallExpr(Id(f), [NumLit(10.0)]))"
+        #self.assertTrue(TestChecker.test(input, expect, 491))

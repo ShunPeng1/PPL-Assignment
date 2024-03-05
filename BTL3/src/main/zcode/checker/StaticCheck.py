@@ -505,7 +505,7 @@ class StaticChecker(BaseVisitor, Utils):
         (envi, exprParam) = param
         if type(exprParam) == ExprParam:
             if exprParam.isRHS:
-                symbol = self.checkDeclared(Identifier(), ast.name, envi)
+                symbol = self.checkDeclared(exprParam.kind, ast.name, envi)
                 
                 if symbol.type :                  
                     return symbol.type
