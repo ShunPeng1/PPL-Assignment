@@ -558,8 +558,8 @@ class StaticChecker(BaseVisitor, Utils):
         arrType = self.visit(ast.arr, (envi, ExprParam(Variable(), exprParam.isRHS, exprParam.isDeclared, None))) # visit array type
         
         print("Array Cell Type: ", arrType, exprParam.isRHS, exprParam.isDeclared, exprParam.inferredType, len(ast.idx))
-        if type(arrType) == UninferableType: # arrType type is None cannot know if ArrayCell a[1,2,3] is array of [?,?,?] size
-            return arrType # Type cannot be inferred, will raise error in parent node
+        if arrType is None or type(arrType) == UninferableType: # arrType type is None cannot know if ArrayCell a[1,2,3] is array of [?,?,?] size
+            return UninferableType() # Type cannot be inferred, will raise error in parent node
 
         if type(arrType) != ArrayType:
             raise TypeMismatchInExpression(ast) # arrType is not an array type
@@ -725,6 +725,9 @@ class StaticChecker(BaseVisitor, Utils):
         if lhsType: # LHS is declared and has type
             rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True, lhsType)))
 
+            if type(rhsType) == UninferableType or type(lhsType) == UninferableType:
+                raise TypeCannotBeInferred(ast)
+
             #if type(lhsType) != type(rhsType):
             if self.compareType(lhsType, rhsType) == False:
                 raise TypeMismatchInStatement(ast)
@@ -820,17 +823,23 @@ class StaticChecker(BaseVisitor, Utils):
                 
                 
                 if self.compareType(valueType, innerType) == False:
-                    return MismatchType()
-                
+                    #return MismatchType()
+                    raise TypeMismatchInExpression(ast)
 
             return ArrayType(inferredType.size , inferredType.eleType)
 
 
         else : # No inferred type
-            # TODO : What happen if the first is not inferred
-            firstType = self.visit(ast.value[0], (envi, ExprParam(Variable(), True, True, None))) if len(ast.value) > 0 else None
+            
+            firstType = None            
+            for value in ast.value:
+                firstType = self.visit(value, (envi, ExprParam(Variable(), True, True, None)))
+
+                if (firstType and type(firstType) != UninferableType):
+                    break
+            
             #print("Array Literal First Type: ", firstType)
-            if firstType is None:
+            if firstType is None or type(firstType) == UninferableType:
                 return UninferableType() # TODO : check again and raise error
             
             # Check for type of each value in array
