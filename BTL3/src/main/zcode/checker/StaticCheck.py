@@ -126,7 +126,7 @@ class StaticChecker(BaseVisitor, Utils):
 
 
     def checkRedeclared(self, kind : Function | Variable | Parameter, name: str, lst : Scope):
-        print("checkRedeclared: ", kind, name, lst)
+        #print("checkRedeclared: ", kind, name, lst)
 
         symbols = lst.symbols
         symbol = self.lookup(name, symbols, getName)
@@ -137,10 +137,10 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def checkDeclared(self, kind : Kind, name : str, envi : Envi) -> Symbol:
-        print("checkDeclared: ", kind, name, envi)
+        #print("checkDeclared: ", kind, name, envi)
         
         for i in range(len(envi) - 1, -1, -1): # from current scope to global scope
-            print("checkDeclared Scope: ", i, envi[i])
+            #print("checkDeclared Scope: ", i, envi[i])
             symbols = envi[i].symbols # list of Symbol in scope
            
             for symbol in symbols:
@@ -152,7 +152,7 @@ class StaticChecker(BaseVisitor, Utils):
     
 
     def checkEntry(self):
-        print("checkEntry: ", self.envi[0].symbols)
+        #print("checkEntry: ", self.envi[0].symbols)
 
         globalSymbols = self.envi[0].symbols
 
@@ -173,7 +173,7 @@ class StaticChecker(BaseVisitor, Utils):
 
 
     def getSymbol(self, lhs : Id | ArrayCell , isOnlyLastScope : bool, envi : Envi) -> Symbol:
-        print("getSymbol: ", lhs, envi)
+        #print("getSymbol: ", lhs, envi)
 
         name = ""
         if type(lhs) == Id:
@@ -196,7 +196,7 @@ class StaticChecker(BaseVisitor, Utils):
         return None # No symbol found
 
     def compareType(self, type1 : Type, type2 : Type) -> bool:
-        print("compareType: ", type1, type2)
+        #print("compareType: ", type1, type2)
         
         if type(type1) != type(type2): # type of value is different from inferred type
             return False # Type cannot be inferred, will raise error in parent node
@@ -218,7 +218,7 @@ class StaticChecker(BaseVisitor, Utils):
 
 
     def visitProgram(self, ast : Program, param):
-        print(ast)
+        #print(ast)
 
         # Visit all declaration in program
         for decl in ast.decl:
@@ -237,10 +237,10 @@ class StaticChecker(BaseVisitor, Utils):
         self.envi.pop()
 
         return 
-        yield
+        
 
     def visitVarDecl(self, ast : VarDecl, param : tuple[Envi, VarDeclParam]):
-        print("visitVarDecl: ", ast)
+        #print("visitVarDecl: ", ast)
 
         (envi, varDeclParam) = param
         name = ast.name.name
@@ -288,7 +288,7 @@ class StaticChecker(BaseVisitor, Utils):
             return symbol
     
     def visitFuncDecl(self, ast : FuncDecl, param : tuple[Envi, None]):
-        print(ast)
+        #print(ast)
 
         (envi, _) = param
 
@@ -302,7 +302,7 @@ class StaticChecker(BaseVisitor, Utils):
         def visitFuncParam():
             parameters = []
 
-            print(len(envi),envi.getLast())
+            #print(len(envi),envi.getLast())
             envi.append(Scope()) # new scope for function parameters
 
             if ast.param:
@@ -310,7 +310,7 @@ class StaticChecker(BaseVisitor, Utils):
                     parameterSymbol = self.visit(astParam, (envi, VarDeclParam(Parameter(), len(envi)-1)))
                     parameters.append(parameterSymbol)
                 
-                print(len(envi),envi.getLast())
+                #print(len(envi),envi.getLast())
             return parameters
 
         def visitFuncBody(functionSymbol : FunctionSymbol = None):
@@ -480,7 +480,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitCallExpr(self, ast : CallExpr, param : tuple[Envi, ExprParam]):
-        print("Call Expr: ",ast, param[1])
+        #print("Call Expr: ",ast, param[1])
 
         (envi, exprParam) = param
 
@@ -524,7 +524,7 @@ class StaticChecker(BaseVisitor, Utils):
     
     
     def visitId(self, ast : Id, param : tuple[Envi, ExprParam]):
-        print("Visit Id: " , ast, param)
+        #print("Visit Id: " , ast, param)
         (envi, exprParam) = param
         if type(exprParam) == ExprParam:
             if exprParam.isRHS:
@@ -551,13 +551,13 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitArrayCell(self, ast : ArrayCell, param : tuple[Envi, ExprParam]):
-        print("Array Cell: ", ast, param)
+        #print("Array Cell: ", ast, param)
 
         (envi, exprParam) = param
 
         arrType = self.visit(ast.arr, (envi, ExprParam(Variable(), exprParam.isRHS, exprParam.isDeclared, None))) # visit array type
         
-        print("Array Cell Type: ", arrType, exprParam.isRHS, exprParam.isDeclared, exprParam.inferredType, len(ast.idx))
+        #print("Array Cell Type: ", arrType, exprParam.isRHS, exprParam.isDeclared, exprParam.inferredType, len(ast.idx))
         if arrType is None or type(arrType) == UninferableType: # arrType type is None cannot know if ArrayCell a[1,2,3] is array of [?,?,?] size
             return UninferableType() # Type cannot be inferred, will raise error in parent node
 
@@ -586,7 +586,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitBlock(self, ast : Block, param : tuple[Envi, StmtParam]):
-        print("Visit Block: ", ast)
+        #print("Visit Block: ", ast)
         
         (envi, stmtParam) = param
 
@@ -605,7 +605,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitIf(self, ast : If, param : tuple[Envi, StmtParam]):
-        print("Visit If: ", ast)
+        #print("Visit If: ", ast)
 
         (envi, stmtParam) = param
 
@@ -631,7 +631,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitFor(self, ast : For, param):
-        print("Visit For: ", ast)
+        #print("Visit For: ", ast)
 
         (envi, stmtParam) = param
     
@@ -663,7 +663,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitContinue(self, ast : Continue, param : tuple[Envi, StmtParam]):
-        print("Visit Continue: ", ast)
+        #print("Visit Continue: ", ast)
 
         (envi, stmtParam) = param
 
@@ -674,7 +674,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitBreak(self, ast : Break, param):
-        print("Visit Break: ", ast)
+        #print("Visit Break: ", ast)
 
         (envi, stmtParam) = param
 
@@ -744,7 +744,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitCallStmt(self, ast : CallStmt, param : tuple[Envi, StmtParam]):
-        print("Call Stmt: ",ast)
+        #print("Call Stmt: ",ast)
 
         (envi, stmtParam) = param
 
@@ -778,7 +778,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitNumberLiteral(self, ast : NumberLiteral, param):
-        print("Number Literal: ", ast)
+        #print("Number Literal: ", ast)
         return NumberType()
 
     
@@ -791,7 +791,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     def visitArrayLiteral(self, ast : ArrayLiteral, param : tuple[Envi, ExprParam]):
-        print("Array Literal: ", ast)
+        #print("Array Literal: ", ast)
 
         (envi, exprParam) = param
 
@@ -804,7 +804,7 @@ class StaticChecker(BaseVisitor, Utils):
                 return MismatchType() # TODO : check again and raise error
                 
             # Check for size of array
-            print("Array Literal Inferred Type: ", inferredType.size, len(ast.value), inferredType.eleType, len(inferredType.size) > 0, inferredType.size[0] != len(ast.value))
+            #print("Array Literal Inferred Type: ", inferredType.size, len(ast.value), inferredType.eleType, len(inferredType.size) > 0, inferredType.size[0] != len(ast.value))
             if len(inferredType.size) > 0:
                 if (inferredType.size[0] != len(ast.value)):
                     return MismatchType() # Type cannot be inferred, will raise error in parent node
