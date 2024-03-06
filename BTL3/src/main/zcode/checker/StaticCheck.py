@@ -97,6 +97,14 @@ class StmtParam:
     def __str__(self) -> str:
         pass
         
+class UninferableType(Type):
+    def __str__(self) -> str:
+        return "UninferableType"
+    
+class MismatchType(Type):
+    def __str__(self) -> str:
+        return "MismatchType"
+
 class StaticChecker(BaseVisitor, Utils):
 
     def __init__(self, ast):
@@ -203,6 +211,7 @@ class StaticChecker(BaseVisitor, Utils):
                     return False # Type cannot be inferred, will raise error in parent node
 
         return True
+        
 
     def check(self):
         return self.visit(self.ast, self.envi)
@@ -241,9 +250,9 @@ class StaticChecker(BaseVisitor, Utils):
         
         # Visit variable type
         if ast.modifier == "var":
-            varInitType = self.visit(ast.varInit, (envi, ExprParam(Identifier(), True, True))) if ast.varInit else None
+            varInitType = self.visit(ast.varInit, (envi, ExprParam(Identifier(), True, True))) 
             
-            if varInitType is None:
+            if type(varInitType) == UninferableType:
                 raise TypeCannotBeInferred(ast)
             
             current_scope.define(VariableSymbol(name, varInitType))
@@ -251,9 +260,9 @@ class StaticChecker(BaseVisitor, Utils):
         elif ast.modifier == "dynamic":  
             varSymbol = VariableSymbol(name, None)  
             if ast.varInit:
-                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, True)))
+                varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, True))) if ast.varInit else None
                 
-                if varInitType is None:
+                if type(varInitType) == UninferableType:
                     raise TypeCannotBeInferred(ast)
                 
                 varSymbol = VariableSymbol(name, varInitType)
@@ -268,6 +277,9 @@ class StaticChecker(BaseVisitor, Utils):
             if ast.varInit:
                 varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, True, varType)))
                 
+                if type(varInitType) == UninferableType:
+                    raise TypeCannotBeInferred(ast)
+
                 #if type(varType) != type(varInitType):
                 if self.compareType(varType, varInitType) == False:
                     raise TypeMismatchInStatement(ast)
@@ -283,8 +295,9 @@ class StaticChecker(BaseVisitor, Utils):
         # Get function symbol
         functionSymbol = self.getSymbol(ast.name, True, envi)
         name = ast.name.name
+        isDeclared = functionSymbol is not None
 
-        self.visit(ast.name, (envi, ExprParam(Function(), False, functionSymbol is not None))) # visit function name, check functionSymbol have declared or not
+        self.visit(ast.name, (envi, ExprParam(Function(), False, isDeclared))) # visit function name, check functionSymbol have declared or not
         
         def visitFuncParam():
             parameters = []
@@ -425,8 +438,8 @@ class StaticChecker(BaseVisitor, Utils):
         left = self.visit(ast.left, (envi, operandParam))
         right = self.visit(ast.right, (envi, operandParam))
         
-        if left is None or right is None:
-            return None # Type cannot be inferred, will raise error in parent node
+        if type(left) is UninferableType or type(right) is UninferableType:
+            return UninferableType() # Type cannot be inferred, will raise error in parent node
 
         #if type(right) != type(inferredOperandType) or type(left) != type(inferredOperandType):
         if self.compareType(left, inferredOperandType) == False or self.compareType(right, inferredOperandType) == False:
@@ -456,8 +469,8 @@ class StaticChecker(BaseVisitor, Utils):
         
         exprType = self.visit(ast.operand, (envi, operandParam))
         
-        if exprType is None:
-            return None # Type cannot be inferred, will raise error in parent node
+        if type(exprType) is UninferableType:
+            return UninferableType() # Type cannot be inferred, will raise error in parent node
 
         #if type(expr) != type(inferredOperandType):
         if self.compareType(exprType, inferredOperandType) == False:
@@ -496,13 +509,14 @@ class StaticChecker(BaseVisitor, Utils):
             if exprParam.inferredType:
                 functionSymbol.type = exprParam.inferredType
             else:
-                return None # Will raise error in parent node
+                #return None
+                return UninferableType() # Will raise error in parent node
 
         else: # function declared and have the return type
             #if exprParam.inferredType and type(functionSymbol.type) != type(exprParam.inferredType): # inferred type is different from declared type and exist
             if exprParam.inferredType and self.compareType(functionSymbol.type, exprParam.inferredType) == False: # inferred type is different from declared type and exist
-                #raise TypeMismatchInExpression(ast)    
-                return None # Will raise error in parent node
+                return MismatchType() # Will raise error in parent node
+                #return None # Will raise error in parent node
             
         return functionSymbol.type 
 
@@ -522,7 +536,7 @@ class StaticChecker(BaseVisitor, Utils):
                     symbol.type = exprParam.inferredType
                     return symbol.type
                 else :
-                    return None # No type can be inferred, will raise error in parent node
+                    return UninferableType() # No type can be inferred, will raise error in parent node
         
             else : # LHS
                 if exprParam.isDeclared:
@@ -530,22 +544,26 @@ class StaticChecker(BaseVisitor, Utils):
                     return symbol.type
                 else : # not declared
                     self.checkRedeclared(exprParam.kind, ast.name, envi.getLast())
-                    return None # No type can be inferred, will raise error in parent node
+                    return UninferableType() # No type can be inferred, will raise error in parent node
 
         else:
             return ast.name
 
     
     def visitArrayCell(self, ast : ArrayCell, param : tuple[Envi, ExprParam]):
-        print("Array Cell: ", ast)
+        print("Array Cell: ", ast, param)
 
         (envi, exprParam) = param
 
-        arrType = self.visit(ast.arr, (envi, ExprParam(Variable(), exprParam.isRHS, exprParam.isDeclared))) # visit array type
+        arrType = self.visit(ast.arr, (envi, ExprParam(Variable(), exprParam.isRHS, exprParam.isDeclared, None))) # visit array type
         
-        if type(arrType) != ArrayType: # cannot know if ArrayCell a[1,2,3] is array of [?,?,?] size
-            return None # Type cannot be inferred, will raise error in parent node
-        
+        print("Array Cell Type: ", arrType, exprParam.isRHS, exprParam.isDeclared, exprParam.inferredType, len(ast.idx))
+        if type(arrType) == UninferableType: # arrType type is None cannot know if ArrayCell a[1,2,3] is array of [?,?,?] size
+            return arrType # Type cannot be inferred, will raise error in parent node
+
+        if type(arrType) != ArrayType:
+            raise TypeMismatchInExpression(ast) # arrType is not an array type
+
         if len(ast.idx) > len(arrType.size): # index out of range
             raise TypeMismatchInExpression(ast)
 
@@ -673,7 +691,7 @@ class StaticChecker(BaseVisitor, Utils):
             if ast.expr:
                 returnType = self.visit(ast.expr, (envi, ExprParam(Variable(), True, True, stmtParam.currentFunctionSymbol.type)))
                 
-                if returnType is None:
+                if type(returnType) == UninferableType:
                     raise TypeCannotBeInferred(ast)
                 
                 stmtParam.currentFunctionSymbol.type = returnType
@@ -711,9 +729,9 @@ class StaticChecker(BaseVisitor, Utils):
             if self.compareType(lhsType, rhsType) == False:
                 raise TypeMismatchInStatement(ast)
         else: # LHS first use
-            rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True, None)))
+            rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True)))
             
-            if rhsType is None:
+            if type(rhsType) == UninferableType:
                 raise TypeCannotBeInferred(ast)
 
             symbol.type = rhsType
@@ -780,13 +798,13 @@ class StaticChecker(BaseVisitor, Utils):
         inferredType = exprParam.inferredType
         if inferredType: 
             if type(inferredType) != ArrayType: # inferred type is not an array
-                return None # TODO : check again and raise error
+                return MismatchType() # TODO : check again and raise error
                 
             # Check for size of array
             print("Array Literal Inferred Type: ", inferredType.size, len(ast.value), inferredType.eleType, len(inferredType.size) > 0, inferredType.size[0] != len(ast.value))
             if len(inferredType.size) > 0:
                 if (inferredType.size[0] != len(ast.value)):
-                    return None # Type cannot be inferred, will raise error in parent node
+                    return MismatchType() # Type cannot be inferred, will raise error in parent node
 
             # Get inner type of array
             innerType = ArrayType(inferredType.size, inferredType.eleType) # copy of array type
@@ -802,7 +820,7 @@ class StaticChecker(BaseVisitor, Utils):
                 
                 
                 if self.compareType(valueType, innerType) == False:
-                    return None
+                    return MismatchType()
                 
 
             return ArrayType(inferredType.size , inferredType.eleType)
@@ -813,14 +831,14 @@ class StaticChecker(BaseVisitor, Utils):
             firstType = self.visit(ast.value[0], (envi, ExprParam(Variable(), True, True, None))) if len(ast.value) > 0 else None
             #print("Array Literal First Type: ", firstType)
             if firstType is None:
-                return None # TODO : check again and raise error
+                return UninferableType() # TODO : check again and raise error
             
             # Check for type of each value in array
             for value in ast.value:
                 valueType = self.visit(value, (envi, ExprParam(Variable(), True, True, firstType)))
                 
                 if self.compareType(valueType, firstType) == False:
-                    return None
+                    return MismatchType()
                 
 
             if type(firstType) == ArrayType: # the first element is an array type
