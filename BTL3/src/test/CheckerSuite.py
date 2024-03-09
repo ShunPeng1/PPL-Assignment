@@ -1800,3 +1800,28 @@ end
         """
         expect = "Type Mismatch In Expression: ArrayLit(ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0), NumLit(4.0)), ArrayLit(NumLit(4.0), NumLit(5.0), NumLit(6.0)))"
         self.assertTrue(TestChecker.test(input, expect, 523))
+
+    def test_uninfer_or_mismatch_14(self):
+        input = """
+            func f()
+                return [[1,2],[3,4]]
+            func g()
+            func h() ## h is ArrayType([2.0, 2.0, 2.0], NumberType)
+                return [g(),f()]
+            func g() ## g is ArrayType([2.0, 2.0], NumberType)
+                return h()[1]
+    
+            func main()
+            begin
+                number a <- f()[1,2]
+                var b <- f()[1]
+                var c <- g()
+                var d <- h()
+                c <- h()[1]
+            end
+
+        """
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 524))
+
+    
