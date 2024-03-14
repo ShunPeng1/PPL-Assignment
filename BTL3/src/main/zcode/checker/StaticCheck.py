@@ -4,6 +4,7 @@ from Utils import Utils
 from StaticError import *
 from functools import reduce
 
+from typing import List, Union, Tuple
 
 class Symbol:
     def __init__(self, name : str, type : Type = None):
@@ -22,9 +23,12 @@ class VariableSymbol(Symbol):
         return f"VariableSymbol({self.name}, {self.type})"
 
 class FunctionSymbol(Symbol):
-    def __init__(self, name: str, type: Type = None, param: list[VariableSymbol] = [], body:Stmt =None):
+    def __init__(self, name: str, type: Type = None, param: List[VariableSymbol] = None, body:Stmt =None):
         self.name = name
         self.type = type # return type of function
+        
+        if param is None:
+            param = []
         self.param = param
         self.body = body
 
@@ -44,7 +48,7 @@ class Envi:
     def __init__(self, scope : None):
         if scope is None:
             scope = []
-        self.scope : list[Scope] = scope
+        self.scope : List[Scope] = scope
 
     def append(self, scope : Scope):
         self.scope.append(scope)
@@ -125,7 +129,7 @@ class StaticChecker(BaseVisitor, Utils):
         self.envi.append(global_scope) # global scope
 
 
-    def checkRedeclared(self, kind : Function | Variable | Parameter, name: str, lst : Scope):
+    def checkRedeclared(self, kind : Union[Function, Variable, Parameter], name: str, lst : Scope):
         #print("checkRedeclared: ", kind, name, lst)
 
         symbols = lst.symbols
@@ -172,7 +176,7 @@ class StaticChecker(BaseVisitor, Utils):
                 raise NoDefinition(symbol.name)
 
 
-    def getSymbol(self, lhs : Id | ArrayCell , isOnlyLastScope : bool, envi : Envi) -> Symbol:
+    def getSymbol(self, lhs : Union[Id , ArrayCell] , isOnlyLastScope : bool, envi : Envi) -> Symbol:
         #print("getSymbol: ", lhs, envi)
 
         name = ""
@@ -239,7 +243,7 @@ class StaticChecker(BaseVisitor, Utils):
         return 
         
 
-    def visitVarDecl(self, ast : VarDecl, param : tuple[Envi, VarDeclParam]):
+    def visitVarDecl(self, ast : VarDecl, param : Tuple[Envi, VarDeclParam]):
         #print("visitVarDecl: ", ast)
 
         (envi, varDeclParam) = param
@@ -287,7 +291,7 @@ class StaticChecker(BaseVisitor, Utils):
             current_scope.define(symbol)
             return symbol
     
-    def visitFuncDecl(self, ast : FuncDecl, param : tuple[Envi, None]):
+    def visitFuncDecl(self, ast : FuncDecl, param : Tuple[Envi, None]):
         #print(ast)
 
         (envi, _) = param
@@ -403,7 +407,7 @@ class StaticChecker(BaseVisitor, Utils):
         return ArrayType(ast.size, ast.eleType)
 
     
-    def visitBinaryOp(self, ast : BinaryOp, param : tuple[Envi, ExprParam]):
+    def visitBinaryOp(self, ast : BinaryOp, param : Tuple[Envi, ExprParam]):
         
         (envi, exprParam) = param
 
@@ -449,7 +453,7 @@ class StaticChecker(BaseVisitor, Utils):
         return inferredReturnType # return type of binary operation
 
     
-    def visitUnaryOp(self, ast : UnaryOp, param : tuple[Envi, ExprParam]):
+    def visitUnaryOp(self, ast : UnaryOp, param : Tuple[Envi, ExprParam]):
         (envi, exprParam) = param
 
         inferredOperandType = None
@@ -479,7 +483,7 @@ class StaticChecker(BaseVisitor, Utils):
         return inferredReturnType # No type can be inferred
 
     
-    def visitCallExpr(self, ast : CallExpr, param : tuple[Envi, ExprParam]):
+    def visitCallExpr(self, ast : CallExpr, param : Tuple[Envi, ExprParam]):
         #print("Call Expr: ",ast, param[1])
 
         (envi, exprParam) = param
@@ -523,7 +527,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     
     
-    def visitId(self, ast : Id, param : tuple[Envi, ExprParam]):
+    def visitId(self, ast : Id, param : Tuple[Envi, ExprParam]):
         #print("Visit Id: " , ast, param)
         (envi, exprParam) = param
         if type(exprParam) == ExprParam:
@@ -550,7 +554,7 @@ class StaticChecker(BaseVisitor, Utils):
             return ast.name
 
     
-    def visitArrayCell(self, ast : ArrayCell, param : tuple[Envi, ExprParam]):
+    def visitArrayCell(self, ast : ArrayCell, param : Tuple[Envi, ExprParam]):
         #print("Array Cell: ", ast, param)
 
         (envi, exprParam) = param
@@ -585,7 +589,7 @@ class StaticChecker(BaseVisitor, Utils):
         
 
     
-    def visitBlock(self, ast : Block, param : tuple[Envi, StmtParam]):
+    def visitBlock(self, ast : Block, param : Tuple[Envi, StmtParam]):
         #print("Visit Block: ", ast)
         
         (envi, stmtParam) = param
@@ -604,7 +608,7 @@ class StaticChecker(BaseVisitor, Utils):
         return True # TODO : return of a statement
 
     
-    def visitIf(self, ast : If, param : tuple[Envi, StmtParam]):
+    def visitIf(self, ast : If, param : Tuple[Envi, StmtParam]):
         #print("Visit If: ", ast)
 
         (envi, stmtParam) = param
@@ -662,7 +666,7 @@ class StaticChecker(BaseVisitor, Utils):
         return True # TODO : return of a statement
 
     
-    def visitContinue(self, ast : Continue, param : tuple[Envi, StmtParam]):
+    def visitContinue(self, ast : Continue, param : Tuple[Envi, StmtParam]):
         #print("Visit Continue: ", ast)
 
         (envi, stmtParam) = param
@@ -683,7 +687,7 @@ class StaticChecker(BaseVisitor, Utils):
 
         return True # TODO : return of a statement
     
-    def visitReturn(self, ast : Return, param : tuple[Envi, StmtParam]):
+    def visitReturn(self, ast : Return, param : Tuple[Envi, StmtParam]):
         
         (envi, stmtParam) = param
 
@@ -715,7 +719,7 @@ class StaticChecker(BaseVisitor, Utils):
 
 
     
-    def visitAssign(self, ast : Assign, param : tuple[Envi, StmtParam]):
+    def visitAssign(self, ast : Assign, param : Tuple[Envi, StmtParam]):
         
         (envi, stmtParam) = param
 
@@ -743,7 +747,7 @@ class StaticChecker(BaseVisitor, Utils):
         return True # TODO : return of a statement
 
     
-    def visitCallStmt(self, ast : CallStmt, param : tuple[Envi, StmtParam]):
+    def visitCallStmt(self, ast : CallStmt, param : Tuple[Envi, StmtParam]):
         #print("Call Stmt: ",ast)
 
         (envi, stmtParam) = param
@@ -790,7 +794,7 @@ class StaticChecker(BaseVisitor, Utils):
         return StringType()
 
     
-    def visitArrayLiteral(self, ast : ArrayLiteral, param : tuple[Envi, ExprParam]):
+    def visitArrayLiteral(self, ast : ArrayLiteral, param : Tuple[Envi, ExprParam]):
         #print("Array Literal: ", ast)
 
         (envi, exprParam) = param
