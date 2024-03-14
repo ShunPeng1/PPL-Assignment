@@ -101,7 +101,7 @@ class CheckerSuite(unittest.TestCase):
                 return
             end
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 411))
 
     def test_variable_declare_8(self):
@@ -122,7 +122,7 @@ class CheckerSuite(unittest.TestCase):
             func main() 
                 return 
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 413))
         
     def test_function_declare_2(self):
@@ -146,7 +146,7 @@ class CheckerSuite(unittest.TestCase):
             func foo(number c, number d)
                 return 0
                """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 415))
 
     def test_function_declare_4(self):
@@ -211,7 +211,7 @@ class CheckerSuite(unittest.TestCase):
             func main()
                 return
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 420))
 
     def test_inferring_type_2(self):
@@ -291,7 +291,7 @@ class CheckerSuite(unittest.TestCase):
             func main() 
                 return 
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 427))
 
     def test_dynamic_type_1(self):
@@ -302,7 +302,7 @@ class CheckerSuite(unittest.TestCase):
             func main()
                 return
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 428))
 
     def test_dynamic_type_2(self):
@@ -340,7 +340,7 @@ class CheckerSuite(unittest.TestCase):
                 return
             end
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 431))
 
     def test_assign_statement_2(self):
@@ -368,7 +368,7 @@ class CheckerSuite(unittest.TestCase):
                 return
             end
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 433))
 
     def test_assign_statement_4(self):
@@ -397,7 +397,7 @@ class CheckerSuite(unittest.TestCase):
                 return
             end
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 435))
 
     def test_assign_statement_6(self):
@@ -429,7 +429,7 @@ class CheckerSuite(unittest.TestCase):
                     return
             end
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 437))
 
     def test_if_statement_2(self):
@@ -461,7 +461,7 @@ class CheckerSuite(unittest.TestCase):
                 return
             end
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 439))
 
     def test_callstmt_2(self):
@@ -642,7 +642,7 @@ class CheckerSuite(unittest.TestCase):
                 var a <- foo(5)
             end
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 451))
 
 
@@ -1049,7 +1049,7 @@ class CheckerSuite(unittest.TestCase):
             end
         """
         
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 473))
 
     def test_array_11(self):
@@ -1289,7 +1289,7 @@ begin
     writeNumber(add())
 end
 """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 490))
 
 
@@ -1329,7 +1329,7 @@ end
 
 """
 
-        expect = "[]"
+        expect = ""
 
         self.assertTrue(TestChecker.test(input, expect, 492))
 
@@ -1367,7 +1367,7 @@ begin
     writeNumber(a[0] + b[0] + c[0])
 end
 """               
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 494))
 
 
@@ -1420,7 +1420,7 @@ begin
     writeNumber(add())
 end
 """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 497))
 
     def test498(self):
@@ -1588,7 +1588,7 @@ end
 
             end
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 509))
 
     def test_redeclare_11(self):
@@ -1606,7 +1606,7 @@ end
 
             end
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 510))
         
     def test_uninfer_or_mismatch_1(self):
@@ -1690,7 +1690,7 @@ end
                 return [f(),f()]            
 
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 515))
 
     def test_uninfer_or_mismatch_6(self):
@@ -1761,7 +1761,7 @@ end
             end             
 
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 520))
 
     def test_uninfer_or_mismatch_11(self):
@@ -1821,7 +1821,7 @@ end
             end
 
         """
-        expect = "[]"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 524))
 
     
