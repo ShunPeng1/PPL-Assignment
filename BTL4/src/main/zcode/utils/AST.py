@@ -1,4 +1,7 @@
 from abc import ABC, abstractmethod, ABCMeta
+# from Visitor import Visitor
+from dataclasses import dataclass
+from typing import List, Tuple
 
 
 class AST(ABC):
@@ -57,7 +60,7 @@ class BinaryOp(Expr):
         self.right = right
 
     def __str__(self):
-        return f"BinaryOp({self.op}, {str(self.left)}, {str(self.right)}))"
+        return f"BinaryOp({self.op}, {str(self.left)}, {str(self.right)})"
 
 
 # used for unary expression with orerand like !,+,-
@@ -173,7 +176,7 @@ class If(Stmt):
         self.elseStmt = elseStmt
 
     def __str__(self):
-        return f"If({str(self.expr)}, {str(self.thenStmt)}), [{', '.join(f'({str(x[0])}, {str(x[1])})' for x in self.elifStmt)}], {str(self.elseStmt) if self.elseStmt else 'None'}"
+        return f"If(({str(self.expr)}, {str(self.thenStmt)}), [{', '.join(f'({str(x[0])}, {str(x[1])})' for x in self.elifStmt)}], {str(self.elseStmt) if self.elseStmt else 'None'})"
 
 
 class For(Stmt):
