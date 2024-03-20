@@ -62,14 +62,15 @@ class CodeGenerator:
         self.libName = "io"
 
     def init(self):
-        return [Symbol("readInt", MType(list(), IntType()), CName(self.libName)),
-                Symbol("writeInt", MType([IntType()],
-                       VoidType()), CName(self.libName)),
-                Symbol("writeIntLn", MType(
-                    [IntType()], VoidType()), CName(self.libName)),
-                Symbol("writeFloat", MType(
-                    [FloatType()], VoidType()), CName(self.libName))
-                ]
+        return [
+            Symbol("readNumber", MType(list(), NumberType()), CName(self.libName)),
+            Symbol("readString", MType(list(), StringType()), CName(self.libName)),
+            Symbol("readBool", MType(list(), BoolType()), CName(self.libName)),
+            Symbol("writeNumber", MType([NumberType()], VoidType()), CName(self.libName)),
+            Symbol("writeString", MType([StringType()], VoidType()), CName(self.libName)),
+            Symbol("writeBool", MType([BoolType()], VoidType()), CName(self.libName)),
+        ]
+    
 
     def gen(self, ast, path):
         # ast: AST
