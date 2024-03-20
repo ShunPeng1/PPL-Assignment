@@ -80,9 +80,83 @@ class CodeGenVisitor(BaseVisitor):
         self.env = env
         self.path = path
 
-    def visitProgram(self, ast, c):
+    def visitProgram(self, ast : Program, c):
         [self.visit(i, c)for i in ast.decl]
         return c
+    
+    def visitVarDecl(self, ast : VarDecl, param):
+        print("VisitVarDecl: ",ast, param)
+        pass
+
+    def visitFuncDecl(self, ast : FuncDecl, param):
+        print("VisitFuncDecl: ",ast, param)
+        
+        return Symbol(ast.name.name, MType([self.visit(x) for x in ast.param], ast.returnType), CName("MCClass"))
+        
+        pass
+
+    def visitNumberType(self, ast, param):
+        pass
+
+    def visitBoolType(self, ast, param):
+        pass
+
+    def visitStringType(self, ast, param):
+        pass
+
+    def visitArrayType(self, ast, param):
+        pass
+
+    def visitBinaryOp(self, ast, param):
+        pass
+
+    def visitUnaryOp(self, ast, param):
+        pass
+
+    def visitCallExpr(self, ast, param):
+        pass
+
+    def visitId(self, ast, param):
+        pass
+
+    def visitArrayCell(self, ast, param):
+        pass
+
+    def visitBlock(self, ast, param):
+        pass
+
+    def visitIf(self, ast, param):
+        pass
+
+    def visitFor(self, ast, param):
+        pass
+
+    def visitContinue(self, ast, param):
+        pass
+
+    def visitBreak(self, ast, param):
+        pass
+
+    def visitReturn(self, ast, param):
+        pass
+
+    def visitAssign(self, ast, param):
+        pass
+
+    def visitCallStmt(self, ast, param):
+        pass
+
+    def visitNumberLiteral(self, ast, param):
+        pass
+
+    def visitBooleanLiteral(self, ast, param):
+        pass
+
+    def visitStringLiteral(self, ast, param):
+        pass
+
+    def visitArrayLiteral(self, ast, param):
+        pass
 
     def visitClassDecl(self, ast, c):
         self.className = ast.classname.name
