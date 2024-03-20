@@ -202,7 +202,7 @@ class CodeGenVisitor(BaseVisitor):
          for ele in ast.memlist if type(ele) == MethodDecl]
         # generate default constructor
         self.genMETHOD(MethodDecl(Instance(), Id("<init>"), list(
-        ), None, Block([], [])), c, Frame("<init>", VoidType()))
+        ), None, Block([])), c, Frame("<init>", VoidType()))
         self.emit.emitEPILOG()
         return c
 
@@ -272,7 +272,7 @@ class CodeGenVisitor(BaseVisitor):
             cname + "/" + ast.method.name, ctype, frame))
 
     def visitNumberLiteral(self, ast, o):
-        return self.emit.emitPUSHFCONST(ast.value, o.frame), IntType()
+        return self.emit.emitPUSHFCONST(ast.value, o.frame), NumberType()
 
     def visitBinaryOp(self, ast, o):
         e1c, e1t = self.visit(ast.left, o)
