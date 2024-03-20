@@ -13,9 +13,9 @@ from ZCodeLexer import ZCodeLexer
 from ZCodeParser import ZCodeParser
 from lexererr import *
 from ASTGeneration import ASTGeneration
-# from StaticCheck import StaticChecker
-# from StaticError import *
-# from CodeGenerator import CodeGenerator
+from StaticCheck import StaticChecker
+from StaticError import *
+from CodeGenerator import CodeGenerator
 import subprocess
 
 JASMIN_JAR = "./external/jasmin.jar"
