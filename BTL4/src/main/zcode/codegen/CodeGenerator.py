@@ -193,11 +193,13 @@ class CodeGenVisitor(BaseVisitor):
     def visitArrayLiteral(self, ast, param):
         pass
 
-    def visitClassDecl(self, ast, c):
+    def visitClassDecl(self, ast : ClassDecl, c : SubBody):
         self.className = ast.classname.name
         self.emit = Emitter(self.path+"/" + self.className + ".j")
         self.emit.printout(self.emit.emitPROLOG(
             self.className, "java.lang.Object"))
+        
+        
         [self.visit(ele, SubBody(None, self.env))
          for ele in ast.memlist if type(ele) == MethodDecl]
         # generate default constructor
@@ -206,7 +208,7 @@ class CodeGenVisitor(BaseVisitor):
         self.emit.emitEPILOG()
         return c
 
-    def genMETHOD(self, consdecl, o, frame):
+    def genMETHOD(self, consdecl : MethodDecl, o, frame : Frame):
         isInit = consdecl.returnType is None
         isMain = consdecl.name.name == "main" and len(
             consdecl.param) == 0 and type(consdecl.returnType) is VoidType
@@ -251,7 +253,7 @@ class CodeGenVisitor(BaseVisitor):
         self.emit.printout(self.emit.emitENDMETHOD(frame))
         frame.exitScope()
 
-    def visitMethodDecl(self, ast, o):
+    def visitMethodDecl(self, ast : MethodDecl, o : SubBody):
         frame = Frame(ast.name, ast.returnType)
         self.genMETHOD(ast, o.sym, frame)
         return Symbol(ast.name, MType([x.typ for x in ast.param], ast.returnType), CName(self.className))
