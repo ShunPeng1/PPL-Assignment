@@ -6,21 +6,55 @@ from abc import ABC
 from Visitor import *
 from AST import *
 
+## Make missing classes
 
-class MType:
-    def __init__(self, partype, rettype):
-        self.partype = partype
-        self.rettype = rettype
+class ClassType (Type):
+    def __init__(self, ctype):
+        self.classname = ctype # Id
+
+class Instance:
+    def __init__(self):
+        pass
+
+class ClassDecl (Decl):
+    def __init__(self, classname, memlist):
+        self.classname = classname # Id
+        self.memlist = memlist # list of MemDecl
+
+
+class MethodDecl:
+    # instance: Instance
+    # name: Id
+    # param: list[VarDecl]
+    # returnType: Type
+    # body: Block
+
+    def __init__(self, instance, name, param, returnType, body):
+        self.instance = instance # Not used but keep for consistency
+        self.name = name # Id
+        self.param = param # list of VarDecl
+        self.returnType = returnType # Type
+        self.body = body # Block
 
 
 class Symbol:
     def __init__(self, name, mtype, value=None):
         self.name = name
-        self.mtype = mtype
-        self.value = value
+        self.mtype = mtype # MType
+        self.value = value # Val
 
     def __str__(self):
         return "Symbol("+self.name+","+str(self.mtype)+")"
+
+
+## End of missing classes
+
+
+class MType:
+    def __init__(self, partype, rettype):
+        self.partype = partype # list of Type
+        self.rettype = rettype # Type
+
 
 
 class CodeGenerator:
