@@ -6,6 +6,7 @@ from abc import ABC
 from Visitor import *
 from AST import *
 
+from typing import List, Union, Tuple
 ## Make missing classes
 
 class ClassType (Type):
@@ -17,9 +18,9 @@ class Instance:
         pass
 
 class ClassDecl (Decl):
-    def __init__(self, classname, memlist):
-        self.classname = classname # Id
-        self.memlist = memlist # list of MemDecl
+    def __init__(self, classname : Id, memlist : List[Decl]):
+        self.classname : Id = classname # Id
+        self.memlist : List[Decl] = memlist # list of Decl
 
 
 class MethodDecl:
@@ -82,9 +83,9 @@ class CodeGenerator:
 
 
 class SubBody():
-    def __init__(self, frame, sym):
-        self.frame = frame
-        self.sym = sym
+    def __init__(self, frame : Frame, sym : List[Symbol]):
+        self.frame : Frame = frame
+        self.sym : List[Symbol] = sym # list of Symbol
 
 
 class Access():
@@ -193,13 +194,13 @@ class CodeGenVisitor(BaseVisitor):
     def visitArrayLiteral(self, ast, param):
         pass
 
-    def visitClassDecl(self, ast : ClassDecl, c : SubBody):
+    def visitClassDecl(self, ast : ClassDecl, c : List[Symbol]):
         self.className = ast.classname.name
         self.emit = Emitter(self.path+"/" + self.className + ".j")
         self.emit.printout(self.emit.emitPROLOG(
             self.className, "java.lang.Object"))
         
-        
+        # visit all methoddecl
         [self.visit(ele, SubBody(None, self.env))
          for ele in ast.memlist if type(ele) == MethodDecl]
         # generate default constructor
