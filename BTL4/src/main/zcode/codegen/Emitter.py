@@ -22,7 +22,7 @@ class Emitter():
             return "V"
         elif typeIn is ArrayType:
             return "[" + self.getJVMType(inType.eleType)
-        elif typeIn is cgen.MType:
+        elif typeIn is cgen.MethodType:
             return "(" + "".join(list(map(lambda x: self.getJVMType(x), inType.partype))) + ")" + self.getJVMType(inType.rettype)
         elif typeIn is ClassType:
             return "L" + inType.classname.name + ";"

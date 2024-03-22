@@ -7,6 +7,8 @@ from Visitor import *
 from AST import *
 
 from typing import List, Union, Tuple
+
+
 ## Make missing classes
 
 class ClassType (Type):
@@ -18,9 +20,9 @@ class Instance:
         pass
 
 class ClassDecl (Decl):
-    def __init__(self, classname : Id, memlist : List[Decl]):
+    def __init__(self, classname : Id, memlist : list[Decl]):
         self.classname : Id = classname # Id
-        self.memlist : List[Decl] = memlist # list of Decl
+        self.memlist : list[Decl] = memlist # list of Decl
 
 
 class MethodDecl:
@@ -41,7 +43,7 @@ class MethodDecl:
 class Symbol:
     def __init__(self, name, mtype, value=None):
         self.name = name
-        self.mtype = mtype # MType
+        self.mtype = mtype # MethodType
         self.value = value # Val
 
     def __str__(self):
@@ -51,7 +53,7 @@ class Symbol:
 ## End of missing classes
 
 
-class MType:
+class MethodType(Type):
     def __init__(self, partype, rettype):
         self.partype = partype # list of Type
         self.rettype = rettype # Type
@@ -64,13 +66,13 @@ class CodeGenerator:
 
     def init(self):
         return [
-            Symbol("readNumber", MType(list(), NumberType()), CName(self.libName)),
-            Symbol("readString", MType(list(), StringType()), CName(self.libName)),
-            Symbol("readBool", MType(list(), BoolType()), CName(self.libName)),
-            Symbol("writeNumber", MType([NumberType()], VoidType()), CName(self.libName)),
-            Symbol("writeString", MType([StringType()], VoidType()), CName(self.libName)),
-            Symbol("writeBool", MType([BoolType()], VoidType()), CName(self.libName)),
-        ]
+            Symbol("readNumber", MethodType([], NumberType()), ClassName(self.libName)),
+            Symbol("readString", MethodType([], StringType()), ClassName(self.libName)),
+            Symbol("readBool", MethodType([], BoolType()), ClassName(self.libName)),
+            Symbol("writeNumber", MethodType([NumberType()], VoidType()), ClassName(self.libName)),
+            Symbol("writeString", MethodType([StringType()], VoidType()), ClassName(self.libName)),
+            Symbol("writeBool", MethodType([BoolType()], VoidType()), ClassName(self.libName)),
+        ]))
     
 
     def gen(self, ast, path):
@@ -83,9 +85,9 @@ class CodeGenerator:
 
 
 class SubBody():
-    def __init__(self, frame : Frame, sym : List[Symbol]):
+    def __init__(self, frame : Frame, sym : list[Symbol]):
         self.frame : Frame = frame
-        self.sym : List[Symbol] = sym # list of Symbol
+        self.sym : list[Symbol] = sym # list of Symbol
 
 
 class Access():
@@ -105,7 +107,7 @@ class Index(Val):
         self.value = value
 
 
-class CName(Val):
+class ClassName(Val):
     def __init__(self, value):
         self.value = value
 
@@ -127,7 +129,7 @@ class CodeGenVisitor(BaseVisitor):
     def visitFuncDecl(self, ast : FuncDecl, param):
         print("VisitFuncDecl: ",ast, param)
         
-        return Symbol(ast.name.name, MType([self.visit(x) for x in ast.param], ast.returnType), CName("MCClass"))
+        return Symbol(ast.name.name, MethodType([self.visit(x) for x in ast.param], ast.returnType), ClassName("MCClass"))
         
         pass
 
@@ -194,7 +196,7 @@ class CodeGenVisitor(BaseVisitor):
     def visitArrayLiteral(self, ast, param):
         pass
 
-    def visitClassDecl(self, ast : ClassDecl, c : List[Symbol]):
+    def visitClassDecl(self, ast : ClassDecl, c : list[Symbol]):
         self.className = ast.classname.name
         self.emit = Emitter(self.path+"/" + self.className + ".j")
         self.emit.printout(self.emit.emitPROLOG(
@@ -203,61 +205,77 @@ class CodeGenVisitor(BaseVisitor):
         # visit all methoddecl
         [self.visit(ele, SubBody(None, self.env))
          for ele in ast.memlist if type(ele) == MethodDecl]
+        
         # generate default constructor
         self.genMETHOD(MethodDecl(Instance(), Id("<init>"), list(
         ), None, Block([])), c, Frame("<init>", VoidType()))
         self.emit.emitEPILOG()
         return c
 
-    def genMETHOD(self, consdecl : MethodDecl, o, frame : Frame):
-        isInit = consdecl.returnType is None
-        isMain = consdecl.name.name == "main" and len(
-            consdecl.param) == 0 and type(consdecl.returnType) is VoidType
-        returnType = VoidType() if isInit else consdecl.returnType
-        methodName = "<init>" if isInit else consdecl.name.name
-        intype = [ArrayType(0, StringType())] if isMain else list(
-            map(lambda x: x.typ, consdecl.param))
-        mtype = MType(intype, returnType)
+    def genMETHOD(self, consdecl : MethodDecl, o : list[Symbol], frame : Frame):
+        # Check if the method is a constructor or the main method
+        isConstructor = consdecl.returnType is None
+        isMain = consdecl.name.name == "main" and len(consdecl.param) == 0 and type(consdecl.returnType) is VoidType
 
-        self.emit.printout(self.emit.emitMETHOD(
-            methodName, mtype, not isInit, frame))
+        # Set the return type based on whether the method is a constructor
+        returnType = VoidType() if isConstructor else consdecl.returnType
 
+        # Set the method name based on whether the method is a constructor
+        methodName = "<init>" if isConstructor else consdecl.name.name
+
+        # Set the input types based on whether the method is the main method
+        intype = [ArrayType(0, StringType())] if isMain else list(map(lambda x: x.typ, consdecl.param))
+
+        # Create a method type object
+        mtype = MethodType(intype, returnType)
+
+        # Generate the method declaration code
+        self.emit.printout(self.emit.emitMETHOD(methodName, mtype, not isConstructor, frame))
+
+        # Enter a new scope
         frame.enterScope(True)
 
+        # Initialize the global environment
         glenv = o
 
         # Generate code for parameter declarations
-        if isInit:
-            self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "this", ClassType(
-                Id(self.className)), frame.getStartLabel(), frame.getEndLabel(), frame))
+        if isConstructor:
+            self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "this", ClassType(Id(self.className)), frame.getStartLabel(), frame.getEndLabel(), frame))
         elif isMain:
-            self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "args", ArrayType(
-                0, StringType()), frame.getStartLabel(), frame.getEndLabel(), frame))
+            self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "args", ArrayType(0, StringType()), frame.getStartLabel(), frame.getEndLabel(), frame))
         else:
-            local = reduce(lambda env, ele: SubBody(
-                frame, [self.visit(ele, env)]+env.sym), consdecl.param, SubBody(frame, []))
+            local = reduce(lambda env, ele: SubBody(frame, [self.visit(ele, env)]+env.sym), consdecl.param, SubBody(frame, []))
             glenv = local.sym+glenv
 
+        # Get the method body
         body = consdecl.body
+
+        # Generate the start label for the method
         self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
 
         # Generate code for statements
-        if isInit:
-            self.emit.printout(self.emit.emitREADVAR(
-                "this", ClassType(Id(self.className)), 0, frame))
+        if isConstructor:
+            self.emit.printout(self.emit.emitREADVAR("this", ClassType(Id(self.className)), 0, frame))
             self.emit.printout(self.emit.emitINVOKESPECIAL(frame))
         list(map(lambda x: self.visit(x, SubBody(frame, glenv)), body.stmt))
 
+        # Generate the end label for the method
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
+
+        # Generate the return statement
         if type(returnType) is VoidType:
             self.emit.printout(self.emit.emitRETURN(VoidType(), frame))
+
+        # End the method
         self.emit.printout(self.emit.emitENDMETHOD(frame))
+
+        # Exit the scope
         frame.exitScope()
 
     def visitMethodDecl(self, ast : MethodDecl, o : SubBody):
         frame = Frame(ast.name, ast.returnType)
         self.genMETHOD(ast, o.sym, frame)
-        return Symbol(ast.name, MType([x.typ for x in ast.param], ast.returnType), CName(self.className))
+        return Symbol(ast.name, MethodType([x.typ for x in ast.param], ast.returnType), ClassName(self.className))
 
     def visitCallStmt(self, ast, o):
         ctxt = o
