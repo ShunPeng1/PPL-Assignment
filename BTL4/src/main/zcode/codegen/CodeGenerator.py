@@ -50,6 +50,83 @@ class Symbol:
         return "Symbol("+self.name+","+str(self.mtype)+")"
 
 
+class VariableSymbol(Symbol):
+    def __init__(self, name : str, type : Type = None):
+        self.name = name
+        self.type = type
+
+    def __str__(self):
+        return f"VariableSymbol({self.name}, {self.type})"
+
+class FunctionSymbol(Symbol):
+    def __init__(self, name: str, type: Type = None, param: List[VariableSymbol] = None, body:Stmt =None):
+        self.name = name
+        self.type = type # return type of function
+        
+        if param is None:
+            param = []
+        self.param = param
+        self.body = body
+
+    def __str__(self):
+        return f"FunctionSymbol({self.name}, {self.type}, [{', '.join(str(i) for i in self.param)}], {self.body})"
+
+class Scope:
+    def __init__(self, symbols = None):
+        self.symbols = symbols if symbols is not None else []  # Initialize as empty list if None is provided
+    
+    def define(self, symbol : Symbol):
+        self.symbols.append(symbol)
+
+    def __str__(self) -> str:
+        return f"Scope([{', '.join(str(i) for i in self.symbols)}])"
+
+class Envi:
+    def __init__(self, scope : None):
+        if scope is None:
+            scope = []
+        self.scope : List[Scope] = scope
+        self.itr = len(scope)-1
+
+    def append(self, scope : Scope):
+        self.scope.append(scope)
+
+    def next_iterator(self):
+        if self.itr < len(self.scope) - 1:
+            self.itr += 1
+        return self.scope[self.itr]
+        
+    def previous_iterator(self):
+        if self.itr > 0:
+            self.itr -= 1
+        return self.scope[self.itr] 
+
+    def getLast(self) -> Scope:
+        return self.scope[-1]
+
+    def __getitem__(self, index : int):
+        return self.scope[index]
+
+    def __setitem__(self, index, value : Scope):
+        self.scope[index] = value
+    
+    def __len__(self):
+        return len(self.scope)
+
+    def __str__(self) -> str:
+        return f"Environtment({self.scope})"
+
+
+class ExprParam: 
+    def __init__(self, isRHS : bool = False, isDeclared : bool = False, inferredType : Type = None) -> None:
+        self.isRHS = isRHS
+        self.isDeclared = isDeclared
+        self.inferredType = inferredType
+
+    def __str__(self) -> str:
+        return f"IdParam({self.isRHS}, {self.inferredType})"
+
+
 ## End of missing classes
 
 
@@ -58,14 +135,12 @@ class MethodType(Type):
         self.partype = partype # list of Type
         self.rettype = rettype # Type
 
-
-
 class CodeGenerator:
     def __init__(self):
         self.libName = "io"
 
     def init(self):
-        return [
+        return Envi(Scope([
             Symbol("readNumber", MethodType([], NumberType()), ClassName(self.libName)),
             Symbol("readString", MethodType([], StringType()), ClassName(self.libName)),
             Symbol("readBool", MethodType([], BoolType()), ClassName(self.libName)),
@@ -79,8 +154,9 @@ class CodeGenerator:
         # ast: AST
         # dir_: String
 
-        gl = self.init()
-        gc = CodeGenVisitor(ast, gl, path)
+        global_envi = self.init()
+        java_ast = AstConvertToJavaAstVisitor(ast, global_envi)
+        gc = CodeGenVisitor(java_ast, global_envi, path)
         gc.visit(ast, None)
 
 
@@ -119,7 +195,9 @@ class CodeGenVisitor(BaseVisitor):
         self.path = path
 
     def visitProgram(self, ast : Program, c):
-        [self.visit(i, c)for i in ast.decl]
+        
+        [self.visit(i, c) for i in ast.decl]
+        
         return c
     
     def visitVarDecl(self, ast : VarDecl, param):
