@@ -188,6 +188,119 @@ class ClassName(Val):
         self.value = value
 
 
+class AstConvertToJavaAstVisitor(BaseVisitor):
+    def __init__(self, astTree,env):
+        self.astTree = astTree
+        self.env = env
+
+    def visitProgram(self, ast : Program, c):
+        
+        return ClassDecl(ClassName("ZCode"),[self.visit(i, (self.env, None)) for i in ast.decl])
+    
+    def visitVarDecl(self, ast : VarDecl, param : tuple[Envi,None]):
+        
+        (envi, varDeclParam) = param
+        name = ast.name.name
+        self.visit(ast.name, (envi, ExprParam(False, False)))
+        
+        current_scope = envi.getLast()
+        
+        # Visit variable type
+        if ast.modifier == "var":
+            varInitType = self.visit(ast.varInit, (envi, ExprParam(True, True))) 
+            
+            current_scope.define(VariableSymbol(name, varInitType))
+        
+        elif ast.modifier == "dynamic":  
+            varSymbol = VariableSymbol(name, None)  
+            if ast.varInit:
+                varInitType = self.visit(ast.varInit, (envi, ExprParam(True, True))) if ast.varInit else None
+                varSymbol = VariableSymbol(name, varInitType)
+                
+            current_scope.define(varSymbol)
+
+        else: # no modifier
+            varType = self.visit(ast.varType, (envi, None))
+            
+            symbol = VariableSymbol(name, varType)
+            
+            if ast.varInit:
+                varInitType = self.visit(ast.varInit, (envi, ExprParam(True, True, varType)))
+            
+            current_scope.define(symbol)
+            return symbol
+        
+
+    def visitFuncDecl(self, ast : FuncDecl, param):
+        print("VisitFuncDecl: ",ast, param)
+        
+        return Symbol(ast.name.name, MethodType([self.visit(x) for x in ast.param], ast.returnType), ClassName("MCClass"))
+        
+        pass
+
+    def visitNumberType(self, ast, param):
+        pass
+
+    def visitBoolType(self, ast, param):
+        pass
+
+    def visitStringType(self, ast, param):
+        pass
+
+    def visitArrayType(self, ast, param):
+        pass
+
+    def visitBinaryOp(self, ast, param):
+        pass
+
+    def visitUnaryOp(self, ast, param):
+        pass
+
+    def visitCallExpr(self, ast, param):
+        pass
+
+    def visitId(self, ast, param):
+        pass
+
+    def visitArrayCell(self, ast, param):
+        pass
+
+    def visitBlock(self, ast, param):
+        pass
+
+    def visitIf(self, ast, param):
+        pass
+
+    def visitFor(self, ast, param):
+        pass
+
+    def visitContinue(self, ast, param):
+        pass
+
+    def visitBreak(self, ast, param):
+        pass
+
+    def visitReturn(self, ast, param):
+        pass
+
+    def visitAssign(self, ast, param):
+        pass
+
+    def visitCallStmt(self, ast, param):
+        pass
+
+    def visitNumberLiteral(self, ast, param):
+        pass
+
+    def visitBooleanLiteral(self, ast, param):
+        pass
+
+    def visitStringLiteral(self, ast, param):
+        pass
+
+    def visitArrayLiteral(self, ast, param):
+        pass
+
 class CodeGenVisitor(BaseVisitor):
     def __init__(self, astTree, env, path):
         self.astTree = astTree
