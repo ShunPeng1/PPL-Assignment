@@ -1,5 +1,5 @@
 public class Simple {
-    public static float b = 3;
+    public static int b = 1;
     public static void main(String[] args) {
         boolean a = true;
         if (a) {
@@ -7,8 +7,7 @@ public class Simple {
             writeNumber(c);
         }
         else {
-            int c = 6;
-            writeNumber(c);
+            writeNumber(b);
         }
         
     }

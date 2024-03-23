@@ -12,7 +12,7 @@
 .class public Simple
 .super java/lang/Object
 
-.field public static b F
+.field public static b I
 
 .method public <init>()V
   .limit stack 1
@@ -39,17 +39,14 @@
   8: iload_2
   9: invokestatic Simple/writeNumber(I)V
   .line 8
-  12: goto Label22
+  12: goto Label21
 Label15:
   .line 10
-  15: bipush 6
-  17: istore_2
-  .line 11
-  18: iload_2
-  19: invokestatic Simple/writeNumber(I)V
-Label22:
-  .line 14
-  22: return
+  15: getstatic Simple/b I
+  18: invokestatic Simple/writeNumber(I)V
+Label21:
+  .line 13
+  21: return
   ; append_frame (frameNumber = 0)
   ; frame_type = 252, offset_delta = 15
   ; frame bytes: 252 0 15 1 
@@ -58,10 +55,10 @@ Label22:
     locals Integer
     .end stack
   ; same_frame (frameNumber = 1)
-  ; frame_type = 6, offset_delta = 6
-  ; frame bytes: 6 
+  ; frame_type = 5, offset_delta = 5
+  ; frame bytes: 5 
   .stack 
-    offset 22
+    offset 21
     locals Integer
     .end stack
 .end method
@@ -69,11 +66,11 @@ Label22:
 .method public static writeNumber(I)V
   .limit stack 2
   .limit locals 1
-  .line 17
+  .line 16
   0: getstatic java/lang/System/out Ljava/io/PrintStream;
   3: iload_0
   4: invokevirtual java/io/PrintStream/println(I)V
-  .line 18
+  .line 17
   7: return
 .end method
 
@@ -81,8 +78,8 @@ Label22:
   .limit stack 1
   .limit locals 0
   .line 2
-  0: ldc 3.0
-  2: putstatic Simple/b F
-  5: return
+  0: iconst_1
+  1: putstatic Simple/b I
+  4: return
 .end method
 
