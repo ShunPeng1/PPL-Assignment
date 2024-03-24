@@ -403,8 +403,24 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
     def visitArrayCell(self, ast, param):
         pass
 
-    def visitBlock(self, ast, param):
-        pass
+    def visitBlock(self, ast, param : tuple[Envi,StmtParam]):
+        
+        (envi, stmtParam) = param
+
+        envi.append(Scope())
+
+        i = 0
+        for stmt in ast.stmt:
+            if type(stmt) == VarDecl:
+                self.visit(stmt, (envi, VarDeclParam(False, i)))
+                i += 1
+            else:
+                self.visit(stmt, (envi, stmtParam))
+
+        envi.pop()
+
+
+        return ast # TODO : return of a statement
 
     def visitIf(self, ast, param):
         pass
@@ -428,13 +444,13 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         pass
 
     def visitNumberLiteral(self, ast, param):
-        pass
+        return ast
 
     def visitBooleanLiteral(self, ast, param):
-        pass
+        return ast
 
     def visitStringLiteral(self, ast, param):
-        pass
+        return ast
 
     def visitArrayLiteral(self, ast, param):
         pass
