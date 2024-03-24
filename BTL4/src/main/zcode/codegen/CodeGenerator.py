@@ -202,14 +202,15 @@ class CodeGenerator:
         self.libName = "io"
 
     def init(self):
-        return Envi(Scope([
-            Symbol("readNumber", MethodType([], NumberType()), ClassName(self.libName)),
-            Symbol("readString", MethodType([], StringType()), ClassName(self.libName)),
-            Symbol("readBool", MethodType([], BoolType()), ClassName(self.libName)),
-            Symbol("writeNumber", MethodType([NumberType()], VoidType()), ClassName(self.libName)),
-            Symbol("writeString", MethodType([StringType()], VoidType()), ClassName(self.libName)),
-            Symbol("writeBool", MethodType([BoolType()], VoidType()), ClassName(self.libName)),
-        ]))
+        currClassName = ClassName(self.libName)
+        return Envi([Scope([
+            FunctionSymbol("readNumber", MethodType([], NumberType()), className= currClassName),
+            FunctionSymbol("readString", MethodType([], StringType()), className= currClassName),
+            FunctionSymbol("readBool", MethodType([], BoolType()), className= currClassName),
+            FunctionSymbol("writeNumber", MethodType([NumberType()], VoidType()), className= currClassName),
+            FunctionSymbol("writeString", MethodType([StringType()], VoidType()), className= currClassName),
+            FunctionSymbol("writeBool", MethodType([BoolType()], VoidType()), className= currClassName),
+        ])])
     
 
     def gen(self, ast, path):
@@ -217,37 +218,20 @@ class CodeGenerator:
         # dir_: String
 
         global_envi = self.init()
+        print("Global Envi: ", global_envi)
         java_ast = AstConvertToJavaAstVisitor(ast, global_envi)
+        print("Java AST: ", java_ast.visit(ast, None))
         gc = CodeGenVisitor(java_ast, global_envi, path)
         gc.visit(ast, None)
 
 
-class SubBody():
-    def __init__(self, frame : Frame, sym : list[Symbol]):
-        self.frame : Frame = frame
-        self.sym : list[Symbol] = sym # list of Symbol
 
 
-class Access():
-    def __init__(self, frame, sym, isLeft, isFirst=False):
-        self.frame = frame
-        self.sym = sym
-        self.isLeft = isLeft
-        self.isFirst = isFirst
 
 
-class Val(ABC):
-    pass
 
 
-class Index(Val):
-    def __init__(self, value):
-        self.value = value
 
-
-class ClassName(Val):
-    def __init__(self, value):
-        self.value = value
 
 
 class AstConvertToJavaAstVisitor(BaseVisitor):
@@ -382,7 +366,7 @@ class CodeGenVisitor(BaseVisitor):
     def visitFuncDecl(self, ast : FuncDecl, param):
         print("VisitFuncDecl: ",ast, param)
         
-        return Symbol(ast.name.name, MethodType([self.visit(x) for x in ast.param], ast.returnType), ClassName("MCClass"))
+        return FunctionSymbol(ast.name.name, MethodType([self.visit(x) for x in ast.param], ast.returnType), ClassName("MCClass"))
         
         pass
 
@@ -449,7 +433,7 @@ class CodeGenVisitor(BaseVisitor):
     def visitArrayLiteral(self, ast, param):
         pass
 
-    def visitClassDecl(self, ast : ClassDecl, c : list[Symbol]):
+    def visitClassDecl(self, ast : ClassDecl, c : list[FunctionSymbol]):
         self.className = ast.classname.name
         self.emit = Emitter(self.path+"/" + self.className + ".j")
         self.emit.printout(self.emit.emitPROLOG(
@@ -465,7 +449,7 @@ class CodeGenVisitor(BaseVisitor):
         self.emit.emitEPILOG()
         return c
 
-    def genMETHOD(self, consdecl : MethodDecl, o : list[Symbol], frame : Frame):
+    def genMETHOD(self, consdecl : MethodDecl, o : list[FunctionSymbol], frame : Frame):
         # Check if the method is a constructor or the main method
         isConstructor = consdecl.returnType is None
         isMain = consdecl.name.name == "main" and len(consdecl.param) == 0 and type(consdecl.returnType) is VoidType
@@ -528,7 +512,7 @@ class CodeGenVisitor(BaseVisitor):
     def visitMethodDecl(self, ast : MethodDecl, o : SubBody):
         frame = Frame(ast.name, ast.returnType)
         self.genMETHOD(ast, o.sym, frame)
-        return Symbol(ast.name, MethodType([x.typ for x in ast.param], ast.returnType), ClassName(self.className))
+        return FunctionSymbol(ast.name, MethodType([x.typ for x in ast.param], ast.returnType), ClassName(self.className))
 
     def visitCallStmt(self, ast, o):
         ctxt = o
