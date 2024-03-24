@@ -304,12 +304,77 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         return ast
         
 
-    def visitFuncDecl(self, ast : FuncDecl, param):
+    def visitFuncDecl(self, ast : FuncDecl, param : tuple[Envi,None]):
         print("VisitFuncDecl: ",ast, param)
         
-        return Symbol(ast.name.name, MethodType([self.visit(x) for x in ast.param], ast.returnType), ClassName("MCClass"))
+        (envi, _) = param
+
+        # Get function symbol
+        functionSymbol = self.getSymbol(ast.name, True, envi)
+        name = ast.name.name
+        isDeclared = functionSymbol is not None
+
+        self.visit(ast.name, (envi, ExprParam(False, isDeclared))) # visit function name, check functionSymbol have declared or not
         
-        pass
+        def visitFuncParamAndBody(functionSymbol : FunctionSymbol):
+            parameters : list[VariableSymbol] = []
+
+            #print(len(envi),envi.getLast())
+            envi.append(Scope()) # new scope for function parameters
+
+            if ast.param:
+                for i in range(0,len(ast.param)):
+                    astParam = ast.param[i]
+                    parameterSymbol = self.visit(astParam, (envi, VarDeclParam(False , i)))
+                    parameters.append(parameterSymbol)
+                
+                #print(len(envi),envi.getLast())
+            
+
+            stmtParam = StmtParam(functionSymbol, 0)
+            body = self.visit(ast.body, (envi, stmtParam)) if ast.body else None # declare only or implement function
+            
+            if body: # function has body so it must have a type
+                if functionSymbol.methodType is None:
+                    functionSymbol.methodType = MethodType([x.type for x in parameters],None)
+                
+                if functionSymbol.methodType.rettype is None:
+                    functionSymbol.methodType = MethodType([x.type for x in parameters],VoidType()) 
+                else:
+                    functionSymbol.methodType = MethodType([x.type for x in parameters],functionSymbol.methodType.rettype)
+            else:
+                functionSymbol.methodType = MethodType([x.type for x in parameters],None)
+
+            functionSymbol.param = parameters
+            functionSymbol.body = body
+
+            stmtParam.currentFunctionSymbol = None # pop the scope of function 
+            envi.pop() # pop the scope of function parameters
+
+        
+        if functionSymbol is None: # first declaration of function 
+            
+            functionSymbol = FunctionSymbol(name, MethodType([],None), [], None, ast) # TODO : return type of function
+
+            # Add function to current scope, add it soon because of recursive call
+            envi.getLast().define(functionSymbol) 
+
+            # Visit function parameters and body
+            visitFuncParamAndBody(functionSymbol)
+        
+            return MethodDecl(Instance(), functionSymbol.name, functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body) if functionSymbol.body else None
+
+    
+        elif type(functionSymbol) == FunctionSymbol: # implement the body function
+        
+            # Check for redeclared parameters
+            visitFuncParamAndBody(functionSymbol)
+
+            return MethodDecl(Instance(), functionSymbol.name, functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body)
+    
+        else:
+            pass # Solved in StaticChecker
+        
 
     def visitNumberType(self, ast, param):
         pass
