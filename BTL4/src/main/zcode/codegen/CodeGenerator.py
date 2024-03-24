@@ -280,27 +280,26 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         # Visit variable type
         if ast.modifier == "var":
             varInitType = self.visit(ast.varInit, (envi, ExprParam(True, True))) 
+            varSymbol = VariableSymbol(name, varInitType, varDeclParam.index, varDeclParam.isStatic, ast)
+            current_scope.define(varSymbol)
             
-            current_scope.define(VariableSymbol(name, varInitType))
-        
         elif ast.modifier == "dynamic":  
             varSymbol = VariableSymbol(name, None)  
             if ast.varInit:
                 varInitType = self.visit(ast.varInit, (envi, ExprParam(True, True))) if ast.varInit else None
-                varSymbol = VariableSymbol(name, varInitType)
+                varSymbol = VariableSymbol(name, varInitType, varDeclParam.index, varDeclParam.isStatic, ast)
                 
             current_scope.define(varSymbol)
-
+        
         else: # no modifier
             varType = self.visit(ast.varType, (envi, None))
             
-            symbol = VariableSymbol(name, varType)
+            varSymbol = VariableSymbol(name, varType, varDeclParam.index, varDeclParam.isStatic, ast)
             
-            if ast.varInit:
-                varInitType = self.visit(ast.varInit, (envi, ExprParam(True, True, varType)))
-            
-            current_scope.define(symbol)
-            return symbol
+            current_scope.define(varSymbol)
+
+
+        return ast
         
 
     def visitFuncDecl(self, ast : FuncDecl, param):
