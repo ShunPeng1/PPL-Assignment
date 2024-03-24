@@ -266,10 +266,12 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         return None # No symbol found
 
     def visitProgram(self, ast : Program, c):
-        
-        return ClassDecl(ClassName("ZCode"),[self.visit(i, (self.env, None)) for i in ast.decl])
-    
-    def visitVarDecl(self, ast : VarDecl, param : tuple[Envi,None]):
+        result = []
+        for i in range(len(ast.decl)):
+            result.append(self.visit(ast.decl[i], (self.env, VarDeclParam(True, i))))
+        return ClassDecl(self.className, result)
+
+    def visitVarDecl(self, ast : VarDecl, param : tuple[Envi,VarDeclParam]):
         
         (envi, varDeclParam) = param
         name = ast.name.name
