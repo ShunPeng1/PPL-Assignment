@@ -11,6 +11,24 @@ from typing import List, Union, Tuple
 
 ## Make missing classes
 
+
+
+class Access():
+    def __init__(self, frame, sym, isLeft, isFirst=False):
+        self.frame = frame
+        self.sym = sym
+        self.isLeft = isLeft
+        self.isFirst = isFirst
+
+
+class Val(ABC):
+    pass
+
+
+class Index(Val):
+    def __init__(self, value):
+        self.value = value
+
 class ClassType (Type):
     def __init__(self, ctype):
         self.classname = ctype # Id
@@ -19,10 +37,29 @@ class Instance:
     def __init__(self):
         pass
 
+class ClassName(Val):
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return f"ClassName({self.value})"
+
 class ClassDecl (Decl):
-    def __init__(self, classname : Id, memlist : list[Decl]):
-        self.classname : Id = classname # Id
+    def __init__(self, classname : ClassName, memlist : list[Decl]):
+        self.classname : ClassName = classname # Id
         self.memlist : list[Decl] = memlist # list of Decl
+
+    def __str__(self):
+        memlist_str = ', '.join(str(mem) for mem in self.memlist)
+        return f"ClassDecl({self.classname}, [{memlist_str}] )"
+
+class MethodType(Type):
+    def __init__(self, partype, rettype):
+        self.partype = partype # list of Type
+        self.rettype = rettype # Type
+
+    def __str__(self):
+        return f"MethodType({self.partype}, {self.rettype})"
 
 
 class MethodDecl:
@@ -39,43 +76,54 @@ class MethodDecl:
         self.returnType = returnType # Type
         self.body = body # Block
 
+    def __str__(self):
+        return f"MethodDecl({self.name}, {self.param}, {self.returnType}, {self.body})"
 
 class Symbol:
-    def __init__(self, name, mtype, value=None):
+    def __init__(self, name):
         self.name = name
-        self.mtype = mtype # MethodType
-        self.value = value # Val
 
     def __str__(self):
-        return "Symbol("+self.name+","+str(self.mtype)+")"
-
+        return f"Symbol({self.name})"
 
 class VariableSymbol(Symbol):
-    def __init__(self, name : str, type : Type = None):
+    def __init__(self, name : str, type : Type = None, position = 0, isStatic : bool = False, astVarDecl : VarDecl = None):
         self.name = name
         self.type = type
+        self.position = position
+        self.isStatic = isStatic
+        self.astVarDecl = astVarDecl
 
     def __str__(self):
         return f"VariableSymbol({self.name}, {self.type})"
 
+
 class FunctionSymbol(Symbol):
-    def __init__(self, name: str, type: Type = None, param: List[VariableSymbol] = None, body:Stmt =None):
+    def __init__(self, name, methodType = MethodType([],None), param : list[VariableSymbol] = None, body = None, astFuncDecl=None, className : ClassName = None):
         self.name = name
-        self.type = type # return type of function
-        
+        self.methodType : MethodType = methodType  # MethodType
         if param is None:
             param = []
         self.param = param
+
         self.body = body
+        self.astFuncDecl = astFuncDecl
 
     def __str__(self):
-        return f"FunctionSymbol({self.name}, {self.type}, [{', '.join(str(i) for i in self.param)}], {self.body})"
+        return f"FunctionSymbol({self.name}, {self.methodType})"
+
+   
+class SubBody():
+    def __init__(self, frame : Frame, sym : list[FunctionSymbol]):
+        self.frame : Frame = frame
+        self.sym : list[FunctionSymbol] = sym # list of Symbol
+
 
 class Scope:
     def __init__(self, symbols = None):
         self.symbols = symbols if symbols is not None else []  # Initialize as empty list if None is provided
     
-    def define(self, symbol : Symbol):
+    def define(self, symbol : FunctionSymbol):
         self.symbols.append(symbol)
 
     def __str__(self) -> str:
@@ -90,6 +138,9 @@ class Envi:
 
     def append(self, scope : Scope):
         self.scope.append(scope)
+
+    def pop(self):
+        self.scope.pop()
 
     def next_iterator(self):
         if self.itr < len(self.scope) - 1:
@@ -126,14 +177,25 @@ class ExprParam:
     def __str__(self) -> str:
         return f"IdParam({self.isRHS}, {self.inferredType})"
 
+class VarDeclParam():
+    def __init__(self, isStatic, index):
+        self.isStatic = isStatic
+        self.index = index
+
+
+class StmtParam:
+    def __init__(self, currentFunctionSymbol : FunctionSymbol = None, insideLoopCount : int = 0) -> None:
+        if currentFunctionSymbol is None:
+            currentFunctionSymbol = None
+        self.currentFunctionSymbol = currentFunctionSymbol
+        self.insideLoopCount = 0
+        pass
+       
+        
+    def __str__(self) -> str:
+        pass
 
 ## End of missing classes
-
-
-class MethodType(Type):
-    def __init__(self, partype, rettype):
-        self.partype = partype # list of Type
-        self.rettype = rettype # Type
 
 class CodeGenerator:
     def __init__(self):
