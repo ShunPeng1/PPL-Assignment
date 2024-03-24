@@ -227,17 +227,43 @@ class CodeGenerator:
 
 
 
-
-
-
-
-
-
-
+def getName(symbol : Symbol) -> str:
+    return symbol.name
+    
 class AstConvertToJavaAstVisitor(BaseVisitor):
     def __init__(self, astTree,env):
         self.astTree = astTree
         self.env = env
+        self.className = ClassName("ZCode")
+
+    def lookup(self, name : str, symbols : list[Symbol], getName) -> Symbol:
+        for symbol in symbols:
+            if name == getName(symbol):
+                return symbol
+        return None
+
+    def getSymbol(self, lhs : Union[Id , ArrayCell] , isOnlyLastScope : bool, envi : Envi) -> Symbol:
+        print("getSymbol: ", lhs, envi)
+
+        name = ""
+        if type(lhs) == Id:
+            name = lhs.name
+        elif type(lhs) == ArrayCell:
+            name = lhs.arr.name
+
+
+        if isOnlyLastScope:
+            return self.lookup(name, envi.getLast().symbols, getName)
+
+        for i in range(len(envi) - 1, -1, -1): # from current scope to global scope
+            #print("checkDeclared Scope: ", i, envi[i])
+            symbols = envi[i].symbols # list of Symbol in scope
+           
+            for symbol in symbols:
+                if name == getName(symbol):
+                    return symbol
+
+        return None # No symbol found
 
     def visitProgram(self, ast : Program, c):
         
