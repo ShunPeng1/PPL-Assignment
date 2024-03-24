@@ -38,17 +38,20 @@ class Instance:
         pass
 
 class ClassName(Val):
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, name):
+        self.name = name
 
     def __str__(self):
-        return f"ClassName({self.value})"
+        return f"ClassName({self.name})"
 
 class ClassDecl (Decl):
     def __init__(self, classname : ClassName, memlist : list[Decl]):
         self.classname : ClassName = classname # Id
         self.memlist : list[Decl] = memlist # list of Decl
 
+    def accept(self, visitor, param):
+        return visitor.visitClassDecl(self, param)
+    
     def __str__(self):
         memlist_str = ', '.join(str(mem) for mem in self.memlist)
         return f"ClassDecl({self.classname}, [{memlist_str}] )"
@@ -75,6 +78,9 @@ class MethodDecl:
         self.param = param # list of VarDecl
         self.returnType = returnType # Type
         self.body = body # Block
+
+    def accept(self, visitor, param):
+        return visitor.visitMethodDecl(self, param)
 
     def __str__(self):
         return f"MethodDecl({self.name}, {self.param}, {self.returnType}, {self.body})"
@@ -114,9 +120,12 @@ class FunctionSymbol(Symbol):
 
    
 class SubBody():
-    def __init__(self, frame : Frame, sym : list[FunctionSymbol]):
+    def __init__(self, frame : Frame, sym : list[Symbol]):
         self.frame : Frame = frame
-        self.sym : list[FunctionSymbol] = sym # list of Symbol
+        self.sym : list[Symbol] = sym # list of Symbol
+
+    def __str__(self):
+        return f"SubBody([{', '.join(str(i) for i in self.sym)}])"
 
 
 class Scope:
@@ -133,39 +142,42 @@ class Envi:
     def __init__(self, scope : None):
         if scope is None:
             scope = []
-        self.scope : List[Scope] = scope
+        self.scopes : List[Scope] = scope
         self.itr = len(scope)-1
 
     def append(self, scope : Scope):
-        self.scope.append(scope)
+        self.scopes.append(scope)
 
     def pop(self):
-        self.scope.pop()
+        self.scopes.pop()
 
     def next_iterator(self):
-        if self.itr < len(self.scope) - 1:
+        if self.itr < len(self.scopes) - 1:
             self.itr += 1
-        return self.scope[self.itr]
+        return self.scopes[self.itr]
         
     def previous_iterator(self):
         if self.itr > 0:
             self.itr -= 1
-        return self.scope[self.itr] 
+        return self.scopes[self.itr] 
+
+    def getFirst(self) -> Scope:
+        return self.scopes[0]
 
     def getLast(self) -> Scope:
-        return self.scope[-1]
+        return self.scopes[-1]
 
     def __getitem__(self, index : int):
-        return self.scope[index]
+        return self.scopes[index]
 
     def __setitem__(self, index, value : Scope):
-        self.scope[index] = value
+        self.scopes[index] = value
     
     def __len__(self):
-        return len(self.scope)
+        return len(self.scopes)
 
     def __str__(self) -> str:
-        return f"Environtment({self.scope})"
+        return f"Environtment({self.scopes})"
 
 
 class ExprParam: 
@@ -203,14 +215,14 @@ class CodeGenerator:
 
     def init(self):
         currClassName = ClassName(self.libName)
-        return Envi([Scope([
+        return [
             FunctionSymbol("readNumber", MethodType([], NumberType()), className= currClassName),
             FunctionSymbol("readString", MethodType([], StringType()), className= currClassName),
             FunctionSymbol("readBool", MethodType([], BoolType()), className= currClassName),
             FunctionSymbol("writeNumber", MethodType([NumberType()], VoidType()), className= currClassName),
             FunctionSymbol("writeString", MethodType([StringType()], VoidType()), className= currClassName),
             FunctionSymbol("writeBool", MethodType([BoolType()], VoidType()), className= currClassName),
-        ])])
+        ]
     
 
     def gen(self, ast, path):
@@ -219,10 +231,11 @@ class CodeGenerator:
 
         global_envi = self.init()
         print("Global Envi: ", global_envi)
-        java_ast = AstConvertToJavaAstVisitor(ast, global_envi)
-        print("Java AST: ", java_ast.visit(ast, None))
+        java_ast_visitor = AstConvertToJavaAstVisitor(ast, Envi([Scope(global_envi)]) )
+        java_ast = java_ast_visitor.visit(ast, None)
+        print("Java AST: ", java_ast)
         gc = CodeGenVisitor(java_ast, global_envi, path)
-        gc.visit(ast, None)
+        gc.visit(java_ast, global_envi)
 
 
 
@@ -234,7 +247,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
     def __init__(self, astTree,env):
         self.astTree = astTree
         self.env = env
-        self.className = ClassName("ZCode")
+        self.className = ClassName("ZCodeClass")
 
     def lookup(self, name : str, symbols : list[Symbol], getName) -> Symbol:
         for symbol in symbols:
@@ -362,7 +375,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             # Visit function parameters and body
             visitFuncParamAndBody(functionSymbol)
         
-            return MethodDecl(Instance(), functionSymbol.name, functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body) if functionSymbol.body else None
+            return MethodDecl(Instance(), ast.name , functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body) if functionSymbol.body else None
 
     
         elif type(functionSymbol) == FunctionSymbol: # implement the body function
@@ -456,108 +469,38 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         pass
 
 class CodeGenVisitor(BaseVisitor):
-    def __init__(self, astTree, env, path):
+    def __init__(self, astTree, env : Envi, path):
         self.astTree = astTree
-        self.env = env
+        self.env : Envi = env
         self.path = path
-
-    def visitProgram(self, ast : Program, c):
-        
-        [self.visit(i, c) for i in ast.decl]
-        
-        return c
     
-    def visitVarDecl(self, ast : VarDecl, param):
-        print("VisitVarDecl: ",ast, param)
-        pass
+    def visitClassDecl(self, ast : ClassDecl, globalEnvi : List[FunctionSymbol]):
+        print("VisitClassDecl: ",ast, globalEnvi)
 
-    def visitFuncDecl(self, ast : FuncDecl, param):
-        print("VisitFuncDecl: ",ast, param)
-        
-        return FunctionSymbol(ast.name.name, MethodType([self.visit(x) for x in ast.param], ast.returnType), ClassName("MCClass"))
-        
-        pass
-
-    def visitNumberType(self, ast, param):
-        pass
-
-    def visitBoolType(self, ast, param):
-        pass
-
-    def visitStringType(self, ast, param):
-        pass
-
-    def visitArrayType(self, ast, param):
-        pass
-
-    def visitBinaryOp(self, ast, param):
-        pass
-
-    def visitUnaryOp(self, ast, param):
-        pass
-
-    def visitCallExpr(self, ast, param):
-        pass
-
-    def visitId(self, ast, param):
-        pass
-
-    def visitArrayCell(self, ast, param):
-        pass
-
-    def visitBlock(self, ast, param):
-        pass
-
-    def visitIf(self, ast, param):
-        pass
-
-    def visitFor(self, ast, param):
-        pass
-
-    def visitContinue(self, ast, param):
-        pass
-
-    def visitBreak(self, ast, param):
-        pass
-
-    def visitReturn(self, ast, param):
-        pass
-
-    def visitAssign(self, ast, param):
-        pass
-
-    def visitCallStmt(self, ast, param):
-        pass
-
-    def visitNumberLiteral(self, ast, param):
-        pass
-
-    def visitBooleanLiteral(self, ast, param):
-        pass
-
-    def visitStringLiteral(self, ast, param):
-        pass
-
-    def visitArrayLiteral(self, ast, param):
-        pass
-
-    def visitClassDecl(self, ast : ClassDecl, c : list[FunctionSymbol]):
         self.className = ast.classname.name
         self.emit = Emitter(self.path+"/" + self.className + ".j")
         self.emit.printout(self.emit.emitPROLOG(
             self.className, "java.lang.Object"))
+
+         
+        for ele in ast.memlist:
+            if type(ele) == VarDecl:
+                variableSymbol = self.visit(ele, SubBody(None, globalEnvi))
+                globalEnvi.append(variableSymbol)
+            else:
+                functionSymbol = self.visit(ele, SubBody(None, globalEnvi))
+                globalEnvi.append(functionSymbol)
         
-        # visit all methoddecl
-        [self.visit(ele, SubBody(None, self.env))
-         for ele in ast.memlist if type(ele) == MethodDecl]
         
         # generate default constructor
         self.genMETHOD(MethodDecl(Instance(), Id("<init>"), list(
-        ), None, Block([])), c, Frame("<init>", VoidType()))
+        ), None, Block([])), globalEnvi, Frame("<init>", VoidType()))
         self.emit.emitEPILOG()
-        return c
+        return globalEnvi
 
     def genMETHOD(self, consdecl : MethodDecl, o : list[FunctionSymbol], frame : Frame):
+        print("genMETHOD: ",consdecl, o, frame)
+
         # Check if the method is a constructor or the main method
         isConstructor = consdecl.returnType is None
         isMain = consdecl.name.name == "main" and len(consdecl.param) == 0 and type(consdecl.returnType) is VoidType
@@ -618,9 +561,79 @@ class CodeGenVisitor(BaseVisitor):
         frame.exitScope()
 
     def visitMethodDecl(self, ast : MethodDecl, o : SubBody):
+        print("VisitMethodDecl: ",ast, o)
+
         frame = Frame(ast.name, ast.returnType)
         self.genMETHOD(ast, o.sym, frame)
         return FunctionSymbol(ast.name, MethodType([x.typ for x in ast.param], ast.returnType), ClassName(self.className))
+
+    
+    def visitVarDecl(self, ast : VarDecl, param):
+        print("VisitVarDecl: ",ast, param)
+        pass
+    
+
+    def visitNumberType(self, ast, param):
+        pass
+
+    def visitBoolType(self, ast, param):
+        pass
+
+    def visitStringType(self, ast, param):
+        pass
+
+    def visitArrayType(self, ast, param):
+        pass
+
+    def visitBinaryOp(self, ast, param):
+        pass
+
+    def visitUnaryOp(self, ast, param):
+        pass
+
+    def visitCallExpr(self, ast, param):
+        pass
+
+    def visitId(self, ast, param):
+        pass
+
+    def visitArrayCell(self, ast, param):
+        pass
+
+    def visitBlock(self, ast, param):
+        pass
+
+    def visitIf(self, ast, param):
+        pass
+
+    def visitFor(self, ast, param):
+        pass
+
+    def visitContinue(self, ast, param):
+        pass
+
+    def visitBreak(self, ast, param):
+        pass
+
+    def visitReturn(self, ast, param):
+        pass
+
+    def visitAssign(self, ast, param):
+        pass
+
+    def visitNumberLiteral(self, ast, param):
+        pass
+
+    def visitBooleanLiteral(self, ast, param):
+        pass
+
+    def visitStringLiteral(self, ast, param):
+        pass
+
+    def visitArrayLiteral(self, ast, param):
+        pass
+
+
 
     def visitCallStmt(self, ast, o):
         ctxt = o
