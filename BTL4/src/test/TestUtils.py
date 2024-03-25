@@ -182,8 +182,10 @@ class TestCodeGen():
         dest = open(os.path.join(SOL_DIR, str(num) + ".txt"), "r")
         line = dest.read()
         print("Testcase: ", num)
-        print("line: ", line)
-        print("expect: ", expect)
+        print("Line: ")
+        print(line)
+        print("Expect: ")
+        print(expect)
         return line == expect
 
     @staticmethod

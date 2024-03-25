@@ -62,7 +62,8 @@ class MethodType(Type):
         self.rettype = rettype # Type
 
     def __str__(self):
-        return f"MethodType({self.partype}, {self.rettype})"
+        partype_str = ', '.join(str(i) for i in self.partype)
+        return f"MethodType([{partype_str}], {self.rettype})"
 
 
 class MethodDecl:
@@ -622,17 +623,10 @@ class CodeGenVisitor(BaseVisitor):
     def visitAssign(self, ast, param):
         pass
 
-    def visitNumberLiteral(self, ast, param):
-        pass
-
-    def visitBooleanLiteral(self, ast, param):
-        pass
-
-    def visitStringLiteral(self, ast, param):
-        pass
-
-    def visitArrayLiteral(self, ast, param):
-        pass
+    def visitBinaryOp(self, ast, o):
+        e1c, e1t = self.visit(ast.left, o)
+        e2c, e2t = self.visit(ast.right, o)
+        return e1c + e2c + self.emit.emitADDOP(ast.op, e1t, o.frame), e1t
 
 
 
@@ -648,14 +642,22 @@ class CodeGenVisitor(BaseVisitor):
         for x in ast.args:
             str1, typ1 = self.visit(x, Access(frame, nenv, False, True))
             in_ = (in_[0] + str1, in_[1].append(typ1))
+        
+        print("VisitCallStmt2: ", methodType,in_)
+
         self.emit.printout(in_[0])
         self.emit.printout(self.emit.emitINVOKESTATIC(
             className + "/" + ast.name.name, methodType, frame))
 
-    def visitNumberLiteral(self, ast, o):
+    def visitNumberLiteral(self, ast : NumberLiteral, o : SubBody):
         return self.emit.emitPUSHFCONST(ast.value, o.frame), NumberType()
 
-    def visitBinaryOp(self, ast, o):
-        e1c, e1t = self.visit(ast.left, o)
-        e2c, e2t = self.visit(ast.right, o)
-        return e1c + e2c + self.emit.emitADDOP(ast.op, e1t, o.frame), e1t
+    def visitBooleanLiteral(self, ast : BooleanLiteral, o : SubBody):
+        return self.emit.emitPUSHICONST(str(ast.value).lower(), o.frame), BoolType()
+
+    def visitStringLiteral(self, ast : StringLiteral, o : SubBody):
+        print("VisitStringLiteral: ",ast, o)
+        return self.emit.emitPUSHCONST(ast.value, StringType(), o.frame), StringType()
+
+    def visitArrayLiteral(self, ast, param):
+        pass

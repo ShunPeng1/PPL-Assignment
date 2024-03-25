@@ -170,16 +170,16 @@ public class io {
     */
 
     
-    public static void readNumber() {
-        readFloat();
+    public static float readNumber() {
+        return readFloat();
     }
 
     public static void writeNumber(float f) {
         System.out.print(f+"");
     }
 	
-    public static void readString() {
-        readStr();
+    public static String readString() {
+        return readStr();
     }
 
     public static void writeString(String a) {

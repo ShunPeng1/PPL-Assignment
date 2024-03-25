@@ -22,6 +22,8 @@ class Emitter():
             return "Ljava/lang/String;"
         elif type(inType) is VoidType:
             return "V"
+        elif type(inType) is BoolType:
+            return "Z"
         elif type(inType) is ArrayType:
             return "[" + self.getJVMType(inType.eleType)
         elif type(inType) is cgen.MethodType:
@@ -82,11 +84,11 @@ class Emitter():
         # typ: Type
         # frame: Frame
 
-        if type(typ) is IntType:
+        if type(typ) is NumberType:
             return self.emitPUSHICONST(in_, frame)
         elif type(typ) is StringType:
             frame.push()
-            return self.jvm.emitLDC(in_)
+            return self.jvm.emitLDC("\""+in_+"\"")
         else:
             raise IllegalOperandException(in_)
 
