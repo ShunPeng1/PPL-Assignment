@@ -14,7 +14,7 @@ from ASTGeneration import ASTGeneration
 # from StaticError import *
 from CodeGenerator import CodeGenerator
 import subprocess
-
+import shutil
 JASMIN_JAR = "./external/jasmin.jar"
 TEST_DIR = "./test/testcases/"
 SOL_DIR = "./test/solutions/"
@@ -181,6 +181,9 @@ class TestCodeGen():
 
         dest = open(os.path.join(SOL_DIR, str(num) + ".txt"), "r")
         line = dest.read()
+        print("Testcase: ", num)
+        print("line: ", line)
+        print("expect: ", expect)
         return line == expect
 
     @staticmethod
@@ -193,11 +196,16 @@ class TestCodeGen():
         try:
             codeGen.gen(asttree, path)
 
+            # Move the .j file to the desired directory
+            #shutil.move(path + "/ZCodeClass.j", "BTL4/src/lib/ZCodeClass.j")
+
             subprocess.call("java  -jar " + JASMIN_JAR + " " + path +
                             "/ZCodeClass.j", shell=True, stderr=subprocess.STDOUT)
-
-            subprocess.run("java -cp ./lib:. ZCodeClass",
+            print("java  -jar " + JASMIN_JAR + " " + path + "/ZCodeClass.j")
+            #subprocess.run("java -cp ./lib:. ZCodeClass",
+            subprocess.run("java -cp . ZCodeClass",           
                            shell=True, stdout=f, timeout=10)
+            print("java -cp . ZCodeClass")
         except StaticError as e:
             f.write(str(e))
         except subprocess.TimeoutExpired:
@@ -207,3 +215,4 @@ class TestCodeGen():
                 e.cmd, e.returncode, e.output))
         finally:
             f.close()
+            print("f.close()!")
