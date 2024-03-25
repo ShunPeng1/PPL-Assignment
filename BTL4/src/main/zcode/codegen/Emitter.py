@@ -1,9 +1,11 @@
+from CodeGenError import IllegalOperandException
 from Utils import *
 # from StaticCheck import *
 # from StaticError import *
 import CodeGenerator as cgen
 from MachineCode import JasminCode
 from AST import *
+from Frame import Frame 
 
 
 class Emitter():
@@ -13,18 +15,18 @@ class Emitter():
         self.jvm = JasminCode()
 
     def getJVMType(self, inType):
-        typeIn = type(inType)
-        if typeIn is NumberType:
+        
+        if type(inType) is NumberType:
             return "F"
-        elif typeIn is StringType:
+        elif type(inType) is StringType:
             return "Ljava/lang/String;"
-        elif typeIn is VoidType:
+        elif type(inType) is VoidType:
             return "V"
-        elif typeIn is ArrayType:
+        elif type(inType) is ArrayType:
             return "[" + self.getJVMType(inType.eleType)
-        elif typeIn is cgen.MethodType:
+        elif type(inType) is cgen.MethodType:
             return "(" + "".join(list(map(lambda x: self.getJVMType(x), inType.partype))) + ")" + self.getJVMType(inType.rettype)
-        elif typeIn is ClassType:
+        elif type(inType) is cgen.ClassType:
             return "L" + inType.classname.name + ";"
 
     def getFullType(inType):
@@ -67,7 +69,7 @@ class Emitter():
         if rst == "0.0" or rst == "1.0" or rst == "2.0":
             return self.jvm.emitFCONST(rst)
         else:
-            return self.jvm.emitLDC(in_)
+            return self.jvm.emitLDC(str(in_))
 
     ''' 
     *    generate code to push a constant onto the operand stack.
@@ -136,7 +138,8 @@ class Emitter():
         # toLabel: Int
         # frame: Frame
 
-        return self.jvm.emitVAR(in_, varName, self.getJVMType(inType), fromLabel, toLabel)
+        returnType = self.getJVMType(inType) if inType is not None else "V"
+        return self.jvm.emitVAR(in_, varName, returnType, fromLabel, toLabel)
 
     def emitREADVAR(self, name, inType, index, frame):
         # name: String
@@ -146,10 +149,10 @@ class Emitter():
         # ... -> ..., value
 
         frame.push()
-        if type(inType) is IntType:
+        if type(inType) is NumberType:
             return self.jvm.emitILOAD(index)
         # elif type(inType) is cgen.ArrayPointerType or type(inType) is cgen.ClassType or type(inType) is StringType:
-        elif type(inType) is ClassType or type(inType) is StringType:
+        elif type(inType) is cgen.ClassType or type(inType) is StringType:
             return self.jvm.emitALOAD(index)
         else:
             raise IllegalOperandException(name)
@@ -253,7 +256,7 @@ class Emitter():
     *   @param in the type descriptor of the method.
     '''
 
-    def emitINVOKESTATIC(self, lexeme, in_, frame):
+    def emitINVOKESTATIC(self, lexeme, in_ , frame : Frame):
         # lexeme: String
         # in_: Type
         # frame: Frame
@@ -590,7 +593,7 @@ class Emitter():
         # in_: Type
         # frame: Frame
 
-        if type(in_) is IntType:
+        if type(in_) is NumberType:
             frame.pop()
             return self.jvm.emitIRETURN()
         elif type(in_) is VoidType:

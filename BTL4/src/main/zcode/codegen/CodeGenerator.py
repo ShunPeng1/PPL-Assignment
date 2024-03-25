@@ -31,7 +31,7 @@ class Index(Val):
 
 class ClassType (Type):
     def __init__(self, ctype):
-        self.classname = ctype # Id
+        self.classname = ctype # ClassType
 
 class Instance:
     def __init__(self):
@@ -105,7 +105,7 @@ class VariableSymbol(Symbol):
 
 
 class FunctionSymbol(Symbol):
-    def __init__(self, name, methodType = MethodType([],None), param : list[VariableSymbol] = None, body = None, astFuncDecl=None, className : ClassName = None):
+    def __init__(self, name, methodType = MethodType([],None), className : ClassName = None, param : list[VariableSymbol] = None, body = None, astFuncDecl=None):
         self.name = name
         self.methodType : MethodType = methodType  # MethodType
         if param is None:
@@ -114,6 +114,7 @@ class FunctionSymbol(Symbol):
 
         self.body = body
         self.astFuncDecl = astFuncDecl
+        self.className = className
 
     def __str__(self):
         return f"FunctionSymbol({self.name}, {self.methodType})"
@@ -216,12 +217,12 @@ class CodeGenerator:
     def init(self):
         currClassName = ClassName(self.libName)
         return [
-            FunctionSymbol("readNumber", MethodType([], NumberType()), className= currClassName),
-            FunctionSymbol("readString", MethodType([], StringType()), className= currClassName),
-            FunctionSymbol("readBool", MethodType([], BoolType()), className= currClassName),
-            FunctionSymbol("writeNumber", MethodType([NumberType()], VoidType()), className= currClassName),
-            FunctionSymbol("writeString", MethodType([StringType()], VoidType()), className= currClassName),
-            FunctionSymbol("writeBool", MethodType([BoolType()], VoidType()), className= currClassName),
+            FunctionSymbol("readNumber", MethodType([], NumberType()), currClassName),
+            FunctionSymbol("readString", MethodType([], StringType()), currClassName),
+            FunctionSymbol("readBool", MethodType([], BoolType()), currClassName),
+            FunctionSymbol("writeNumber", MethodType([NumberType()], VoidType()), currClassName),
+            FunctionSymbol("writeString", MethodType([StringType()], VoidType()), currClassName),
+            FunctionSymbol("writeBool", MethodType([BoolType()], VoidType()), currClassName),
         ]
     
 
@@ -367,7 +368,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         
         if functionSymbol is None: # first declaration of function 
             
-            functionSymbol = FunctionSymbol(name, MethodType([],None), [], None, ast) # TODO : return type of function
+            functionSymbol = FunctionSymbol(name, MethodType([],None), self.className, [], None, ast) # TODO : return type of function
 
             # Add function to current scope, add it soon because of recursive call
             envi.getLast().define(functionSymbol) 
@@ -635,20 +636,21 @@ class CodeGenVisitor(BaseVisitor):
 
 
 
-    def visitCallStmt(self, ast, o):
+    def visitCallStmt(self, ast : CallStmt, o : SubBody):
+        print("VisitCallStmt: ",ast, o)
         ctxt = o
         frame = ctxt.frame
         nenv = ctxt.sym
-        sym = next(filter(lambda x: ast.method.name == x.name, nenv), None)
-        cname = sym.value.value
-        ctype = sym.mtype
+        functionSymbol : FunctionSymbol = next(filter(lambda x: ast.name.name == x.name, nenv), None)
+        className = functionSymbol.className.name
+        methodType = functionSymbol.methodType
         in_ = ("", list())
-        for x in ast.param:
+        for x in ast.args:
             str1, typ1 = self.visit(x, Access(frame, nenv, False, True))
             in_ = (in_[0] + str1, in_[1].append(typ1))
         self.emit.printout(in_[0])
         self.emit.printout(self.emit.emitINVOKESTATIC(
-            cname + "/" + ast.method.name, ctype, frame))
+            className + "/" + ast.name.name, methodType, frame))
 
     def visitNumberLiteral(self, ast, o):
         return self.emit.emitPUSHFCONST(ast.value, o.frame), NumberType()
