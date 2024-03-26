@@ -907,8 +907,6 @@ class CodeGenVisitor(BaseVisitor):
     def visitArrayType(self, ast, param):
         pass
 
-    def visitUnaryOp(self, ast, param):
-        pass
 
     def visitArrayCell(self, ast, param):
         pass
@@ -935,10 +933,56 @@ class CodeGenVisitor(BaseVisitor):
         pass
 
 
-    def visitBinaryOp(self, ast, o):
-        e1c, e1t = self.visit(ast.left, o)
-        e2c, e2t = self.visit(ast.right, o)
-        return e1c + e2c + self.emit.emitADDOP(ast.op, e1t, o.frame), e1t
+    def visitUnaryOp(self, ast : UnaryOp, o : Access):
+        exprEmit, exprType = self.visit(ast.operand, o)
+        if ast.op == "-":
+            return exprEmit + self.emit.emitNEGOP(exprType, o.frame), exprType
+        elif ast.op == "not":
+            return exprEmit + self.emit.emitNOT(exprType, o.frame), exprType
+        else:
+            pass
+
+
+    def visitBinaryOp(self, ast : BinaryOp, o : Access):
+        leftEmit, leftType = self.visit(ast.left, o)
+        rightEmit, rightType = self.visit(ast.right, o)
+        
+        if ast.op == "+":
+            return leftEmit + rightEmit + self.emit.emitADDOP(ast.op, leftType, o.frame), leftType
+        elif ast.op == "-":
+            return leftEmit + rightEmit + self.emit.emitADDOP(ast.op, leftType, o.frame), leftType
+        elif ast.op == "*":
+            return leftEmit + rightEmit + self.emit.emitMULOP(ast.op, leftType, o.frame), leftType
+        elif ast.op == "/":
+            return leftEmit + rightEmit + self.emit.emitMULOP(ast.op, leftType, o.frame), leftType
+        elif ast.op == "%":
+            return leftEmit + rightEmit + self.emit.emitMOD(ast.op, leftType, o.frame), leftType
+        
+        elif ast.op == ">":
+            return leftEmit + rightEmit + self.emit.emitREOP(ast.op, leftType, o.frame), BoolType()
+        elif ast.op == ">=":
+            return leftEmit + rightEmit + self.emit.emitREOP(ast.op, leftType, o.frame), BoolType()
+        elif ast.op == "<":
+            return leftEmit + rightEmit + self.emit.emitREOP(ast.op, leftType, o.frame), BoolType()
+        elif ast.op == "<=":
+            return leftEmit + rightEmit + self.emit.emitREOP(ast.op, leftType, o.frame), BoolType()
+        elif ast.op == "=":
+            return leftEmit + rightEmit + self.emit.emitREOP(ast.op, leftType, o.frame), BoolType()
+        elif ast.op == "!=":
+            return leftEmit + rightEmit + self.emit.emitREOP(ast.op, leftType, o.frame), BoolType()
+        
+        elif ast.op == "and":
+            return leftEmit + rightEmit + self.emit.emitANDOP(o.frame), BoolType()
+        elif ast.op == "or":
+            return leftEmit + rightEmit + self.emit.emitOROP(o.frame), BoolType()
+        
+        elif ast.op == "...":
+            return leftEmit + rightEmit + self.emit.emitConcatStrings(o.frame), StringType()
+        elif ast.op == "==":
+            return leftEmit + rightEmit + self.emit.emitCompareStrings(o.frame), BoolType()
+        
+        else:
+            pass
 
 
 

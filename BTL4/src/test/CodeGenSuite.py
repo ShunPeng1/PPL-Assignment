@@ -53,4 +53,14 @@ class CheckCodeGenSuite(unittest.TestCase):
         """
         expect = "1.0"
         #self.assertTrue(TestCodeGen.test(input, expect, 504))
-        
+    
+    def test_binary_binary_op_1(self):
+        input = """func main ()
+        begin
+            writeNumber(1 + 2)
+        end
+        """
+        expect = "3.0"
+        self.assertTrue(TestCodeGen.test(input, expect, 505))
+
+    

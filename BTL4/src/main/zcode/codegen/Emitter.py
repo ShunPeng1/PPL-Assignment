@@ -324,7 +324,7 @@ class Emitter():
         # ..., value -> ..., result
 
         if type(in_) is NumberType:
-            return self.jvm.emitINEG()
+            return self.jvm.emitFNEG()
         else:
             return self.jvm.emitFNEG()
 
@@ -335,12 +335,12 @@ class Emitter():
         label1 = frame.getNewLabel()
         label2 = frame.getNewLabel()
         result = list()
-        result.append(emitIFTRUE(label1, frame))
-        result.append(emitPUSHCONST("true", in_, frame))
-        result.append(emitGOTO(label2, frame))
-        result.append(emitLABEL(label1, frame))
-        result.append(emitPUSHCONST("false", in_, frame))
-        result.append(emitLABEL(label2, frame))
+        result.append(self.emitIFTRUE(label1, frame))
+        result.append(self.emitPUSHCONST("true", BoolType(), frame))
+        result.append(self.emitGOTO(label2, frame))
+        result.append(self.emitLABEL(label1, frame))
+        result.append(self.emitPUSHCONST("false", BoolType(), frame))
+        result.append(self.emitLABEL(label2, frame))
         return ''.join(result)
 
     '''
@@ -358,12 +358,12 @@ class Emitter():
         frame.pop()
         if lexeme == "+":
             if type(in_) is NumberType:
-                return self.jvm.emitIADD()
+                return self.jvm.emitFADD()
             else:
                 return self.jvm.emitFADD()
         else:
             if type(in_) is NumberType:
-                return self.jvm.emitISUB()
+                return self.jvm.emitFSUB()
             else:
                 return self.jvm.emitFSUB()
 
@@ -382,12 +382,12 @@ class Emitter():
         frame.pop()
         if lexeme == "*":
             if type(in_) is NumberType:
-                return self.jvm.emitIMUL()
+                return self.jvm.emitFMUL()
             else:
                 return self.jvm.emitFMUL()
         else:
             if type(in_) is NumberType:
-                return self.jvm.emitIDIV()
+                return self.jvm.emitFDIV()
             else:
                 return self.jvm.emitFDIV()
 
@@ -423,6 +423,22 @@ class Emitter():
         frame.pop()
         return self.jvm.emitIOR()
 
+    def emitCompareStrings(self, frame):
+        # frame: Frame
+        # ..., string1, string2 -> ..., result
+
+        frame.pop()
+        frame.pop()
+        return self.emitINVOKEVIRTUAL("java/lang/String", "equals", "(Ljava/lang/Object;)Z", frame)
+
+    def emitConcatStrings(self, frame):
+    # frame: Frame
+    # ..., string1, string2 -> ..., result
+
+        frame.pop()
+        frame.pop()
+        return self.emitINVOKEVIRTUAL("java/lang/String", "concat", "(Ljava/lang/String;)Ljava/lang/String;", frame)
+
     def emitREOP(self, op, in_, frame):
         # op: String
         # in_: Type
@@ -445,13 +461,14 @@ class Emitter():
             result.append(self.jvm.emitIFICMPGT(labelF))
         elif op == "!=":
             result.append(self.jvm.emitIFICMPEQ(labelF))
-        elif op == "==":
+        elif op == "=":
             result.append(self.jvm.emitIFICMPNE(labelF))
-        result.append(self.emitPUSHCONST("1", NumberType(), frame))
+    
+        result.append(self.emitPUSHCONST("true", BoolType(), frame))
         frame.pop()
         result.append(self.emitGOTO(labelO, frame))
         result.append(self.emitLABEL(labelF, frame))
-        result.append(self.emitPUSHCONST("0", NumberType(), frame))
+        result.append(self.emitPUSHCONST("false", BoolType(), frame))
         result.append(self.emitLABEL(labelO, frame))
         return ''.join(result)
 
@@ -478,7 +495,7 @@ class Emitter():
             result.append(self.jvm.emitIFICMPGT(falseLabel))
         elif op == "!=":
             result.append(self.jvm.emitIFICMPEQ(falseLabel))
-        elif op == "==":
+        elif op == "=":
             result.append(self.jvm.emitIFICMPNE(falseLabel))
         result.append(self.jvm.emitGOTO(trueLabel))
         return ''.join(result)
