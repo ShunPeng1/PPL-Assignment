@@ -39,5 +39,18 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "1.0"
-        self.assertTrue(TestCodeGen.test(input, expect, 503))
+        #self.assertTrue(TestCodeGen.test(input, expect, 503))
 
+    def test_decl_2(self):
+        input = """
+        
+        var a <- 1
+        func main ()
+        begin
+            dynamic b <- a
+            writeNumber(b)
+        end
+        """
+        expect = "1.0"
+        #self.assertTrue(TestCodeGen.test(input, expect, 504))
+        

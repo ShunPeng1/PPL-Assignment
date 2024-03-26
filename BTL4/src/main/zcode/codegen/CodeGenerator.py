@@ -779,9 +779,16 @@ class CodeGenVisitor(BaseVisitor):
         self.emit.printout(self.emit.emitPROLOG(
             self.className, "java.lang.Object"))
 
-         
+        # generate class static init
+        staticAttributeDecl = list(filter(lambda x: type(x) == AttributeDecl and x.isStatic, ast.memlist))
+
+        self.genMETHOD(MethodDecl(Instance(), Id("<clinit>"), list(), VoidType(), Block(staticAttributeDecl)), globalEnvi, Frame("<clinit>", VoidType()))
+
+        # generate static classes
         for symbol in ast.memlist:
-            self.visit(symbol, SubBody(None, globalEnvi))
+            if type(symbol) == MethodDecl:
+                self.visit(symbol, SubBody(None, globalEnvi))
+            
             
         
         # generate default constructor
@@ -790,7 +797,7 @@ class CodeGenVisitor(BaseVisitor):
         self.emit.emitEPILOG()
         return globalEnvi
 
-    def genMETHOD(self, consdecl : MethodDecl, o : list[FunctionSymbol], frame : Frame):
+    def genMETHOD(self, consdecl : MethodDecl, o : list[Symbol], frame : Frame):
         print("genMETHOD: ",consdecl, o, frame)
 
         # Check if the method is a constructor or the main method
@@ -866,22 +873,24 @@ class CodeGenVisitor(BaseVisitor):
         print("visitAttributeDecl: ",ast, o)
 
         isStatic = ast.isStatic
-
-        if isStatic:
+        variableSymbol = None
+        if isStatic: # static variable
             self.emit.printout(self.emit.emitATTRIBUTE(ast.name.name, ast.varType, False, None))
-        
+            variableSymbol = VariableSymbol(ast.name.name, ast.varType, 0, isStatic, ast)
+
         else: # local variable
             idx = o.frame.getNewIndex()
-
-            initEmit, initType = self.visit(ast.varInit, Access(o.frame, o.sym, True, False))
-            self.emit.printout(initEmit)
-            #self.emit.printout(self.emit.emitPUSHCONST(idx, ast.varType, o.frame))
-            
             variableSymbol = VariableSymbol(ast.name.name, ast.varType, idx, isStatic, ast)
-            o.sym.append(variableSymbol)
+        
 
-            leftEmit, leftType = self.visit(ast.name, Access(o.frame, o.sym, True, False))
-            self.emit.printout(leftEmit)
+        initEmit, initType = self.visit(ast.varInit, Access(o.frame, o.sym, False, False))
+        self.emit.printout(initEmit)
+        #self.emit.printout(self.emit.emitPUSHCONST(idx, ast.varType, o.frame))
+        
+        o.sym.append(variableSymbol)
+
+        leftEmit, leftType = self.visit(ast.name, Access(o.frame, o.sym, True, False))
+        self.emit.printout(leftEmit)
         
         return variableSymbol
     
@@ -981,25 +990,26 @@ class CodeGenVisitor(BaseVisitor):
     def visitId(self, ast : Id, param : Access):
         print("VisitId: ",ast, param)
         
-        if param.isLeft :
-            ctxt = param
-            frame = ctxt.frame
-            nenv = ctxt.sym
-            symbol : VariableSymbol = next(filter(lambda x: ast.name == x.name, nenv), None)
-            idx = symbol.idx
-            typ = symbol.type
-            return self.emit.emitWRITEVAR(ast.name, typ, idx, frame), typ
-       
-       
-        elif not param.isLeft:
-            ctxt = param
-            frame = ctxt.frame
-            nenv = ctxt.sym
-            symbol : VariableSymbol = next(filter(lambda x: ast.name == x.name, nenv), None)
-            idx = symbol.idx
-            typ = symbol.type
-            return self.emit.emitREADVAR(ast.name, typ, idx, frame), typ
+        ctxt = param
+        frame = ctxt.frame
+        nenv = ctxt.sym
+        symbol : VariableSymbol = next(filter(lambda x: ast.name == x.name, nenv), None)
+        idx = symbol.idx
+        typ = symbol.type
+        
+        if symbol.isStatic:
+            if param.isLeft:
+                return self.emit.emitPUTSTATIC(ast.name, typ, frame), typ
+            else:
+                return self.emit.emitGETSTATIC(ast.name, typ, frame), typ
+        else:
+            if param.isLeft :
+                return self.emit.emitWRITEVAR(ast.name, typ, idx, frame), typ
+            else :
+                return self.emit.emitREADVAR(ast.name, typ, idx, frame), typ
 
+       
+            
     def visitNumberLiteral(self, ast : NumberLiteral, o : Access):
         return self.emit.emitPUSHFCONST(ast.value, o.frame), NumberType()
 
