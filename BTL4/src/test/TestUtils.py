@@ -217,4 +217,3 @@ class TestCodeGen():
                 e.cmd, e.returncode, e.output))
         finally:
             f.close()
-            print("f.close()!")
