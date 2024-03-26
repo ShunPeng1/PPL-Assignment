@@ -40,3 +40,4 @@ class CheckCodeGenSuite(unittest.TestCase):
         """
         expect = "1.0"
         self.assertTrue(TestCodeGen.test(input, expect, 503))
+

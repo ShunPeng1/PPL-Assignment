@@ -56,7 +56,7 @@ class MethodType(Type):
         return f"MethodType([{partype_str}], {self.rettype})"
 
 
-class MethodDecl:
+class MethodDecl(Decl):
     # instance: Instance
     # name: Id
     # param: list[VarDecl]
@@ -76,6 +76,21 @@ class MethodDecl:
     def __str__(self):
         return f"MethodDecl({self.name}, {self.param}, {self.returnType}, {self.body})"
 
+class AttributeDecl(Decl):
+    def __init__(self, isStatic, name, varType, idx, varInit):
+        self.isStatic = isStatic
+        self.name = name # Id
+        self.varType = varType
+        self.idx = idx
+        self.varInit = varInit # Block
+
+    def accept(self, visitor, param):
+        return visitor.visitAttributeDecl(self, param)
+
+    def __str__(self):
+        return f"AttributeDecl({self.name}, {self.idx}, {self.varType}, {self.varInit})"
+        
+
 class Symbol:
     def __init__(self, name):
         self.name = name
@@ -84,10 +99,10 @@ class Symbol:
         return f"Symbol({self.name})"
 
 class VariableSymbol(Symbol):
-    def __init__(self, name : str, type : Type = None, position = 0, isStatic : bool = False, astVarDecl : VarDecl = None):
+    def __init__(self, name : str, type : Type = None, idx = 0, isStatic : bool = False, astVarDecl : VarDecl = None):
         self.name = name
         self.type = type
-        self.position = position
+        self.idx = idx
         self.isStatic = isStatic
         self.astVarDecl = astVarDecl
 
@@ -121,11 +136,11 @@ class SubBody():
 
 
 class Access():
-    def __init__(self,  frame : Frame, sym : list[Symbol], isLeft, isFirst=False):
+    def __init__(self,  frame : Frame, sym : list[Symbol], isLeft, isDeclared=False):
         self.frame : Frame = frame
         self.sym : list[Symbol] = sym # list of Symbol
         self.isLeft = isLeft
-        self.isFirst = isFirst
+        self.isDeclared = isDeclared
 
 
 class Scope:
@@ -296,7 +311,10 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         if ast.modifier == "var":
             varInitType = self.visit(ast.varInit, (envi, ExprParam(True, True))) 
             varSymbol = VariableSymbol(name, varInitType, varDeclParam.index, varDeclParam.isStatic, ast)
+            attributeDecl = AttributeDecl(varDeclParam.isStatic, ast.name, varInitType, varDeclParam.index, ast.varInit)
+            
             current_scope.define(varSymbol)
+            return attributeDecl
             
         elif ast.modifier == "dynamic":  
             varSymbol = VariableSymbol(name, None)  
@@ -304,17 +322,20 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
                 varInitType = self.visit(ast.varInit, (envi, ExprParam(True, True))) if ast.varInit else None
                 varSymbol = VariableSymbol(name, varInitType, varDeclParam.index, varDeclParam.isStatic, ast)
                 
+            attributeDecl = AttributeDecl(varDeclParam.isStatic, ast.name, varSymbol.type, varDeclParam.index, ast.varInit)
+            
             current_scope.define(varSymbol)
+            return attributeDecl
         
         else: # no modifier
             varType = self.visit(ast.varType, (envi, None))
             
             varSymbol = VariableSymbol(name, varType, varDeclParam.index, varDeclParam.isStatic, ast)
-            
+            attributeDecl = AttributeDecl(varDeclParam.isStatic, ast.name, varType, varDeclParam.index, ast.varInit)
+
             current_scope.define(varSymbol)
+            return attributeDecl
 
-
-        return ast
         
 
     def visitFuncDecl(self, ast : FuncDecl, param : tuple[Envi,None]):
@@ -511,8 +532,8 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
                         return symbol.type
                     elif type(symbol) is FunctionSymbol:
                         return symbol.methodType.rettype
-
-        raise Exception("Id not found in enviroment")
+        else:
+            raise Exception("Id not found in enviroment")
 
 
     def visitArrayCell(self, ast : ArrayCell, param : Tuple[Envi, ExprParam]):
@@ -544,18 +565,18 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
         envi.append(Scope())
 
+        stmts = []
         i = 0
         for stmt in ast.stmt:
             if type(stmt) == VarDecl:
-                self.visit(stmt, (envi, VarDeclParam(False, i)))
+                stmts = stmts + [self.visit(stmt, (envi, VarDeclParam(False, i)))]
                 i += 1
             else:
-                self.visit(stmt, (envi, stmtParam))
+                stmts = stmts + [self.visit(stmt, (envi, stmtParam))]
 
         envi.pop()
 
-
-        return ast 
+        return Block(stmts) 
 
     def visitIf(self, ast : If, param : Tuple[Envi, StmtParam]):
         #print("Visit If: ", ast)
@@ -662,20 +683,21 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
     
     def visitCallStmt(self, ast : CallStmt, param : Tuple[Envi, StmtParam]):
-        #print("Call Stmt: ",ast)
+        #print("Call Stmt: ",ast, )
 
         (envi, stmtParam) = param
 
         self.visit(ast.name, (envi, ExprParam( True, True)))
         functionSymbol : FunctionSymbol = self.getSymbol(ast.name, False, envi)
-
+        
+        print("Call Stmt: ",ast, functionSymbol, len(ast.args))
 
         for i in range(len(ast.args)):
-            symbolParamType = functionSymbol.param[i].type
+            symbolParamType = functionSymbol.methodType.partype[i]
             callParamType = self.visit(ast.args[i], (envi, ExprParam( True, True, symbolParamType)))
 
-        if functionSymbol.type is None: # function declared-only
-            functionSymbol.type = VoidType()
+        if functionSymbol.methodType.rettype is None: # function declared-only
+            functionSymbol.methodType.rettype = VoidType()
           
         return ast
 
@@ -758,14 +780,9 @@ class CodeGenVisitor(BaseVisitor):
             self.className, "java.lang.Object"))
 
          
-        for ele in ast.memlist:
-            if type(ele) == VarDecl:
-                variableSymbol = self.visit(ele, SubBody(None, globalEnvi))
-                globalEnvi.append(variableSymbol)
-            else:
-                functionSymbol = self.visit(ele, SubBody(None, globalEnvi))
-                globalEnvi.append(functionSymbol)
-        
+        for symbol in ast.memlist:
+            self.visit(symbol, SubBody(None, globalEnvi))
+            
         
         # generate default constructor
         self.genMETHOD(MethodDecl(Instance(), Id("<init>"), list(
@@ -840,12 +857,33 @@ class CodeGenVisitor(BaseVisitor):
 
         frame = Frame(ast.name, ast.returnType)
         self.genMETHOD(ast, o.sym, frame)
-        return FunctionSymbol(ast.name, MethodType([x.typ for x in ast.param], ast.returnType), ClassName(self.className))
+        functionSymbol = FunctionSymbol(ast.name, MethodType([x.typ for x in ast.param], ast.returnType), ClassName(self.className))
+        o.sym.append(functionSymbol)
+        return functionSymbol
 
     
-    def visitVarDecl(self, ast : VarDecl, param):
-        print("VisitVarDecl: ",ast, param)
-        pass
+    def visitAttributeDecl(self, ast : AttributeDecl, o : SubBody):
+        print("visitAttributeDecl: ",ast, o)
+
+        isStatic = ast.isStatic
+
+        if isStatic:
+            self.emit.printout(self.emit.emitATTRIBUTE(ast.name.name, ast.varType, False, None))
+        
+        else: # local variable
+            idx = o.frame.getNewIndex()
+
+            initEmit, initType = self.visit(ast.varInit, Access(o.frame, o.sym, True, False))
+            self.emit.printout(initEmit)
+            #self.emit.printout(self.emit.emitPUSHCONST(idx, ast.varType, o.frame))
+            
+            variableSymbol = VariableSymbol(ast.name.name, ast.varType, idx, isStatic, ast)
+            o.sym.append(variableSymbol)
+
+            leftEmit, leftType = self.visit(ast.name, Access(o.frame, o.sym, True, False))
+            self.emit.printout(leftEmit)
+        
+        return variableSymbol
     
 
     def visitNumberType(self, ast, param):
@@ -861,9 +899,6 @@ class CodeGenVisitor(BaseVisitor):
         pass
 
     def visitUnaryOp(self, ast, param):
-        pass
-
-    def visitId(self, ast, param):
         pass
 
     def visitArrayCell(self, ast, param):
@@ -889,6 +924,7 @@ class CodeGenVisitor(BaseVisitor):
 
     def visitAssign(self, ast, param):
         pass
+
 
     def visitBinaryOp(self, ast, o):
         e1c, e1t = self.visit(ast.left, o)
@@ -940,6 +976,29 @@ class CodeGenVisitor(BaseVisitor):
             className + "/" + ast.name.name, methodType, frame))
         
         return in_[0], methodType.rettype
+
+    
+    def visitId(self, ast : Id, param : Access):
+        print("VisitId: ",ast, param)
+        
+        if param.isLeft :
+            ctxt = param
+            frame = ctxt.frame
+            nenv = ctxt.sym
+            symbol : VariableSymbol = next(filter(lambda x: ast.name == x.name, nenv), None)
+            idx = symbol.idx
+            typ = symbol.type
+            return self.emit.emitWRITEVAR(ast.name, typ, idx, frame), typ
+       
+       
+        elif not param.isLeft:
+            ctxt = param
+            frame = ctxt.frame
+            nenv = ctxt.sym
+            symbol : VariableSymbol = next(filter(lambda x: ast.name == x.name, nenv), None)
+            idx = symbol.idx
+            typ = symbol.type
+            return self.emit.emitREADVAR(ast.name, typ, idx, frame), typ
 
     def visitNumberLiteral(self, ast : NumberLiteral, o : Access):
         return self.emit.emitPUSHFCONST(ast.value, o.frame), NumberType()
