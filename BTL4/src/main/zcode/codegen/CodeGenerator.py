@@ -11,16 +11,6 @@ from typing import List, Union, Tuple
 
 ## Make missing classes
 
-
-
-class Access():
-    def __init__(self, frame, sym, isLeft, isFirst=False):
-        self.frame = frame
-        self.sym = sym
-        self.isLeft = isLeft
-        self.isFirst = isFirst
-
-
 class Val(ABC):
     pass
 
@@ -128,6 +118,14 @@ class SubBody():
 
     def __str__(self):
         return f"SubBody([{', '.join(str(i) for i in self.sym)}])"
+
+
+class Access():
+    def __init__(self,  frame : Frame, sym : list[Symbol], isLeft, isFirst=False):
+        self.frame : Frame = frame
+        self.sym : list[Symbol] = sym # list of Symbol
+        self.isLeft = isLeft
+        self.isFirst = isFirst
 
 
 class Scope:
@@ -587,13 +585,7 @@ class CodeGenVisitor(BaseVisitor):
     def visitArrayType(self, ast, param):
         pass
 
-    def visitBinaryOp(self, ast, param):
-        pass
-
     def visitUnaryOp(self, ast, param):
-        pass
-
-    def visitCallExpr(self, ast, param):
         pass
 
     def visitId(self, ast, param):
@@ -638,24 +630,49 @@ class CodeGenVisitor(BaseVisitor):
         functionSymbol : FunctionSymbol = next(filter(lambda x: ast.name.name == x.name, nenv), None)
         className = functionSymbol.className.name
         methodType = functionSymbol.methodType
-        in_ = ("", list())
+        in_ = ("", list()) # Tuple of emit string and list of types
+        
+        # Visit arguments
         for x in ast.args:
             str1, typ1 = self.visit(x, Access(frame, nenv, False, True))
-            in_ = (in_[0] + str1, in_[1].append(typ1))
+            in_ = (in_[0] + str1, in_[1].append(typ1)) # Concatenate emit string and append type
         
-        print("VisitCallStmt2: ", methodType,in_)
 
         self.emit.printout(in_[0])
         self.emit.printout(self.emit.emitINVOKESTATIC(
             className + "/" + ast.name.name, methodType, frame))
 
-    def visitNumberLiteral(self, ast : NumberLiteral, o : SubBody):
+    
+    def visitCallExpr(self, ast : CallExpr, o : Access):
+        print("VisitCallExpr: ",ast, o)
+        print("VisitCallStmt: ",ast, o)
+        ctxt = o
+        frame = ctxt.frame
+        nenv = ctxt.sym
+        functionSymbol : FunctionSymbol = next(filter(lambda x: ast.name.name == x.name, nenv), None)
+        className = functionSymbol.className.name
+        methodType = functionSymbol.methodType
+        in_ = ("", list()) # Tuple of emit string and list of types
+        
+        # Visit arguments
+        for x in ast.args:
+            str1, typ1 = self.visit(x, Access(frame, nenv, False, True))
+            in_ = (in_[0] + str1, in_[1].append(typ1)) # Concatenate emit string and append type
+        
+
+        self.emit.printout(in_[0])
+        self.emit.printout(self.emit.emitINVOKESTATIC(
+            className + "/" + ast.name.name, methodType, frame))
+        
+        return in_[0], methodType.rettype
+
+    def visitNumberLiteral(self, ast : NumberLiteral, o : Access):
         return self.emit.emitPUSHFCONST(ast.value, o.frame), NumberType()
 
-    def visitBooleanLiteral(self, ast : BooleanLiteral, o : SubBody):
+    def visitBooleanLiteral(self, ast : BooleanLiteral, o : Access):
         return self.emit.emitPUSHICONST(str(ast.value).lower(), o.frame), BoolType()
 
-    def visitStringLiteral(self, ast : StringLiteral, o : SubBody):
+    def visitStringLiteral(self, ast : StringLiteral, o : Access):
         print("VisitStringLiteral: ",ast, o)
         return self.emit.emitPUSHCONST(ast.value, StringType(), o.frame), StringType()
 
