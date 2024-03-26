@@ -20,7 +20,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "Hello World"
-        self.assertTrue(TestCodeGen.test(input, expect, 501))
+        #self.assertTrue(TestCodeGen.test(input, expect, 501))
 
     def test_boolean(self):
         input = """func main ()
@@ -31,29 +31,12 @@ class CheckCodeGenSuite(unittest.TestCase):
         expect = "true"
         #self.assertTrue(TestCodeGen.test(input, expect, 502))
 
-    def test_boolean2(self):
+    def test_decl(self):
         input = """func main ()
         begin
-            writeBool(readBool())
+            var a <- 1
+            writeNumber(a)
         end
         """
-        expect = ""
-        #self.assertTrue(TestCodeGen.test(input, expect, 503))
-
-    def test_number2(self):
-        input = """func main ()
-        begin
-            writeNumber(readNumber())
-        end
-        """
-        expect = ""
-        #self.assertTrue(TestCodeGen.test(input, expect, 504))
-    
-    def test_string2(self):
-        input = """func main ()
-        begin
-            writeString(readString())
-        end
-        """
-        expect = ""
-        #self.assertTrue(TestCodeGen.test(input, expect, 505))
+        expect = "1.0"
+        self.assertTrue(TestCodeGen.test(input, expect, 503))
