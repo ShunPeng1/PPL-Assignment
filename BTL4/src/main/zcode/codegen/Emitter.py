@@ -85,6 +85,8 @@ class Emitter():
         # frame: Frame
 
         if type(typ) is NumberType:
+            return self.emitPUSHFCONST(in_, frame)
+        elif type(typ) is BoolType:
             return self.emitPUSHICONST(in_, frame)
         elif type(typ) is StringType:
             frame.push()
@@ -152,6 +154,8 @@ class Emitter():
 
         frame.push()
         if type(inType) is NumberType:
+            return self.jvm.emitFLOAD(index)
+        elif type(inType) is BoolType:
             return self.jvm.emitILOAD(index)
         # elif type(inType) is cgen.ArrayPointerType or type(inType) is cgen.ClassType or type(inType) is StringType:
         elif type(inType) is cgen.ClassType or type(inType) is StringType:
@@ -187,6 +191,8 @@ class Emitter():
         frame.pop()
 
         if type(inType) is NumberType:
+            return self.jvm.emitFSTORE(index)
+        elif type(inType) is BoolType:
             return self.jvm.emitISTORE(index)
         # elif type(inType) is cgen.ArrayPointerType or type(inType) is cgen.ClassType or type(inType) is StringType:
         elif type(inType) is cgen.ClassType or type(inType) is StringType:
