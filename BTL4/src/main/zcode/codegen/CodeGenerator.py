@@ -389,34 +389,156 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             pass # Solved in StaticChecker
         
 
-    def visitNumberType(self, ast, param):
-        pass
+    def visitNumberType(self, ast : NumberType, param):
+        return NumberType()
+    
+    def visitBoolType(self, ast : BoolType, param):
+        return BoolType()
 
-    def visitBoolType(self, ast, param):
-        pass
+    def visitStringType(self, ast : StringType, param):
+        return StringType()
+    
+    def visitArrayType(self, ast : ArrayType, param):
+        return ArrayType(ast.size, ast.eleType)
+    
+    def visitBinaryOp(self, ast : BinaryOp, param : Tuple[Envi, ExprParam]):
+        
+        (envi, exprParam) = param
 
-    def visitStringType(self, ast, param):
-        pass
+        inferredOperandType = None
+        inferredReturnType = None
 
-    def visitArrayType(self, ast, param):
-        pass
+        if ast.op in ['+', '-', '*', '/', '%']:
+            inferredOperandType = NumberType()
+            inferredReturnType = NumberType()
+           
+        
+        if ast.op in ['>', '>=', '<', '<=', '=', '!=']:
+            inferredOperandType = NumberType()
+            inferredReturnType = BoolType()
+            
+        if ast.op in ['and', 'or']:
+            inferredOperandType = BoolType()
+            inferredReturnType = BoolType()
+            
+        if ast.op in ['...']:
+            inferredOperandType = StringType()
+            inferredReturnType = StringType()
+            
+        if ast.op in ['==']:
+            inferredOperandType = StringType()
+            inferredReturnType = BoolType()
 
-    def visitBinaryOp(self, ast, param):
-        pass
+        operandParam = None
+        if exprParam:
+            operandParam = ExprParam(True, True, inferredOperandType)
 
-    def visitUnaryOp(self, ast, param):
-        pass
+        left = self.visit(ast.left, (envi, operandParam))
+        right = self.visit(ast.right, (envi, operandParam))
+        
+        
+        return inferredReturnType # return type of binary operation
 
-    def visitCallExpr(self, ast, param):
-        pass
+    
+    def visitUnaryOp(self, ast : UnaryOp, param : Tuple[Envi, ExprParam]):
+        (envi, exprParam) = param
 
-    def visitId(self, ast, param):
-        pass
+        inferredOperandType = None
+        inferredReturnType = None
 
-    def visitArrayCell(self, ast, param):
-        pass
+        if ast.op in ['-']:
+            inferredOperandType = NumberType()
+            inferredReturnType = NumberType()
+        
+        if ast.op in ['not']:
+            inferredOperandType = BoolType()
+            inferredReturnType = BoolType()
 
-    def visitBlock(self, ast, param : tuple[Envi,StmtParam]):
+        operandParam = None
+        if exprParam:
+            operandParam = ExprParam( True, True, inferredOperandType)
+        
+        exprType = self.visit(ast.operand, (envi, operandParam))
+        
+        return inferredReturnType # No type can be inferred
+
+    def visitCallExpr(self, ast : CallExpr, param : Tuple[Envi, ExprParam]):
+        #print("Call Expr: ",ast, param[1])
+
+        (envi, exprParam) = param
+
+        self.visit(ast.name, (envi, ExprParam( True, True)))
+        functionSymbol : FunctionSymbol = self.getSymbol(ast.name, False, envi)
+
+
+        for i in range(len(ast.args)):
+            symbolParamType = functionSymbol.param[i].type
+            callParamType = self.visit(ast.args[i], (envi, ExprParam(True, True, symbolParamType)))
+            
+
+        if functionSymbol.methodType.rettype is None: # function with not yet assigned type
+            if exprParam.inferredType:
+                functionSymbol.methodType.rettype = exprParam.inferredType
+            
+            
+        return functionSymbol.methodType.rettype
+    
+    def visitId(self, ast : Id, param : Tuple[Envi, ExprParam]):
+        #print("Visit Id: " , ast, param)
+        (envi, exprParam) = param
+        if type(exprParam) == ExprParam:
+            if exprParam.isRHS:
+                symbol = self.getSymbol(ast, False, envi)
+                
+                if type(symbol) is VariableSymbol :
+                    if symbol.type :                  
+                        return symbol.type
+                    elif exprParam.inferredType : # No type in symbol yet so inferred type
+                        symbol.type = exprParam.inferredType
+                        return symbol.type
+                elif type(symbol) is FunctionSymbol:
+                    if symbol.methodType.rettype:
+                        return symbol.methodType.rettype
+                    elif exprParam.inferredType:
+                        symbol.methodType.rettype = exprParam.inferredType
+                        return symbol.methodType.rettype
+                    
+                
+            else : # LHS
+                if exprParam.isDeclared:
+                    symbol = self.getSymbol(ast, False, envi)
+                    if type(symbol) is VariableSymbol :
+                        return symbol.type
+                    elif type(symbol) is FunctionSymbol:
+                        return symbol.methodType.rettype
+
+        raise Exception("Id not found in enviroment")
+
+
+    def visitArrayCell(self, ast : ArrayCell, param : Tuple[Envi, ExprParam]):
+        #print("Array Cell: ", ast, param)
+
+        (envi, exprParam) = param
+
+        arrType : ArrayType = self.visit(ast.arr, (envi, ExprParam(exprParam.isRHS, exprParam.isDeclared, None))) # visit array type
+        
+        #print("Array Cell Type: ", arrType, exprParam.isRHS, exprParam.isDeclared, exprParam.inferredType, len(ast.idx))
+        
+        innerType = ArrayType(arrType.size, arrType.eleType) # copy of array type       
+        for i in range(len(ast.idx)):
+            idx = ast.idx[i]
+            idxType = self.visit(idx, (envi, ExprParam(True, True, NumberType())))
+
+            if len(innerType.size) > 1: # inner type of the array is the array (a[3,2] inner is a[2])
+                innerType.size = innerType.size[1:]
+            else : # inner type of the array is the element type 
+                innerType = innerType.eleType
+
+        #print("Array Cell Inner Type: ", innerType)
+        return innerType # return type of array cell        
+        
+
+    def visitBlock(self, ast : Block, param : tuple[Envi,StmtParam]):
         
         (envi, stmtParam) = param
 
@@ -433,40 +555,193 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         envi.pop()
 
 
-        return ast # TODO : return of a statement
+        return ast 
 
-    def visitIf(self, ast, param):
-        pass
+    def visitIf(self, ast : If, param : Tuple[Envi, StmtParam]):
+        #print("Visit If: ", ast)
 
-    def visitFor(self, ast, param):
-        pass
+        (envi, stmtParam) = param
 
-    def visitContinue(self, ast, param):
-        pass
+        ifConditionType = self.visit(ast.expr, (envi, ExprParam(True, True, BoolType())))
+        
+        self.visit(ast.thenStmt, (envi, stmtParam))
 
-    def visitBreak(self, ast, param):
-        pass
+        for (elifExpr, elifStmt) in ast.elifStmt:
+            elifConditionType = self.visit(elifExpr, (envi, ExprParam( True, True, BoolType())))
 
-    def visitReturn(self, ast, param):
-        pass
+            self.visit(elifStmt, (envi, stmtParam))
+        
+        if ast.elseStmt:
+            self.visit(ast.elseStmt, (envi, stmtParam))
 
-    def visitAssign(self, ast, param):
-        pass
-
-    def visitCallStmt(self, ast, param):
-        pass
-
-    def visitNumberLiteral(self, ast, param):
         return ast
 
-    def visitBooleanLiteral(self, ast, param):
+    
+    def visitFor(self, ast : For, param):
+        #print("Visit For: ", ast)
+
+        (envi, stmtParam) = param
+    
+        lhsType = self.visit(ast.name, (envi, ExprParam(False, True, NumberType())))
+        symbol : VariableSymbol = self.getSymbol(ast.name, False, envi)
+        updType = self.visit(ast.updExpr, (envi, ExprParam(True, True, NumberType())))
+
+        
+        if lhsType is None: # LHS first use so infer type
+            lhsType = NumberType()
+            symbol.type = lhsType
+        
+            
+        # Visit condition of for loop
+        condType = self.visit(ast.condExpr, (envi, ExprParam(True, True, BoolType())))
+       
+        
+        # Visit body of for loop
+        
+        self.visit(ast.body, (envi, stmtParam))
+        
         return ast
 
-    def visitStringLiteral(self, ast, param):
+    
+    def visitContinue(self, ast : Continue, param : Tuple[Envi, StmtParam]):
+        #print("Visit Continue: ", ast)
+
+        (envi, stmtParam) = param
+
+        
         return ast
 
-    def visitArrayLiteral(self, ast, param):
-        pass
+    
+    def visitBreak(self, ast : Break, param):
+        #print("Visit Break: ", ast)
+
+        (envi, stmtParam) = param
+
+        return ast
+    
+    def visitReturn(self, ast : Return, param : Tuple[Envi, StmtParam]):
+        
+        (envi, stmtParam) = param
+
+        if stmtParam.currentFunctionSymbol.methodType.rettype is None: # function type is not declared
+            if ast.expr:
+                returnType = self.visit(ast.expr, (envi, ExprParam(True, True, stmtParam.currentFunctionSymbol.methodType.rettype)))
+            
+                
+                stmtParam.currentFunctionSymbol.methodType.rettype = returnType
+
+            else:
+                stmtParam.currentFunctionSymbol.methodType.rettype = VoidType()
+        
+        else: # function type is declared
+            if ast.expr:
+                returnType = self.visit(ast.expr, (envi, ExprParam(True, True, stmtParam.currentFunctionSymbol.methodType.rettype)))
+                
+                
+        
+        return ast
+
+
+    
+    def visitAssign(self, ast : Assign, param : Tuple[Envi, StmtParam]):
+        
+        (envi, stmtParam) = param
+
+        lhsType = self.visit(ast.lhs, (envi, ExprParam( False, True)))
+        symbol : VariableSymbol = self.getSymbol(ast.lhs, False, envi)
+
+        if lhsType: # LHS is declared and has type
+            rhsType = self.visit(ast.rhs, (envi, ExprParam( True, True, lhsType)))
+
+        else: # LHS first use
+            rhsType = self.visit(ast.rhs, (envi, ExprParam( True, True)))
+            
+            symbol.type = rhsType
+
+        return ast
+
+    
+    def visitCallStmt(self, ast : CallStmt, param : Tuple[Envi, StmtParam]):
+        #print("Call Stmt: ",ast)
+
+        (envi, stmtParam) = param
+
+        self.visit(ast.name, (envi, ExprParam( True, True)))
+        functionSymbol : FunctionSymbol = self.getSymbol(ast.name, False, envi)
+
+
+        for i in range(len(ast.args)):
+            symbolParamType = functionSymbol.param[i].type
+            callParamType = self.visit(ast.args[i], (envi, ExprParam( True, True, symbolParamType)))
+
+        if functionSymbol.type is None: # function declared-only
+            functionSymbol.type = VoidType()
+          
+        return ast
+
+
+    
+    def visitNumberLiteral(self, ast : NumberLiteral, param):
+        #print("Number Literal: ", ast)
+        return NumberType()
+
+    
+    def visitBooleanLiteral(self, ast : BooleanLiteral, param):
+        return BoolType()
+
+    
+    def visitStringLiteral(self, ast : StringLiteral, param):
+        return StringType()
+
+    
+    def visitArrayLiteral(self, ast : ArrayLiteral, param : Tuple[Envi, ExprParam]):
+        #print("Array Literal: ", ast)
+
+        (envi, exprParam) = param
+
+        if len(ast.value) == 0:
+            return ArrayType(0, None)
+        
+        inferredType : ArrayType = exprParam.inferredType
+        if inferredType: 
+             
+            #print("Array Literal Inferred Type: ", inferredType.size, len(ast.value), inferredType.eleType, len(inferredType.size) > 0, inferredType.size[0] != len(ast.value))
+            
+            # Get inner type of array
+            innerType = ArrayType(inferredType.size, inferredType.eleType) # copy of array type
+                
+            if len(inferredType.size) <= 1:
+                innerType = inferredType.eleType
+            else :
+                innerType = ArrayType( inferredType.size[1:] , inferredType.eleType)
+
+            # Check for type of each value in array
+            for value in ast.value:
+                valueType = self.visit(value, (envi, ExprParam( True, True, innerType)))
+                
+
+            return ArrayType(inferredType.size , inferredType.eleType)
+
+
+        else : # No inferred type
+            
+            firstType = None            
+            for value in ast.value:
+                firstType = self.visit(value, (envi, ExprParam(True, True, None)))
+
+            
+            # Check for type of each value in array
+            for value in ast.value:
+                valueType = self.visit(value, (envi, ExprParam(True, True, firstType)))
+                
+                
+            if type(firstType) == ArrayType: # the first element is an array type
+                return ArrayType([len(ast.value)] + firstType.size, firstType.eleType)
+            
+            else: # inferred type is not an array, maybe NumberType, StringType, BoolType, VoidType
+                return ArrayType([len(ast.value)], firstType)
+
+
 
 class CodeGenVisitor(BaseVisitor):
     def __init__(self, astTree, env : Envi, path):
