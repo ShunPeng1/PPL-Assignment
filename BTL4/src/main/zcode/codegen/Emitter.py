@@ -401,7 +401,7 @@ class Emitter():
         # frame: Frame
 
         frame.pop()
-        return self.jvm.emitIREM()
+        return self.jvm.emitFREM()
 
     '''
     *   generate iand

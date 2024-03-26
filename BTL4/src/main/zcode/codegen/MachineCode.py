@@ -565,6 +565,9 @@ class JasminCode(MachineCode):
 
     def emitIREM(self):
         return JasminCode.INDENT + "rem" + JasminCode.END
+    
+    def emitFREM(self):
+        return JasminCode.INDENT + "frem" + JasminCode.END
 
     def emitIFACMPEQ(self, label):
         # label: Int

@@ -956,7 +956,7 @@ class CodeGenVisitor(BaseVisitor):
         elif ast.op == "/":
             return leftEmit + rightEmit + self.emit.emitMULOP(ast.op, leftType, o.frame), leftType
         elif ast.op == "%":
-            return leftEmit + rightEmit + self.emit.emitMOD(ast.op, leftType, o.frame), leftType
+            return leftEmit + rightEmit + self.emit.emitMOD(o.frame), leftType
         
         elif ast.op == ">":
             return leftEmit + rightEmit + self.emit.emitREOP(ast.op, leftType, o.frame), BoolType()
