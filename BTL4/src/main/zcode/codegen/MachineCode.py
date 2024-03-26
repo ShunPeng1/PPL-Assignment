@@ -625,13 +625,20 @@ class JasminCode(MachineCode):
         # label: Int
         return JasminCode.INDENT + "ifge Label" + str(label) + JasminCode.END
 
+    def emitFCMPG(self):
+        return JasminCode.INDENT + "fcmpg" + JasminCode.END
+    
+    def emitFCMPL(self):
+        return JasminCode.INDENT + "fcmpl" + JasminCode.END
+    
+
     def emitLABEL(self, label):
         # label: Int
         return "Label" + str(label) + ":" + JasminCode.END
 
     def emitGOTO(self, label):
         # label: Int
-        return JasminCode.INDENT + "goto Label" + label + JasminCode.END
+        return JasminCode.INDENT + "goto Label" + str(label) + JasminCode.END
 
     def emitINEG(self):
         return JasminCode.INDENT + "ineg" + JasminCode.END

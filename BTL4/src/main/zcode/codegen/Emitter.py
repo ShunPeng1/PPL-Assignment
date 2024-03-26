@@ -439,6 +439,7 @@ class Emitter():
         frame.pop()
         return self.emitINVOKEVIRTUAL("java/lang/String", "concat", "(Ljava/lang/String;)Ljava/lang/String;", frame)
 
+    '''
     def emitREOP(self, op, in_, frame):
         # op: String
         # in_: Type
@@ -464,6 +465,41 @@ class Emitter():
         elif op == "=":
             result.append(self.jvm.emitIFICMPNE(labelF))
     
+        result.append(self.emitPUSHCONST("true", BoolType(), frame))
+        frame.pop()
+        result.append(self.emitGOTO(labelO, frame))
+        result.append(self.emitLABEL(labelF, frame))
+        result.append(self.emitPUSHCONST("false", BoolType(), frame))
+        result.append(self.emitLABEL(labelO, frame))
+        return ''.join(result)
+    '''
+
+    def emitREOP(self, op, in_, frame):
+        # op: String
+        # in_: Type
+        # frame: Frame
+        # ..., value1, value2 -> ..., result
+
+        result = list()
+        labelF = frame.getNewLabel()
+        labelO = frame.getNewLabel()
+
+        frame.pop()
+        frame.pop()
+        result.append(self.jvm.emitFCMPG())
+        if op == ">":
+            result.append(self.jvm.emitIFLE(labelF))
+        elif op == ">=":
+            result.append(self.jvm.emitIFLT(labelF))
+        elif op == "<":
+            result.append(self.jvm.emitIFGE(labelF))
+        elif op == "<=":
+            result.append(self.jvm.emitIFGT(labelF))
+        elif op == "!=":
+            result.append(self.jvm.emitIFEQ(labelF))
+        elif op == "=":
+            result.append(self.jvm.emitIFNE(labelF))
+
         result.append(self.emitPUSHCONST("true", BoolType(), frame))
         frame.pop()
         result.append(self.emitGOTO(labelO, frame))
