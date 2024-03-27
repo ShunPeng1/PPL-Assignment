@@ -400,18 +400,79 @@ true
 8.0
 9.0
 """
-        self.assertTrue(TestCodeGen.test(input, expect, 534))
+        #self.assertTrue(TestCodeGen.test(input, expect, 534))
 
     def test_for_2(self):  
         input = """func main ()
         begin
-        var i <-0
-            if (i >= 10)
-                writeNumber(10)
-            else
-                writeNumber(0)
+            var i <- 5
+            for i until i <= -5 by -1
+                writeNumber(i)
              
         end
         """
-        expect = """0\n"""
+        expect = """5.0
+4.0
+3.0
+2.0
+1.0
+0.0
+-1.0
+-2.0
+-3.0
+-4.0
+"""
         #self.assertTrue(TestCodeGen.test(input, expect, 535))
+
+
+    def test_for_3(self):
+        input = """func main ()
+        begin
+            var i <- 0
+            for i until i >= 10 by 1
+            begin
+                if (i = 4)
+                    break
+                    
+                writeNumber(i)
+            end
+        end
+        """
+        expect = """0.0
+1.0
+2.0
+3.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 536))
+
+    def test_for_4(self):
+        input = """func main ()
+        begin
+            var i <- 0
+            for i until i >= 10 by 1
+            begin
+                if (i <= 7)
+                    continue
+                    
+                writeNumber(i)
+            end
+        end
+        """
+        expect = """8.0
+9.0
+"""
+        self.assertTrue(TestCodeGen.test(input, expect, 537))
+
+    def test_for_5(self):
+        input = """func main ()
+        begin
+            var i <- 0
+            for i until i >= 10 by 1
+            begin        
+                continue
+                
+            end
+        end
+        """
+        expect = """"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 538))

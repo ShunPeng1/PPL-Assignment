@@ -914,18 +914,6 @@ class CodeGenVisitor(BaseVisitor):
         return variableSymbol
     
 
-    def visitNumberType(self, ast, param):
-        pass
-
-    def visitBoolType(self, ast, param):
-        pass
-
-    def visitStringType(self, ast, param):
-        pass
-
-    def visitArrayType(self, ast, param):
-        pass
-
     def visitArrayCell(self, ast, param):
         pass
 
@@ -970,11 +958,21 @@ class CodeGenVisitor(BaseVisitor):
     def visitFor(self, ast : For, o : SubBody):
         print("VisitFor: ",ast, o)
 
-        loopLabel = o.frame.getNewLabel()
-        endLabel = o.frame.getNewLabel()
+        o.frame.enterLoop()
 
+        loopLabel = o.frame.getContinueLabel()
+        endLabel = o.frame.getBreakLabel()
+        conditionLabel = o.frame.getNewLabel()
+
+        self.emit.printout(self.emit.emitGOTO(conditionLabel, o.frame))
         self.emit.printout(self.emit.emitLABEL(loopLabel, o.frame))
 
+        # Update the loop variable
+        updateExpr = Assign(ast.name, BinaryOp("+", ast.name ,ast.updExpr))
+        self.visit(updateExpr, SubBody(o.frame, o.sym))
+
+        # Visit the condition of the loop
+        self.emit.printout(self.emit.emitLABEL(conditionLabel, o.frame))
         condEmit, condType = self.visit(ast.condExpr, Access(o.frame, o.sym, False, True))
         self.emit.printout(condEmit)
 
@@ -982,23 +980,28 @@ class CodeGenVisitor(BaseVisitor):
 
         # Visit the body of the loop
         self.visit(ast.body, o)
-
-        # Update the loop variable
-        updateExpr = Assign(ast.name, BinaryOp("+", ast.name ,ast.updExpr))
-        self.visit(updateExpr, SubBody(o.frame, o.sym))
         
 
         self.emit.printout(self.emit.emitGOTO(loopLabel, o.frame))
+
+        o.frame.exitLoop()
         self.emit.printout(self.emit.emitLABEL(endLabel, o.frame))
 
         return ast
 
 
-    def visitContinue(self, ast, param):
-        pass
+    def visitContinue(self, ast : Continue, o : SubBody):
+        print("VisitContinue: ",ast, o)
 
-    def visitBreak(self, ast, param):
-        pass
+        self.emit.printout(self.emit.emitGOTO(o.frame.getContinueLabel(), o.frame))
+        return ast
+    
+
+    def visitBreak(self, ast : Break, o : SubBody):
+        print("VisitBreak: ",ast, o)
+
+        self.emit.printout(self.emit.emitGOTO(o.frame.getBreakLabel(), o.frame))
+        return ast
 
     def visitReturn(self, ast, param):
         pass
