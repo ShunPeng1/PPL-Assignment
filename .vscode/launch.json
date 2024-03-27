@@ -5,11 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "Test",
+            "request": "launch",
+            "mainClass": "Test",
+            "projectName": "PPL Assignment_1038c9e5"
+        },
+        {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "args": ["test", "ASTGenSuite"],
+            "args": [
+                "test",
+                "ASTGenSuite"
+            ],
             "console": "integratedTerminal",
             "justMyCode": true
         }

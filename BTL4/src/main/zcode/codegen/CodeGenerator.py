@@ -943,6 +943,7 @@ class CodeGenVisitor(BaseVisitor):
         exprEmit, exprType = self.visit(ast.expr, Access(o.frame, o.sym, False, True))
         self.emit.printout(exprEmit)
 
+        # If the condition is false, jump to the elif statement
         self.emit.printout(self.emit.emitIFFALSE(ifFalseLabel, o.frame))
         self.visit(ast.thenStmt, o)
         self.emit.printout(self.emit.emitGOTO(endLabel, o.frame))
@@ -965,6 +966,32 @@ class CodeGenVisitor(BaseVisitor):
         self.emit.printout(self.emit.emitLABEL(endLabel, o.frame))
         return ast
 
+
+    def visitFor(self, ast : For, o : SubBody):
+        print("VisitFor: ",ast, o)
+
+        loopLabel = o.frame.getNewLabel()
+        endLabel = o.frame.getNewLabel()
+
+        self.emit.printout(self.emit.emitLABEL(loopLabel, o.frame))
+
+        condEmit, condType = self.visit(ast.condExpr, Access(o.frame, o.sym, False, True))
+        self.emit.printout(condEmit)
+
+        self.emit.printout(self.emit.emitIFTRUE(endLabel, o.frame))
+
+        # Visit the body of the loop
+        self.visit(ast.body, o)
+
+        # Update the loop variable
+        updateExpr = Assign(ast.name, BinaryOp("+", ast.name ,ast.updExpr))
+        self.visit(updateExpr, SubBody(o.frame, o.sym))
+        
+
+        self.emit.printout(self.emit.emitGOTO(loopLabel, o.frame))
+        self.emit.printout(self.emit.emitLABEL(endLabel, o.frame))
+
+        return ast
 
 
     def visitContinue(self, ast, param):

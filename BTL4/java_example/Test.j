@@ -12,8 +12,6 @@
 .class public Test
 .super java/lang/Object
 
-.field static a Z
-
 .method public <init>()V
   .limit stack 1
   .limit locals 1
@@ -24,21 +22,61 @@
 .end method
 
 .method public static main([Ljava/lang/String;)V
-  .limit stack 1
-  .limit locals 1
-  .line 9
-  0: getstatic Test/a Z
-  3: invokestatic io/writeBool(Z)V
+  .limit stack 2
+  .limit locals 2
+  .line 7
+  0: fconst_0
+  1: fstore_1
+Label2:
+  2: fload_1
+  3: ldc 10.0
+  5: fcmpg
+  6: iflt Label13
+  9: iconst_1
+  10: goto Label14
+Label13:
+  13: iconst_0
+Label14:
+  14: ifle Label28
+  .line 8
+  17: fload_1
+  18: invokestatic io/writeNumber(F)V
+  .line 7
+  21: fload_1
+  22: fconst_1
+  23: fadd
+  24: fstore_1
+  25: goto Label2
+Label28:
   .line 11
-  6: return
-.end method
-
-.method static <clinit>()V
-  .limit stack 1
-  .limit locals 0
-  .line 5
-  0: iconst_0
-  1: putstatic Test/a Z
-  4: return
+  28: return
+  ; append_frame (frameNumber = 0)
+  ; frame_type = 252, offset_delta = 2
+  ; frame bytes: 252 0 2 2 
+  .stack 
+    offset 2
+    locals Float
+    .end stack
+  ; same_frame (frameNumber = 1)
+  ; frame_type = 10, offset_delta = 10
+  ; frame bytes: 10 
+  .stack 
+    offset 13
+    locals Float
+    .end stack
+  ; same_locals_1_stack_item_frame (frameNumber = 2)
+  ; frame_type = 64, offset_delta = 0
+  ; frame bytes: 64 1 
+  .stack 
+    offset 14
+    locals Float
+    stack Integer
+    .end stack
+  ; chop_frame (frameNumber = 3)
+  ; frame_type = 250, offset_delta = 13
+  ; frame bytes: 250 0 13 
+  .stack 
+    offset 28
+    .end stack
 .end method
 

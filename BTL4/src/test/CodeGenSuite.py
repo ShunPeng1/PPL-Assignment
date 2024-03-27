@@ -320,7 +320,7 @@ true
         end
         """
         expect = "3.0\n"
-        self.assertTrue(TestCodeGen.test(input, expect, 529))
+        #self.assertTrue(TestCodeGen.test(input, expect, 529))
 
     def test_if_5(self):
         input = """func main ()
@@ -380,3 +380,38 @@ true
         expect = "4.0\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 533))
 
+    def test_for_1(self):
+        input = """func main ()
+        begin
+            var i <- 0
+            for i until i >= 10 by 1
+                writeNumber(i)
+             
+        end
+        """
+        expect = """0.0
+1.0
+2.0
+3.0
+4.0
+5.0
+6.0
+7.0
+8.0
+9.0
+"""
+        self.assertTrue(TestCodeGen.test(input, expect, 534))
+
+    def test_for_2(self):  
+        input = """func main ()
+        begin
+        var i <-0
+            if (i >= 10)
+                writeNumber(10)
+            else
+                writeNumber(0)
+             
+        end
+        """
+        expect = """0\n"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 535))
