@@ -1,7 +1,6 @@
 
 
 import java.io.*;
-import java.io.IOException;
 
 //import bkool.codegeneration.IllegalRuntimeException;
 
@@ -190,7 +189,7 @@ public class io {
     }
 
     public static void writeString(String a) {
-        writeStr(a);
+        writeStrLn(a);
     }
 
     

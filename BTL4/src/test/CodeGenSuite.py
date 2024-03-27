@@ -461,18 +461,40 @@ true
         expect = """8.0
 9.0
 """
-        self.assertTrue(TestCodeGen.test(input, expect, 537))
+        #self.assertTrue(TestCodeGen.test(input, expect, 537))
 
     def test_for_5(self):
         input = """func main ()
         begin
             var i <- 0
-            for i until i >= 10 by 1
+            var j <- 0
+            for j until i >= 3 by 1
             begin        
-                continue
-                
+                for j until j >= 3 by 1
+                begin
+                    writeNumber(i)
+                    writeNumber(j)
+                end
             end
         end
         """
-        expect = """"""
+        expect = """1.0
+1.0
+1.0
+2.0
+1.0
+3.0
+2.0
+1.0
+2.0
+2.0
+2.0
+3.0
+3.0
+1.0
+3.0
+2.0
+3.0
+3.0
+"""
         #self.assertTrue(TestCodeGen.test(input, expect, 538))

@@ -93,6 +93,8 @@ class Emitter():
         elif type(typ) is StringType:
             frame.push()
             return self.jvm.emitLDC("\""+in_+"\"")
+        elif type(typ) is ArrayType:
+            return self.jvm.emitANEWARRAY(typ.eleType) # TODO check again
         else:
             raise IllegalOperandException(in_)
 
@@ -121,7 +123,7 @@ class Emitter():
         frame.pop()
         frame.pop()
         if type(in_) is NumberType:
-            return self.jvm.emitIASTORE()
+            return self.jvm.emitFASTORE()
         # elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
         elif type(in_) is cgen.ClassType or type(in_) is StringType:
             return self.jvm.emitAASTORE()
@@ -160,7 +162,7 @@ class Emitter():
         elif type(inType) is BoolType:
             return self.jvm.emitILOAD(index)
         # elif type(inType) is cgen.ArrayPointerType or type(inType) is cgen.ClassType or type(inType) is StringType:
-        elif type(inType) is cgen.ClassType or type(inType) is StringType:
+        elif type(inType) is cgen.ClassType or type(inType) is StringType or type(inType) is ArrayType:
             return self.jvm.emitALOAD(index)
         else:
             raise IllegalOperandException(name)
@@ -197,7 +199,7 @@ class Emitter():
         elif type(inType) is BoolType:
             return self.jvm.emitISTORE(index)
         # elif type(inType) is cgen.ArrayPointerType or type(inType) is cgen.ClassType or type(inType) is StringType:
-        elif type(inType) is cgen.ClassType or type(inType) is StringType:
+        elif type(inType) is cgen.ClassType or type(inType) is StringType or type(inType) is ArrayType:
             return self.jvm.emitASTORE(index)
         else:
             raise IllegalOperandException(name)
@@ -661,7 +663,13 @@ class Emitter():
 
         if type(in_) is NumberType:
             frame.pop()
+            return self.jvm.emitFRETURN()
+        elif type(in_) is BoolType:
+            frame.pop()
             return self.jvm.emitIRETURN()
+        elif type(in_) is StringType or type(in_) is ArrayType:
+            frame.pop()
+            return self.jvm.emitARETURN()
         elif type(in_) is VoidType:
             return self.jvm.emitRETURN()
 

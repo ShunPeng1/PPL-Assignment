@@ -190,7 +190,7 @@ public class io {
     }
 
     public static void writeString(String a) {
-        writeStr(a);
+        writeStrLn(a);
     }
 
     
