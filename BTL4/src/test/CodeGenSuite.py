@@ -10,7 +10,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeNumber(1)
         end
         """
-        expect = "1.0"
+        expect = "1.0\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 500))
 
     def test_string(self):
@@ -19,7 +19,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeString("Hello World")
         end
         """
-        expect = "Hello World"
+        expect = "Hello World\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 501))
 
     def test_boolean(self):
@@ -28,7 +28,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool(true)
         end
         """
-        expect = "true"
+        expect = "true\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 502))
 
     def test_decl(self):
@@ -38,7 +38,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeNumber(a)
         end
         """
-        expect = "1.0"
+        expect = "1.0\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 503))
 
     def test_decl_2(self):
@@ -51,7 +51,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeNumber(b)
         end
         """
-        expect = "1.0"
+        expect = "1.0\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 504))
     
     def test_binary_op_1(self):
@@ -60,7 +60,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeNumber(1 + 2)
         end
         """
-        expect = "3.0"
+        expect = "3.0\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 505))
 
     def test_binary_op_2(self):
@@ -69,7 +69,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeNumber(1 - 2)
         end
         """
-        expect = "-1.0"
+        expect = "-1.0\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 506))
 
     def test_binary_op_3(self):
@@ -78,7 +78,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeNumber(1 * 2)
         end
         """
-        expect = "2.0"
+        expect = "2.0\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 507))
 
     def test_binary_op_4(self):
@@ -87,7 +87,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeNumber(1 / 2)
         end
         """
-        expect = "0.5"
+        expect = "0.5\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 508))
 
     def test_binary_op_5(self):
@@ -96,7 +96,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeNumber(1 % 2)
         end
         """
-        expect = "1.0"
+        expect = "1.0\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 509))
 
     def test_binary_op_6(self):
@@ -105,7 +105,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool(1 > 2)
         end
         """
-        expect = "false"
+        expect = "false\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 510))
 
     def test_binary_op_7(self):
@@ -114,7 +114,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool(1 < 2)
         end
         """
-        expect = "true"
+        expect = "true\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 511))
 
     def test_binary_op_8(self):
@@ -123,7 +123,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool(1 >= 2)
         end
         """
-        expect = "false"
+        expect = "false\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 512))
 
     def test_binary_op_9(self):
@@ -132,7 +132,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool(1 <= 2)
         end
         """
-        expect = "true"
+        expect = "true\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 513))
 
     def test_binary_op_10(self):
@@ -141,7 +141,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool(1 = 2)
         end
         """
-        expect = "false"
+        expect = "false\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 514))
 
     def test_binary_op_11(self):
@@ -150,7 +150,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool(1 != 2)
         end
         """
-        expect = "true"
+        expect = "true\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 515))
 
     def test_binary_op_12(self):
@@ -160,7 +160,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool(d)
         end
         """
-        expect = "true"
+        expect = "true\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 516))
     
     def test_binary_op_13(self):
@@ -170,7 +170,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeString(d)
         end
         """
-        expect = "12"
+        expect = "12\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 517))
 
     def test_binary_op_14(self):
@@ -179,7 +179,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool(("1" ... "2") == ("1" ... "2"))
         end
         """
-        expect = "true"
+        expect = "true\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 518))
 
     def test_binary_op_15(self):
@@ -188,7 +188,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool("1" == "2")
         end
         """
-        expect = "false"
+        expect = "false\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 519))
 
     def test_unary_op_1(self):
@@ -197,7 +197,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeNumber(-1)
         end
         """
-        expect = "-1.0"
+        expect = "-1.0\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 520))
 
     def test_unary_op_2(self):
@@ -206,7 +206,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool(not true)
         end
         """
-        expect = "false"
+        expect = "false\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 521))
 
     def test_unary_op_3(self):
@@ -215,7 +215,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool(not false)
         end
         """
-        expect = "true"
+        expect = "true\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 522))
 
 
@@ -227,7 +227,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeNumber(a)
         end
         """
-        expect = "-1.0"
+        expect = "-1.0\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 523))
 
     def test_unary_assign_2(self):
@@ -240,7 +240,7 @@ class CheckCodeGenSuite(unittest.TestCase):
             writeBool(a)
         end
         """
-        expect = "false"
+        expect = "false\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 524))
 
     def test_unary_assign_3(self):
@@ -267,4 +267,116 @@ false
 true
 true
 """
-        self.assertTrue(TestCodeGen.test(input, expect, 525))
+        #self.assertTrue(TestCodeGen.test(input, expect, 525))
+
+    def test_if_1(self):
+        input = """func main ()
+        begin
+            if (true)
+                writeNumber(1)
+            else 
+                writeNumber(2)
+        end
+        """
+        expect = "1.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 526))
+
+    def test_if_2(self):
+        input = """
+        func main ()
+        begin
+            if (false)
+                writeNumber(1)
+            else 
+                writeNumber(2)
+        end
+        """
+        expect = "2.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 527))
+
+    def test_if_3(self):
+        input = """func main ()
+        begin
+            if (false)
+                writeNumber(1)
+            elif (true)
+                writeNumber(2)
+            else 
+                writeNumber(3)
+        end
+        """
+        expect = "2.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 528))
+
+    def test_if_4(self):
+        input = """func main ()
+        begin
+            if (false)
+                writeNumber(1)
+            elif (false)
+                writeNumber(2)
+            else 
+                writeNumber(3)
+        end
+        """
+        expect = "3.0\n"
+        self.assertTrue(TestCodeGen.test(input, expect, 529))
+
+    def test_if_5(self):
+        input = """func main ()
+        begin
+            if (false)
+                writeNumber(1)
+            elif (false)
+                writeNumber(2)
+            elif (true)
+                writeNumber(3)
+            else 
+                writeNumber(4)
+        end
+        """
+        expect = "3.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 530))
+
+    def test_if_6(self):
+        input = """func main ()
+        begin
+            if (false)
+                writeNumber(1)
+            elif (false)
+                writeNumber(2)
+            elif (false)
+                writeNumber(3)
+            else 
+                writeNumber(4)
+        end
+        """
+        expect = "4.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 531))
+
+    def test_if_7(self):
+        input = """func main ()
+        begin
+            if (false)
+                writeNumber(1)
+            writeNumber(4)   
+        end
+        """
+        expect = "4.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 532))
+
+    def test_if_8(self):
+        input = """func main ()
+        begin
+            if (false)
+                writeNumber(1)
+            elif (false)
+                writeNumber(2)
+            elif (false)
+                writeNumber(3)
+            writeNumber(4)
+        end
+        """
+        expect = "4.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 533))
+

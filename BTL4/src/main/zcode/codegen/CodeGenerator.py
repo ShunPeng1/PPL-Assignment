@@ -862,7 +862,7 @@ class CodeGenVisitor(BaseVisitor):
         if isConstructor:
             self.emit.printout(self.emit.emitREADVAR("this", ClassType(Id(self.className)), 0, frame))
             self.emit.printout(self.emit.emitINVOKESPECIAL(frame))
-        list(map(lambda x: self.visit(x, SubBody(frame, glenv)), body.stmt))
+        self.visit(body, SubBody(frame, glenv))
 
         # Generate the end label for the method
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
@@ -926,18 +926,46 @@ class CodeGenVisitor(BaseVisitor):
     def visitArrayType(self, ast, param):
         pass
 
-
     def visitArrayCell(self, ast, param):
         pass
 
-    def visitBlock(self, ast, param):
-        pass
+    def visitBlock(self, ast : Block, o : SubBody):
+        print("VisitBlock: ",ast, o)
+        return list(map(lambda x: self.visit(x, o), ast.stmt))
 
-    def visitIf(self, ast, param):
-        pass
 
-    def visitFor(self, ast, param):
-        pass
+    def visitIf(self, ast : If, o : SubBody):
+        print("VisitIf: ",ast, o)
+
+        ifFalseLabel = o.frame.getNewLabel()
+        endLabel = o.frame.getNewLabel()
+
+        exprEmit, exprType = self.visit(ast.expr, Access(o.frame, o.sym, False, True))
+        self.emit.printout(exprEmit)
+
+        self.emit.printout(self.emit.emitIFFALSE(ifFalseLabel, o.frame))
+        self.visit(ast.thenStmt, o)
+        self.emit.printout(self.emit.emitGOTO(endLabel, o.frame))
+        self.emit.printout(self.emit.emitLABEL(ifFalseLabel, o.frame))
+
+        for (elifExpr, elifStmt) in ast.elifStmt:
+            elifFalseLabel = o.frame.getNewLabel()
+            elifExprEmit, elifExprType = self.visit(elifExpr, Access(o.frame, o.sym, False, True))
+            self.emit.printout(elifExprEmit)
+
+            # If the condition is false, jump to the next condition
+            self.emit.printout(self.emit.emitIFFALSE(elifFalseLabel, o.frame))
+            self.visit(elifStmt, o)
+            self.emit.printout(self.emit.emitGOTO(endLabel, o.frame))
+            self.emit.printout(self.emit.emitLABEL(elifFalseLabel, o.frame))
+
+        if ast.elseStmt: # else statement
+            self.visit(ast.elseStmt, o)
+
+        self.emit.printout(self.emit.emitLABEL(endLabel, o.frame))
+        return ast
+
+
 
     def visitContinue(self, ast, param):
         pass
@@ -1010,8 +1038,6 @@ class CodeGenVisitor(BaseVisitor):
         
         else:
             pass
-
-
 
     def visitCallStmt(self, ast : CallStmt, o : SubBody):
         print("VisitCallStmt: ",ast, o)
