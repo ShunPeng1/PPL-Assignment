@@ -912,14 +912,15 @@ class CodeGenVisitor(BaseVisitor):
             self.emit.printout(leftEmit)
         
         return variableSymbol
-    
 
-    def visitArrayCell(self, ast, param):
-        pass
 
     def visitBlock(self, ast : Block, o : SubBody):
         print("VisitBlock: ",ast, o)
-        return list(map(lambda x: self.visit(x, o), ast.stmt))
+
+        o.frame.enterScope(False)
+        list(map(lambda x: self.visit(x, o), ast.stmt))
+        o.frame.exitScope()
+        return
 
 
     def visitIf(self, ast : If, o : SubBody):
@@ -1003,8 +1004,17 @@ class CodeGenVisitor(BaseVisitor):
         self.emit.printout(self.emit.emitGOTO(o.frame.getBreakLabel(), o.frame))
         return ast
 
-    def visitReturn(self, ast, param):
-        pass
+    def visitReturn(self, ast : Return, o : SubBody):
+        print("VisitReturn: ",ast, o)
+
+        if ast.expr:
+            returnEmit, returnType = self.visit(ast.expr, Access(o.frame, o.sym, False, True))
+            self.emit.printout(returnEmit)
+            self.emit.printout(self.emit.emitRETURN(returnType, o.frame))
+        else:
+            self.emit.printout(self.emit.emitRETURN(VoidType(), o.frame))
+        return ast
+    
 
     def visitAssign(self, ast : Assign, o : SubBody):
         print("visitAssign: ",ast, o)
@@ -1148,4 +1158,8 @@ class CodeGenVisitor(BaseVisitor):
         return self.emit.emitPUSHCONST(ast.value, StringType(), o.frame), StringType()
 
     def visitArrayLiteral(self, ast, param):
+        pass
+
+    
+    def visitArrayCell(self, ast, param):
         pass
