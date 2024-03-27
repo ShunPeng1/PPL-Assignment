@@ -30,6 +30,8 @@ class Emitter():
             return "(" + "".join(list(map(lambda x: self.getJVMType(x), inType.partype))) + ")" + self.getJVMType(inType.rettype)
         elif type(inType) is cgen.ClassType:
             return "L" + inType.classname.name + ";"
+        else:
+            return "Ljava/lang/Object;"
 
     def getFullType(inType):
         typeIn = type(inType)
@@ -269,6 +271,8 @@ class Emitter():
         # in_: Type
         # frame: Frame
 
+        #print("INVOKESTATIC:", lexeme, frame.getStackSize())
+
         typ = in_
         list(map(lambda x: frame.pop(), typ.partype))
         if not type(typ.rettype) is VoidType:
@@ -306,11 +310,15 @@ class Emitter():
         # in_: Type
         # frame: Frame
 
+        #print("INVOKEVIRTUAL:", lexeme, in_, frame.getStackSize())
+
         typ = in_
         list(map(lambda x: frame.pop(), typ.partype))
-        frame.pop()
-        if not type(typ) is VoidType:
+
+        if not (type(typ) is VoidType):
             frame.push()
+        frame.pop()
+
         return self.jvm.emitINVOKEVIRTUAL(lexeme, self.getJVMType(in_))
 
     '''
@@ -427,17 +435,14 @@ class Emitter():
         # frame: Frame
         # ..., string1, string2 -> ..., result
 
-        frame.pop()
-        frame.pop()
-        return self.emitINVOKEVIRTUAL("java/lang/String", "equals", "(Ljava/lang/Object;)Z", frame)
+
+        return self.emitINVOKEVIRTUAL("java/lang/String/equals", cgen.MethodType([None], BoolType()), frame)
 
     def emitConcatStrings(self, frame):
     # frame: Frame
     # ..., string1, string2 -> ..., result
-
-        frame.pop()
-        frame.pop()
-        return self.emitINVOKEVIRTUAL("java/lang/String", "concat", "(Ljava/lang/String;)Ljava/lang/String;", frame)
+        
+        return  self.emitINVOKEVIRTUAL("java/lang/String/concat", cgen.MethodType([ StringType()], StringType()), frame)
 
     '''
     def emitREOP(self, op, in_, frame):
