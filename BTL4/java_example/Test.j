@@ -12,6 +12,8 @@
 .class public Test
 .super java/lang/Object
 
+.field static a Z
+
 .method public <init>()V
   .limit stack 1
   .limit locals 1
@@ -22,17 +24,21 @@
 .end method
 
 .method public static main([Ljava/lang/String;)V
-  .limit stack 2
-  .limit locals 2
-  .line 6
-  0: ldc "4"
-  2: ldc "4"
-  4: invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
-  7: astore_1
-  .line 8
-  8: aload_1
-  9: invokestatic io/writeString(Ljava/lang/String;)V
-  .line 10
-  12: return
+  .limit stack 1
+  .limit locals 1
+  .line 9
+  0: getstatic Test/a Z
+  3: invokestatic io/writeBool(Z)V
+  .line 11
+  6: return
+.end method
+
+.method static <clinit>()V
+  .limit stack 1
+  .limit locals 0
+  .line 5
+  0: iconst_0
+  1: putstatic Test/a Z
+  4: return
 .end method
 

@@ -750,9 +750,9 @@ class JasminCode(MachineCode):
         # typ: String
         # isFinal: Boolean
         if isFinal:
-            return ".field static final " + lexeme + " " + typ + JasminCode.END
+            return ".field public static final " + lexeme + " " + typ + JasminCode.END
         else:
-            return ".field static " + lexeme + " " + typ + JasminCode.END
+            return ".field public static " + lexeme + " " + typ + JasminCode.END
 
     def emitINSTANCEFIELD(self, lexeme, typ):
         # lexeme: String

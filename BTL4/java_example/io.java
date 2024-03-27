@@ -84,7 +84,7 @@ public class io {
 	/** reads and returns a boolean value from the standard input
 	 *	@return int a boolean value read from standard input
 	 */
-	public static boolean readBool() {
+	public static boolean readBoolean() {
         String tmp = "";
 		try {
             tmp = input.readLine();
@@ -102,14 +102,14 @@ public class io {
     /** print out the value of the boolean b to the standard output
      *	@param b the boolean value is printed out
      */
-    public static void writeBool(boolean b)  {
+    public static void writeBoolean(boolean b)  {
     	System.out.print(b+"");
     }
     
     /** same as putBoolLn except that it also prints a new line
      *	@param b the boolean value is printed out
      */
-    public static void writeBoolLn(boolean b) {
+    public static void writeBooleanLn(boolean b) {
     	System.out.println(b+"");
     }
     /** reads and returns a boolean value from the standard input
@@ -169,13 +169,20 @@ public class io {
      * 
     */
 
+    public static boolean readBool() {
+        return readBoolean();
+    }
+
+    public static void writeBool(boolean b) {
+        writeBooleanLn(b);
+    }
     
     public static float readNumber() {
         return readFloat();
     }
 
     public static void writeNumber(float f) {
-        System.out.print(f+"");
+        writeFloatLn(f);
     }
 	
     public static String readString() {
@@ -183,7 +190,7 @@ public class io {
     }
 
     public static void writeString(String a) {
-        System.out.print(a);
+        writeStr(a);
     }
 
     

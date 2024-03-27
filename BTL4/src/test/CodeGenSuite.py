@@ -217,3 +217,54 @@ class CheckCodeGenSuite(unittest.TestCase):
         """
         expect = "true"
         #self.assertTrue(TestCodeGen.test(input, expect, 522))
+
+
+    def test_unary_assign_1(self):
+        input = """func main ()
+        begin
+            var a <- 1
+            a <- -a
+            writeNumber(a)
+        end
+        """
+        expect = "-1.0"
+        #self.assertTrue(TestCodeGen.test(input, expect, 523))
+
+    def test_unary_assign_2(self):
+        input = """
+        var a <- true
+        func main ()
+        begin
+            
+            a <- not a
+            writeBool(a)
+        end
+        """
+        expect = "false"
+        #self.assertTrue(TestCodeGen.test(input, expect, 524))
+
+    def test_unary_assign_3(self):
+        input = """
+        var a <- false
+        var b <- not a
+        func main ()
+        begin
+            writeBool(a)
+            writeBool(b)
+
+            b <- not b
+            writeBool(b)
+            a <- not a
+            writeBool(a)
+            var c <- a and (not b) and (false or true)
+
+            writeBool(c)
+        end
+        """
+        expect = """false
+true
+false
+true
+true
+"""
+        self.assertTrue(TestCodeGen.test(input, expect, 525))
