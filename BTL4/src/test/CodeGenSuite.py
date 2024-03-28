@@ -467,9 +467,9 @@ true
         input = """func main ()
         begin
             var i <- 0
-            var j <- 0
-            for j until i >= 3 by 1
-            begin        
+            for i until i >= 3 by 1
+            begin       
+                var j <- 0   
                 for j until j >= 3 by 1
                 begin
                     writeNumber(i)
@@ -478,23 +478,23 @@ true
             end
         end
         """
-        expect = """1.0
+        expect = """0.0
+0.0
+0.0
+1.0
+0.0
+2.0
+1.0
+0.0
 1.0
 1.0
-2.0
-1.0
-3.0
-2.0
 1.0
 2.0
 2.0
+0.0
 2.0
-3.0
-3.0
 1.0
-3.0
 2.0
-3.0
-3.0
+2.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 538))
+        self.assertTrue(TestCodeGen.test(input, expect, 538))

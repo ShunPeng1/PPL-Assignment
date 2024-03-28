@@ -593,7 +593,8 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
                 stmts = stmts + [self.visit(stmt, (envi, stmtParam))]
 
         envi.pop()
-
+        stmtStr = ', '.join(str(stmt) for stmt in stmts)
+        print("visitBlockJava: ", stmtStr)
         return Block(stmts) 
 
     def visitIf(self, ast : If, param : Tuple[Envi, StmtParam]):
@@ -603,17 +604,19 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
         ifConditionType = self.visit(ast.expr, (envi, ExprParam(True, True, BoolType())))
         
-        self.visit(ast.thenStmt, (envi, stmtParam))
+        thenStmt = self.visit(ast.thenStmt, (envi, stmtParam))
 
+        elifListTuple = []
         for (elifExpr, elifStmt) in ast.elifStmt:
             elifConditionType = self.visit(elifExpr, (envi, ExprParam( True, True, BoolType())))
 
-            self.visit(elifStmt, (envi, stmtParam))
+            elifListTuple.append((elifExpr, self.visit(elifStmt, (envi, stmtParam))))
         
+        elseStmt = None
         if ast.elseStmt:
-            self.visit(ast.elseStmt, (envi, stmtParam))
+            elseStmt = self.visit(ast.elseStmt, (envi, stmtParam))
 
-        return ast
+        return If(ast.expr, thenStmt, elifListTuple, elseStmt)
 
     
     def visitFor(self, ast : For, param):
@@ -637,23 +640,20 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         
         # Visit body of for loop
         
-        self.visit(ast.body, (envi, stmtParam))
+        body = self.visit(ast.body, (envi, stmtParam))
         
-        return ast
+        return For(ast.name, ast.condExpr, ast.updExpr, body)
 
     
     def visitContinue(self, ast : Continue, param : Tuple[Envi, StmtParam]):
         #print("Visit Continue: ", ast)
-
         (envi, stmtParam) = param
 
-        
         return ast
 
     
     def visitBreak(self, ast : Break, param):
         #print("Visit Break: ", ast)
-
         (envi, stmtParam) = param
 
         return ast
@@ -878,7 +878,7 @@ class CodeGenVisitor(BaseVisitor):
         frame.exitScope()
 
     def visitMethodDecl(self, ast : MethodDecl, o : SubBody):
-        print("VisitMethodDecl: ",ast, o)
+        print("VisitMethodDecl: ")
 
         frame = Frame(ast.name, ast.returnType)
         self.genMETHOD(ast, o.sym, frame)
@@ -887,8 +887,9 @@ class CodeGenVisitor(BaseVisitor):
         return functionSymbol
 
     
+ 
     def visitAttributeDecl(self, ast : AttributeDecl, o : SubBody):
-        print("visitAttributeDecl: ",ast, o)
+        print("visitAttributeDecl: ")
 
         isStatic = ast.isStatic
         variableSymbol = None
@@ -915,7 +916,7 @@ class CodeGenVisitor(BaseVisitor):
 
 
     def visitBlock(self, ast : Block, o : SubBody):
-        print("VisitBlock: ",ast, o)
+        print("VisitBlock: ",ast)
 
         o.frame.enterScope(False)
         list(map(lambda x: self.visit(x, o), ast.stmt))
@@ -924,7 +925,7 @@ class CodeGenVisitor(BaseVisitor):
 
 
     def visitIf(self, ast : If, o : SubBody):
-        print("VisitIf: ",ast, o)
+        print("VisitIf: ")
 
         ifFalseLabel = o.frame.getNewLabel()
         endLabel = o.frame.getNewLabel()
@@ -957,7 +958,7 @@ class CodeGenVisitor(BaseVisitor):
 
 
     def visitFor(self, ast : For, o : SubBody):
-        print("VisitFor: ",ast, o)
+        print("VisitFor: ")
 
         o.frame.enterLoop()
 
@@ -992,20 +993,20 @@ class CodeGenVisitor(BaseVisitor):
 
 
     def visitContinue(self, ast : Continue, o : SubBody):
-        print("VisitContinue: ",ast, o)
+        print("VisitContinue: ")
 
         self.emit.printout(self.emit.emitGOTO(o.frame.getContinueLabel(), o.frame))
         return ast
     
 
     def visitBreak(self, ast : Break, o : SubBody):
-        print("VisitBreak: ",ast, o)
+        print("VisitBreak: ")
 
         self.emit.printout(self.emit.emitGOTO(o.frame.getBreakLabel(), o.frame))
         return ast
 
     def visitReturn(self, ast : Return, o : SubBody):
-        print("VisitReturn: ",ast, o)
+        print("VisitReturn: ")
 
         if ast.expr:
             returnEmit, returnType = self.visit(ast.expr, Access(o.frame, o.sym, False, True))
@@ -1017,7 +1018,7 @@ class CodeGenVisitor(BaseVisitor):
     
 
     def visitAssign(self, ast : Assign, o : SubBody):
-        print("visitAssign: ",ast, o)
+        print("visitAssign: ", ast)
 
         assignEmit, assignType = self.visit(ast.rhs, Access(o.frame, o.sym, False, True))
         self.emit.printout(assignEmit)
@@ -1080,7 +1081,7 @@ class CodeGenVisitor(BaseVisitor):
             pass
 
     def visitCallStmt(self, ast : CallStmt, o : SubBody):
-        print("VisitCallStmt: ",ast, o)
+        print("VisitCallStmt: ")
         ctxt = o
         frame = ctxt.frame
         nenv = ctxt.sym
@@ -1101,8 +1102,8 @@ class CodeGenVisitor(BaseVisitor):
 
     
     def visitCallExpr(self, ast : CallExpr, o : Access):
-        print("VisitCallExpr: ",ast, o)
-        print("VisitCallStmt: ",ast, o)
+        print("VisitCallExpr: ")
+        print("VisitCallStmt: ")
         ctxt = o
         frame = ctxt.frame
         nenv = ctxt.sym
@@ -1154,7 +1155,7 @@ class CodeGenVisitor(BaseVisitor):
         return self.emit.emitPUSHICONST(str(ast.value).lower(), o.frame), BoolType()
 
     def visitStringLiteral(self, ast : StringLiteral, o : Access):
-        print("VisitStringLiteral: ",ast, o)
+        print("VisitStringLiteral: ")
         return self.emit.emitPUSHCONST(ast.value, StringType(), o.frame), StringType()
 
     def visitArrayLiteral(self, ast, param):
