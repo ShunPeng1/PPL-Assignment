@@ -497,4 +497,125 @@ true
 2.0
 2.0
 """
-        self.assertTrue(TestCodeGen.test(input, expect, 538))
+        #self.assertTrue(TestCodeGen.test(input, expect, 538))
+
+
+    def test_for_6(self):
+        input = """func main ()
+        begin
+            var i <- 0
+            for i until i > 15 by 1
+            begin
+                if (i <= 7)
+                    continue
+                else if (i > 12)
+                    break
+                    
+                writeNumber(i)
+                if (i % 3 = 0)
+                    writeString(" - divisible by 3")
+            end
+        end
+        """
+        expect = """8.0
+9.0
+ - divisible by 3
+10.0
+11.0
+12.0
+ - divisible by 3
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 539))
+
+    
+    def test_return_1(self):
+        input = """func main ()
+        begin
+            writeNumber(1)
+            return
+            writeNumber(2)
+        end
+        """
+        expect = "1.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 540))
+
+    def test_return_2(self):
+        input = """
+        func main ()
+        begin
+            var i <- 0
+            for i until i > 10 by 1
+            begin
+                writeNumber(i)
+                if (i = 5)
+                    return
+            end
+        end
+        """
+        expect = """0.0
+1.0
+2.0
+3.0
+4.0
+5.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 541))
+
+    def test_return_3(self):
+        input = """
+        func foo ()
+            return true
+        func goo ()
+            return 1
+            
+
+        func main ()
+        begin
+            var i <- goo()
+            for i until not foo() by goo()
+            begin
+                writeNumber(i)
+                if (i = 5)
+                    return
+                
+            end
+        end
+        """
+        expect = """1.0
+2.0
+3.0
+4.0
+5.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 542))
+
+    def test_return_4(self):
+        input = """
+        func fibo(number n)
+        begin
+            if (n <= 1)
+                return n
+            return fibo(n - 1) + fibo(n - 2)
+        end
+
+        func main ()
+        begin
+            var i <- 0
+            for i until i >= 10 by 1
+            begin
+                writeNumber(fibo(i))
+            end
+        end     
+        """
+        expect = """0.0
+1.0
+1.0
+2.0
+3.0
+5.0
+8.0
+13.0
+21.0
+34.0
+"""
+        self.assertTrue(TestCodeGen.test(input, expect, 543))

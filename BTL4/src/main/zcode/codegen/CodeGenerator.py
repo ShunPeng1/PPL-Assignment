@@ -881,9 +881,10 @@ class CodeGenVisitor(BaseVisitor):
         print("VisitMethodDecl: ")
 
         frame = Frame(ast.name, ast.returnType)
-        self.genMETHOD(ast, o.sym, frame)
-        functionSymbol = FunctionSymbol(ast.name, MethodType([x.typ for x in ast.param], ast.returnType), ClassName(self.className))
+        functionSymbol = FunctionSymbol(ast.name.name, MethodType([x.typ for x in ast.param], ast.returnType), ClassName(self.className))
         o.sym.append(functionSymbol)
+        
+        self.genMETHOD(ast, o.sym, frame)
         return functionSymbol
 
     
@@ -1081,7 +1082,7 @@ class CodeGenVisitor(BaseVisitor):
             pass
 
     def visitCallStmt(self, ast : CallStmt, o : SubBody):
-        print("VisitCallStmt: ")
+        print("VisitCallStmt: ", ast)
         ctxt = o
         frame = ctxt.frame
         nenv = ctxt.sym
@@ -1102,8 +1103,7 @@ class CodeGenVisitor(BaseVisitor):
 
     
     def visitCallExpr(self, ast : CallExpr, o : Access):
-        print("VisitCallExpr: ")
-        print("VisitCallStmt: ")
+        print("VisitCallExpr: ",ast)
         ctxt = o
         frame = ctxt.frame
         nenv = ctxt.sym
@@ -1126,7 +1126,7 @@ class CodeGenVisitor(BaseVisitor):
 
     
     def visitId(self, ast : Id, param : Access):
-        print("VisitId: ",ast, param)
+        print("VisitId: ",ast,param.sym)
         
         ctxt = param
         frame = ctxt.frame
