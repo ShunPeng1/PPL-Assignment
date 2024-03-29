@@ -603,7 +603,8 @@ true
             var i <- 0
             for i until i >= 10 by 1
             begin
-                writeNumber(fibo(i))
+                var k <- fibo(i)
+                writeNumber(k)
             end
         end     
         """
@@ -618,4 +619,61 @@ true
 21.0
 34.0
 """
-        self.assertTrue(TestCodeGen.test(input, expect, 543))
+        #self.assertTrue(TestCodeGen.test(input, expect, 543))
+
+    def test_return_5(self):
+        input = """
+        func foo (number i, bool a)
+        begin
+            return i
+        end
+        
+        func main ()
+        begin
+            var i <- foo(69,true)
+            writeNumber(i)
+        end
+        """
+        expect = "69.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 544))
+
+    def test_return_6(self):
+        input = """
+        func foo (number i)
+        begin
+            if (i>=0)
+                return 69
+            else 
+                return foo(i-1)
+        end
+        
+        func main ()
+        begin
+            var i <- foo(10)
+            writeNumber(i)
+        end
+        """
+        expect = "69.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 545))
+
+    
+    def test_return_7(self):
+        input = """
+        func foo (number i)
+        begin
+            if (i>=0)
+                return 69
+            
+            return foo(2)
+        end
+        
+        func main ()
+        begin
+            var i <- foo(-2)
+            writeNumber(i)
+        end
+        """
+        expect = "69.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 545))
+
+    

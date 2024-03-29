@@ -56,26 +56,6 @@ class MethodType(Type):
         return f"MethodType([{partype_str}], {self.rettype})"
 
 
-class MethodDecl(Decl):
-    # instance: Instance
-    # name: Id
-    # param: list[VarDecl]
-    # returnType: Type
-    # body: Block
-
-    def __init__(self, instance, name, param, returnType, body):
-        self.instance = instance # Not used but keep for consistency
-        self.name = name # Id
-        self.param = param # list of VarDecl
-        self.returnType = returnType # Type
-        self.body = body # Block
-
-    def accept(self, visitor, param):
-        return visitor.visitMethodDecl(self, param)
-
-    def __str__(self):
-        return f"MethodDecl({self.name}, {self.param}, {self.returnType}, {self.body})"
-
 class AttributeDecl(Decl):
     def __init__(self, isStatic, name, varType, idx, varInit):
         self.isStatic = isStatic
@@ -90,6 +70,27 @@ class AttributeDecl(Decl):
     def __str__(self):
         return f"AttributeDecl({self.name}, {self.idx}, {self.varType}, {self.varInit})"
         
+
+class MethodDecl(Decl):
+    # instance: Instance
+    # name: Id
+    # param: list[AttributeDecl]
+    # returnType: Type
+    # body: Block
+
+    def __init__(self, instance, name, param : list[AttributeDecl], returnType, body):
+        self.instance = instance # Not used but keep for consistency
+        self.name = name # Id
+        self.param = param # list of AttributeDecl
+        self.returnType = returnType # Type
+        self.body = body # Block
+
+    def accept(self, visitor, param):
+        return visitor.visitMethodDecl(self, param)
+
+    def __str__(self):
+        return f"MethodDecl({self.name}, {self.param}, {self.returnType}, {self.body})"
+
 
 class Symbol:
     def __init__(self, name):
@@ -111,7 +112,7 @@ class VariableSymbol(Symbol):
 
 
 class FunctionSymbol(Symbol):
-    def __init__(self, name, methodType = MethodType([],None), className : ClassName = None, param : list[VariableSymbol] = None, body = None, astFuncDecl=None):
+    def __init__(self, name, methodType = MethodType([],None), className : ClassName = None, param : list[AttributeDecl] = None, body = None, astFuncDecl=None):
         self.name = name
         self.methodType : MethodType = methodType  # MethodType
         if param is None:
@@ -123,7 +124,8 @@ class FunctionSymbol(Symbol):
         self.className = className
 
     def __str__(self):
-        return f"FunctionSymbol({self.name}, {self.methodType})"
+        paramStr = ', '.join(str(i) for i in self.param)
+        return f"FunctionSymbol({self.name}, {self.methodType}, {paramStr})"
 
    
 class SubBody():
@@ -147,7 +149,7 @@ class Scope:
     def __init__(self, symbols = None):
         self.symbols = symbols if symbols is not None else []  # Initialize as empty list if None is provided
     
-    def define(self, symbol : FunctionSymbol):
+    def define(self, symbol : Symbol):
         self.symbols.append(symbol)
 
     def __str__(self) -> str:
@@ -369,35 +371,38 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         self.visit(ast.name, (envi, ExprParam(False, isDeclared))) # visit function name, check functionSymbol have declared or not
         
         def visitFuncParamAndBody(functionSymbol : FunctionSymbol):
-            parameters : list[VariableSymbol] = []
+            
+            
+            parameters : list[AttributeDecl] = []
 
-            #print(len(envi),envi.getLast())
             envi.append(Scope()) # new scope for function parameters
 
             if ast.param:
                 for i in range(0,len(ast.param)):
-                    astParam = ast.param[i]
-                    parameterSymbol = self.visit(astParam, (envi, VarDeclParam(False , i)))
-                    parameters.append(parameterSymbol)
+                    paramDecl = ast.param[i]
+                    paramAttributeDecl = self.visit(paramDecl, (envi, VarDeclParam(False , i)))
+                    parameters.append(paramAttributeDecl)
                 
                 #print(len(envi),envi.getLast())
             
+            # Add function Symbol before visit body for recursive
+            functionSymbol.param = parameters
 
             stmtParam = StmtParam(functionSymbol, 0)
             body = self.visit(ast.body, (envi, stmtParam)) if ast.body else None # declare only or implement function
             
             if body: # function has body so it must have a type
                 if functionSymbol.methodType is None:
-                    functionSymbol.methodType = MethodType([x.type for x in parameters],None)
+                    functionSymbol.methodType = MethodType([x.varType for x in parameters],None)
                 
                 if functionSymbol.methodType.rettype is None:
-                    functionSymbol.methodType = MethodType([x.type for x in parameters],VoidType()) 
+                    functionSymbol.methodType = MethodType([x.varType for x in parameters],VoidType()) 
                 else:
-                    functionSymbol.methodType = MethodType([x.type for x in parameters],functionSymbol.methodType.rettype)
+                    functionSymbol.methodType = MethodType([x.varType for x in parameters],functionSymbol.methodType.rettype)
             else:
-                functionSymbol.methodType = MethodType([x.type for x in parameters],None)
+                functionSymbol.methodType = MethodType([x.varType for x in parameters],None)
 
-            functionSymbol.param = parameters
+
             functionSymbol.body = body
 
             stmtParam.currentFunctionSymbol = None # pop the scope of function 
@@ -406,7 +411,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         
         if functionSymbol is None: # first declaration of function 
             
-            functionSymbol = FunctionSymbol(name, MethodType([],None), self.className, [], None, ast) # TODO : return type of function
+            functionSymbol = FunctionSymbol(name, MethodType([],None), self.className, None, None, ast) # TODO : return type of function
 
             # Add function to current scope, add it soon because of recursive call
             envi.getLast().define(functionSymbol) 
@@ -509,9 +514,9 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         self.visit(ast.name, (envi, ExprParam( True, True)))
         functionSymbol : FunctionSymbol = self.getSymbol(ast.name, False, envi)
 
-
+        print("Call Expr:", len(ast.args), functionSymbol)
         for i in range(len(ast.args)):
-            symbolParamType = functionSymbol.param[i].type
+            symbolParamType = functionSymbol.param[i].varType
             callParamType = self.visit(ast.args[i], (envi, ExprParam(True, True, symbolParamType)))
             
 
@@ -797,8 +802,6 @@ class CodeGenVisitor(BaseVisitor):
         self.emit.printout(self.emit.emitPROLOG(
             self.className, "java.lang.Object"))
 
-        # generate class static init
-        
         
         # generate static classes
         for symbol in ast.memlist:   
@@ -829,7 +832,7 @@ class CodeGenVisitor(BaseVisitor):
         methodName = "<init>" if isConstructor else consdecl.name.name
 
         # Set the input types based on whether the method is the main method
-        intype = [ArrayType(0, StringType())] if isMain else list(map(lambda x: x.typ, consdecl.param))
+        intype = [ArrayType(0, StringType())] if isMain else list(map(lambda x: x.varType, consdecl.param))
 
         # Create a method type object
         mtype = MethodType(intype, returnType)
@@ -881,7 +884,7 @@ class CodeGenVisitor(BaseVisitor):
         print("VisitMethodDecl: ")
 
         frame = Frame(ast.name, ast.returnType)
-        functionSymbol = FunctionSymbol(ast.name.name, MethodType([x.typ for x in ast.param], ast.returnType), ClassName(self.className))
+        functionSymbol = FunctionSymbol(ast.name.name, MethodType([x.varType for x in ast.param], ast.returnType), ClassName(self.className))
         o.sym.append(functionSymbol)
         
         self.genMETHOD(ast, o.sym, frame)
@@ -904,6 +907,10 @@ class CodeGenVisitor(BaseVisitor):
             idx = o.frame.getNewIndex()
             variableSymbol = VariableSymbol(ast.name.name, ast.varType, idx, isStatic, ast)
         
+            if ast.varInit is None:
+                o.sym.append(variableSymbol)
+                return variableSymbol
+
             initEmit, initType = self.visit(ast.varInit, Access(o.frame, o.sym, False, False))
             self.emit.printout(initEmit)
             #self.emit.printout(self.emit.emitPUSHCONST(idx, ast.varType, o.frame))
@@ -955,6 +962,11 @@ class CodeGenVisitor(BaseVisitor):
             self.visit(ast.elseStmt, o)
 
         self.emit.printout(self.emit.emitLABEL(endLabel, o.frame))
+        
+        ## Empty Label at the end of if statement fix
+        self.emit.printout(self.emit.emitPUSHFCONST("0.0",o.frame))
+        self.emit.printout(self.emit.emitPOP(o.frame))
+
         return ast
 
 
@@ -1094,10 +1106,11 @@ class CodeGenVisitor(BaseVisitor):
         # Visit arguments
         for x in ast.args:
             str1, typ1 = self.visit(x, Access(frame, nenv, False, True))
-            in_ = (in_[0] + str1, in_[1].append(typ1)) # Concatenate emit string and append type
+            in_ = (in_[0] + str1, in_[1] + [typ1]) # Concatenate emit string and append type
         
 
         self.emit.printout(in_[0])
+        print("CallStmt: ",self.emit.buff)
         self.emit.printout(self.emit.emitINVOKESTATIC(
             className + "/" + ast.name.name, methodType, frame))
 
@@ -1115,14 +1128,15 @@ class CodeGenVisitor(BaseVisitor):
         # Visit arguments
         for x in ast.args:
             str1, typ1 = self.visit(x, Access(frame, nenv, False, True))
-            in_ = (in_[0] + str1, in_[1].append(typ1)) # Concatenate emit string and append type
+            in_ = (in_[0] + str1, in_[1] + [typ1] ) # Concatenate emit string and append type
         
-
+        print("CallExpr: ",in_[0], self.emit.buff)
+            
         self.emit.printout(in_[0])
         self.emit.printout(self.emit.emitINVOKESTATIC(
             className + "/" + ast.name.name, methodType, frame))
         
-        return in_[0], methodType.rettype
+        return "", methodType.rettype
 
     
     def visitId(self, ast : Id, param : Access):
