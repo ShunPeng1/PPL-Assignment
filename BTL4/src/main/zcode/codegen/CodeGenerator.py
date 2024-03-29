@@ -47,7 +47,7 @@ class ClassDecl (Decl):
         return f"ClassDecl({self.classname}, [{memlist_str}] )"
 
 class MethodType(Type):
-    def __init__(self, partype, rettype):
+    def __init__(self, partype : list[Type], rettype):
         self.partype = partype # list of Type
         self.rettype = rettype # Type
 
@@ -298,7 +298,9 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
     def visitProgram(self, ast : Program, c):
         result = []
         for i in range(len(ast.decl)):
-            result.append(self.visit(ast.decl[i], (self.env, VarDeclParam(True, i))))
+            decl = self.visit(ast.decl[i], (self.env, VarDeclParam(True, i)))
+            if decl:
+                result.append(decl)
         return ClassDecl(self.className, result)
 
     def visitVarDecl(self, ast : VarDecl, param : tuple[Envi,VarDeclParam]):
@@ -372,7 +374,6 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         
         def visitFuncParamAndBody(functionSymbol : FunctionSymbol):
             
-            
             parameters : list[AttributeDecl] = []
 
             envi.append(Scope()) # new scope for function parameters
@@ -388,21 +389,22 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             # Add function Symbol before visit body for recursive
             functionSymbol.param = parameters
 
+            # Add method type only knowing the parameters
+            methodType = MethodType([x.varType for x in parameters],None)
+            functionSymbol.methodType = methodType
+            
             stmtParam = StmtParam(functionSymbol, 0)
             body = self.visit(ast.body, (envi, stmtParam)) if ast.body else None # declare only or implement function
             
             if body: # function has body so it must have a type
-                if functionSymbol.methodType is None:
-                    functionSymbol.methodType = MethodType([x.varType for x in parameters],None)
                 
                 if functionSymbol.methodType.rettype is None:
-                    functionSymbol.methodType = MethodType([x.varType for x in parameters],VoidType()) 
+                    methodType.rettype = VoidType()
                 else:
-                    functionSymbol.methodType = MethodType([x.varType for x in parameters],functionSymbol.methodType.rettype)
-            else:
-                functionSymbol.methodType = MethodType([x.varType for x in parameters],None)
+                    methodType.rettype = functionSymbol.methodType.rettype 
 
-
+            # Add method type to function symbol after visit body
+            functionSymbol.methodType = methodType
             functionSymbol.body = body
 
             stmtParam.currentFunctionSymbol = None # pop the scope of function 
@@ -427,7 +429,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             # Check for redeclared parameters
             visitFuncParamAndBody(functionSymbol)
 
-            return MethodDecl(Instance(), functionSymbol.name, functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body)
+            return MethodDecl(Instance(), Id(functionSymbol.name), functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body)
     
         else:
             pass # Solved in StaticChecker
@@ -881,7 +883,7 @@ class CodeGenVisitor(BaseVisitor):
         frame.exitScope()
 
     def visitMethodDecl(self, ast : MethodDecl, o : SubBody):
-        print("VisitMethodDecl: ")
+        print("VisitMethodDecl: ", ast)
 
         frame = Frame(ast.name, ast.returnType)
         functionSymbol = FunctionSymbol(ast.name.name, MethodType([x.varType for x in ast.param], ast.returnType), ClassName(self.className))

@@ -676,4 +676,132 @@ true
         expect = "69.0\n"
         #self.assertTrue(TestCodeGen.test(input, expect, 545))
 
-    
+    def test_return_8(self):
+        input = """
+        func foo (number i)
+        begin
+            if (i<0)
+                return 69
+            else
+                return foo(i-1)
+        end
+        
+        func main ()
+        begin
+            var i <- foo(10000)
+            writeNumber(i)
+        end
+        """
+        expect = "69.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 546))
+
+    def test_return_9(self):
+        input = """
+        func foo (number i)
+        begin
+            if (i<0)
+                return "1"
+            else
+                return foo(i-2) ... foo(i-1)
+        end
+        
+        func main ()
+        begin
+            var i <- foo(5)
+            writeString(i)
+        end
+        """
+        expect = "111111111111111111111\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 547))
+
+    def test_return_10(self):
+        input = """
+        func foo (number i)
+        begin
+            writeNumber(i)
+        end
+        
+        func main ()
+        begin
+            var i <- 0
+            for i until i >= 10 by 1
+            begin
+                foo(i)
+                if (i = 5)
+                    return
+            end
+        end
+        """
+        expect = """0.0
+1.0
+2.0
+3.0
+4.0
+5.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 548))
+
+    def test_return_11(self):
+        input = """
+        func hanoi(number n, string source, string target, string auxiliary)
+
+        func temp(number n, string source, string target, string auxiliary)
+        begin
+            hanoi(n, source, target, auxiliary)
+        end
+
+        func hanoi(number n, string source, string target, string auxiliary)
+        begin
+            if (n > 0) 
+            begin
+                temp(n - 1, source, auxiliary, target)
+                var a <- "Move disk from " ... source
+                var b <- " to " ... target
+                writeString(a ... b)
+                temp(n - 1, auxiliary, target, source)
+            end
+        end
+
+        func main()
+        begin
+            hanoi(3, "A", "C", "B")
+        end
+        """
+        expect = """Move disk from A to C
+Move disk from A to B
+Move disk from C to B
+Move disk from A to C
+Move disk from B to A
+Move disk from B to C
+Move disk from A to C
+"""
+        self.assertTrue(TestCodeGen.test(input, expect, 549))
+
+    def test_return_12(self):
+        input = """
+        func hanoi(number n, string source, string target, string auxiliary)
+        begin
+            if (n > 0) 
+            begin
+                hanoi(n - 1, source, auxiliary, target)
+                var a <- "Move disk from " ... source
+                var b <- " to " ... target
+                writeString(a ... b)
+                hanoi(n - 1, auxiliary, target, source)
+            end
+        end
+
+        func main()
+        begin
+            hanoi(3, "A", "C", "B")
+        end
+        """
+        expect = """Move disk from A to C
+Move disk from A to B
+Move disk from C to B
+Move disk from A to C
+Move disk from B to A
+Move disk from B to C
+Move disk from A to C
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 550))
