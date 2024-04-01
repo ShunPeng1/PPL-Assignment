@@ -830,7 +830,30 @@ Move disk from A to C
         func main()
         begin
             number a[5] <- [1,2,3,4,5]
+            var i <- 0
+            for i until i > 5 by 1
+            begin
+                a[i] <- i
+                writeNumber(a[i])
+            end
         end
         """
-        expect = """"""
-        #self.assertTrue(TestCodeGen.test(input, expect, 553))
+        expect = """0.0
+1.0
+2.0
+3.0
+4.0
+"""
+        self.assertTrue(TestCodeGen.test(input, expect, 553))
+
+    def test_array_3(self):
+        input = """
+        func main()
+        begin
+            number a[5] <- [1,2,3,4,5]
+            a[2] <- 69
+            writeNumber(a[2])
+        end
+        """
+        expect = "69.0\n"
+        #self.assertTrue(TestCodeGen.test(input, expect, 554))

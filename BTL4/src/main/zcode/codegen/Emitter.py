@@ -147,9 +147,9 @@ class Emitter():
             return self.jvm.emitIASTORE()
         # elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
         elif type(in_) is cgen.ClassType or type(in_) is StringType:
-            return self.jvm.emitASTORE()
+            return self.jvm.emitAASTORE()
         elif type(in_) is ArrayType:
-            return self.jvm.emitASTORE()
+            return self.jvm.emitAASTORE()
         else:
             raise IllegalOperandException(str(in_))
 
@@ -677,6 +677,11 @@ class Emitter():
         # frame: Frame
 
         return self.jvm.emitI2F()
+    
+    def emitF2I(self, frame):
+        # frame: Frame
+
+        return self.jvm.emitF2I()
 
     ''' generate code to return.
     *   <ul>

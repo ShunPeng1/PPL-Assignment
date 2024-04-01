@@ -6,10 +6,10 @@ public class Test {
       
         int[] a = {1, 2, 3, 4, 5};
         
-        a[2] = a[3];
-
         int c = 4;
-        c = c;
+        a[c] = c;
+
+        c = a[3];
     }
     
 
@@ -18,6 +18,10 @@ public class Test {
         
         b[0][1] = b[2][3];
         b[1] = b[0];
+
+        int [] c = {1,2};
+        b[0] = c;
+        b[0][1] = 2;
     }
 
     public static void main3(){

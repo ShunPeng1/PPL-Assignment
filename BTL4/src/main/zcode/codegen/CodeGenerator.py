@@ -259,12 +259,15 @@ class CodeGenerator:
 
 def getName(symbol : Symbol) -> str:
     return symbol.name
-    
+
+EMIT_SEPARATOR : str = "@@@" 
+
 class AstConvertToJavaAstVisitor(BaseVisitor):
     def __init__(self, astTree,env):
         self.astTree = astTree
         self.env = env
         self.className = ClassName("ZCodeClass")
+        
 
     def lookup(self, name : str, symbols : list[Symbol], getName) -> Symbol:
         for symbol in symbols:
@@ -1036,11 +1039,19 @@ class CodeGenVisitor(BaseVisitor):
         print("visitAssign: ", ast)
 
         assignEmit, assignType = self.visit(ast.rhs, Access(o.frame, o.sym, False, True))
-        self.emit.printout(assignEmit)
-
-        leftEmit, leftType = self.visit(ast.lhs, Access(o.frame, o.sym, True, True))
-        self.emit.printout(leftEmit)
+       
+        leftEmit , leftType = self.visit(ast.lhs, Access(o.frame, o.sym, True, True))
         
+
+        if type(ast.lhs) == ArrayCell:
+            innerEmit, arrEmit = leftEmit.split(EMIT_SEPARATOR)
+            self.emit.printout(innerEmit)
+            self.emit.printout(assignEmit)
+            self.emit.printout(arrEmit)
+        else:
+            self.emit.printout(assignEmit)
+            self.emit.printout(leftEmit)
+
         return assignEmit, assignType
 
 
@@ -1172,17 +1183,57 @@ class CodeGenVisitor(BaseVisitor):
         innerType = None
 
         if o.isDeclared:
-
-            if o.isLeft:
-                arrEmit, arrType = self.visit(ast.arr, Access(frame, nenv, o.isLeft, o.isDeclared))
+            
+            if o.isLeft: 
+                            
+                innerEmit , innerType = self.visit(ast.arr, Access(frame, nenv, False, True)) 
                 
+                if type(innerType) != ArrayType:
+                    return innerEmit, innerType # TODO : Error
 
+                # Visit and Load the index of the array
+                for i in range(0,len(ast.idx)):
+                    idxEmit, idxType = self.visit(ast.idx[i], Access(frame, nenv, False, True)) 
+                    
+                    innerEmit += idxEmit + self.emit.emitF2I(frame)
+                    
+                    # Get the inner type of the array
+                    innerType = ArrayType(innerType.size[i+1:], innerType.eleType) if (i + 1 < len(ast.idx)) else innerType.eleType
+                        
+                    if i + 1 < len(ast.idx):
+                        
+                        # idxType is always NumberType (Float), innerType is the type of the inner array
+                        innerEmit += self.emit.emitALOAD(innerType, frame)
+                        
+                
+                arrEmit = self.emit.emitASTORE(innerType, frame) 
+                
+                
+                return innerEmit + EMIT_SEPARATOR + arrEmit, innerType
 
-                return arrEmit, arrType
-            else :
-                pass
+            else : # isRight
+                arrEmit, arrType = self.visit(ast.arr, Access(frame, nenv, False, True))
+
+                if type(arrType) != ArrayType:
+                    return arrEmit, arrType # TODO : Error
+                
+                innerType = arrType
+
+                # Visit and Load the index of the array
+                for i in range(0,len(ast.idx)):
+                    idxEmit, idxType = self.visit(ast.idx[i], Access(frame, nenv, False, True)) 
+                    
+                    # Get the inner type of the array
+                    innerType = ArrayType(arrType.size[i+1:], arrType.eleType) if (i + 1 < len(ast.idx)) else arrType.eleType
+                    
+                    # idxType is always NumberType (Float), innerType is the type of the inner array
+                    arrEmit += idxEmit + self.emit.emitF2I(frame)
+                    arrEmit += self.emit.emitALOAD(innerType, frame)
+                    
+                return arrEmit, innerType
+
         else: # Declaration array cell
-            arrEmit, arrType = self.visit(ast.arr, Access(frame, nenv, o.isLeft, o.isDeclared))
+            arrEmit, arrType = self.visit(ast.arr, Access(frame, nenv, o.isLeft, False))
             #idxEmit, idxType = self.visit(ast.idx, Access(frame, nenv, False, True))
 
             return arrEmit , arrType

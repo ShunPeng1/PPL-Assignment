@@ -51,17 +51,17 @@
   22: iastore
   23: astore_1
   .line 9
-  24: aload_1
-  25: iconst_2
+  24: iconst_4
+  25: istore_2
+  .line 10
   26: aload_1
-  27: iconst_3
-  28: iaload
+  27: iload_2
+  28: iload_2
   29: iastore
-  .line 11
-  30: iconst_4
-  31: istore_2
   .line 12
-  32: iload_2
+  30: aload_1
+  31: iconst_3
+  32: iaload
   33: istore_2
   .line 13
   34: return
@@ -69,7 +69,7 @@
 
 .method public static main2()V
   .limit stack 7
-  .limit locals 1
+  .limit locals 2
   .line 17
   0: iconst_2
   1: anewarray [I
@@ -118,19 +118,43 @@
   46: iconst_0
   47: aaload
   48: aastore
-  .line 21
-  49: return
+  .line 22
+  49: iconst_2
+  50: newarray int
+  52: dup
+  53: iconst_0
+  54: iconst_1
+  55: iastore
+  56: dup
+  57: iconst_1
+  58: iconst_2
+  59: iastore
+  60: astore_1
+  .line 23
+  61: aload_0
+  62: iconst_0
+  63: aload_1
+  64: aastore
+  .line 24
+  65: aload_0
+  66: iconst_0
+  67: aaload
+  68: iconst_1
+  69: iconst_2
+  70: iastore
+  .line 25
+  71: return
 .end method
 
 .method public static main3()V
   .limit stack 3
   .limit locals 0
-  .line 24
+  .line 28
   0: getstatic Test/x [I
   3: iconst_0
   4: bipush 6
   6: iastore
-  .line 26
+  .line 30
   7: return
 .end method
 
