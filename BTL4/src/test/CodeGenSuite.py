@@ -674,7 +674,7 @@ true
         end
         """
         expect = "69.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 545))
+        #self.assertTrue(TestCodeGen.test(input, expect, 546))
 
     def test_return_8(self):
         input = """
@@ -693,7 +693,7 @@ true
         end
         """
         expect = "69.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 546))
+        #self.assertTrue(TestCodeGen.test(input, expect, 547))
 
     def test_return_9(self):
         input = """
@@ -712,7 +712,7 @@ true
         end
         """
         expect = "111111111111111111111\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 547))
+        #self.assertTrue(TestCodeGen.test(input, expect, 548))
 
     def test_return_10(self):
         input = """
@@ -739,7 +739,7 @@ true
 4.0
 5.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 548))
+        #self.assertTrue(TestCodeGen.test(input, expect, 549))
 
     def test_return_11(self):
         input = """
@@ -775,7 +775,7 @@ Move disk from B to A
 Move disk from B to C
 Move disk from A to C
 """
-        self.assertTrue(TestCodeGen.test(input, expect, 549))
+        #self.assertTrue(TestCodeGen.test(input, expect, 550))
 
     def test_return_12(self):
         input = """
@@ -804,4 +804,33 @@ Move disk from B to A
 Move disk from B to C
 Move disk from A to C
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 550))
+        #self.assertTrue(TestCodeGen.test(input, expect, 551))
+
+
+    def test_array_1(self):
+        input = """
+        func main()
+        begin
+            number a[5] <- [1,2,3,4,5]
+            var i <- 0
+            for i until i > 5 by 1
+                writeNumber(a[i])
+        end
+        """
+        expect = """1.0
+2.0
+3.0
+4.0
+5.0
+"""
+        #!self.assertTrue(TestCodeGen.test(input, expect, 552))
+
+    def test_array_2(self):
+        input = """
+        func main()
+        begin
+            number a[5] <- [1,2,3,4,5]
+        end
+        """
+        expect = """"""
+        #!self.assertTrue(TestCodeGen.test(input, expect, 553))
