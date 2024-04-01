@@ -42,6 +42,7 @@ class Frame():
     '''
 
     def push(self):
+        #print("Frame.push()", self.currOpStackSize, " to ", self.currOpStackSize + 1)
         self.currOpStackSize = self.currOpStackSize + 1
         if self.maxOpStackSize < self.currOpStackSize:
             self.maxOpStackSize = self.currOpStackSize
@@ -51,6 +52,7 @@ class Frame():
     '''
 
     def pop(self):
+        #print("Frame.pop()", self.currOpStackSize, " to ", self.currOpStackSize - 1)
         self.currOpStackSize = self.currOpStackSize - 1
         if self.currOpStackSize < 0:
             raise IllegalRuntimeException("Pop empty stack")

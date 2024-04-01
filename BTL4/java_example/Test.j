@@ -12,71 +12,155 @@
 .class public Test
 .super java/lang/Object
 
+.field static x [I
+
 .method public <init>()V
   .limit stack 1
   .limit locals 1
-  .line 3
+  .line 2
   0: aload_0
   1: invokespecial java/lang/Object/<init>()V
   4: return
 .end method
 
 .method public static main([Ljava/lang/String;)V
-  .limit stack 2
-  .limit locals 2
+  .limit stack 4
+  .limit locals 3
   .line 7
-  0: fconst_0
-  1: fstore_1
-Label2:
-  2: fload_1
-  3: ldc 10.0
-  5: fcmpg
-  6: iflt Label13
-  9: iconst_1
-  10: goto Label14
-Label13:
-  13: iconst_0
-Label14:
-  14: ifle Label28
-  .line 8
-  17: fload_1
-  18: invokestatic io/writeNumber(F)V
-  .line 7
-  21: fload_1
-  22: fconst_1
-  23: fadd
-  24: fstore_1
-  25: goto Label2
-Label28:
+  0: iconst_5
+  1: newarray int
+  3: dup
+  4: iconst_0
+  5: iconst_1
+  6: iastore
+  7: dup
+  8: iconst_1
+  9: iconst_2
+  10: iastore
+  11: dup
+  12: iconst_2
+  13: iconst_3
+  14: iastore
+  15: dup
+  16: iconst_3
+  17: iconst_4
+  18: iastore
+  19: dup
+  20: iconst_4
+  21: iconst_5
+  22: iastore
+  23: astore_1
+  .line 9
+  24: aload_1
+  25: iconst_2
+  26: aload_1
+  27: iconst_3
+  28: iaload
+  29: iastore
   .line 11
-  28: return
-  ; append_frame (frameNumber = 0)
-  ; frame_type = 252, offset_delta = 2
-  ; frame bytes: 252 0 2 2 
-  .stack 
-    offset 2
-    locals Float
-    .end stack
-  ; same_frame (frameNumber = 1)
-  ; frame_type = 10, offset_delta = 10
-  ; frame bytes: 10 
-  .stack 
-    offset 13
-    locals Float
-    .end stack
-  ; same_locals_1_stack_item_frame (frameNumber = 2)
-  ; frame_type = 64, offset_delta = 0
-  ; frame bytes: 64 1 
-  .stack 
-    offset 14
-    locals Float
-    stack Integer
-    .end stack
-  ; chop_frame (frameNumber = 3)
-  ; frame_type = 250, offset_delta = 13
-  ; frame bytes: 250 0 13 
-  .stack 
-    offset 28
-    .end stack
+  30: iconst_4
+  31: istore_2
+  .line 12
+  32: iload_2
+  33: istore_2
+  .line 13
+  34: return
+.end method
+
+.method public static main2()V
+  .limit stack 7
+  .limit locals 1
+  .line 17
+  0: iconst_2
+  1: anewarray [I
+  4: dup
+  5: iconst_0
+  6: iconst_2
+  7: newarray int
+  9: dup
+  10: iconst_0
+  11: iconst_1
+  12: iastore
+  13: dup
+  14: iconst_1
+  15: iconst_2
+  16: iastore
+  17: aastore
+  18: dup
+  19: iconst_1
+  20: iconst_2
+  21: newarray int
+  23: dup
+  24: iconst_0
+  25: iconst_3
+  26: iastore
+  27: dup
+  28: iconst_1
+  29: iconst_4
+  30: iastore
+  31: aastore
+  32: astore_0
+  .line 19
+  33: aload_0
+  34: iconst_0
+  35: aaload
+  36: iconst_1
+  37: aload_0
+  38: iconst_2
+  39: aaload
+  40: iconst_3
+  41: iaload
+  42: iastore
+  .line 20
+  43: aload_0
+  44: iconst_1
+  45: aload_0
+  46: iconst_0
+  47: aaload
+  48: aastore
+  .line 21
+  49: return
+.end method
+
+.method public static main3()V
+  .limit stack 3
+  .limit locals 0
+  .line 24
+  0: getstatic Test/x [I
+  3: iconst_0
+  4: bipush 6
+  6: iastore
+  .line 26
+  7: return
+.end method
+
+.method static <clinit>()V
+  .limit stack 4
+  .limit locals 0
+  .line 4
+  0: iconst_5
+  1: newarray int
+  3: dup
+  4: iconst_0
+  5: iconst_1
+  6: iastore
+  7: dup
+  8: iconst_1
+  9: iconst_2
+  10: iastore
+  11: dup
+  12: iconst_2
+  13: iconst_3
+  14: iastore
+  15: dup
+  16: iconst_3
+  17: iconst_4
+  18: iastore
+  19: dup
+  20: iconst_4
+  21: iconst_5
+  22: iastore
+  23: putstatic Test/x [I
+  26: return
 .end method
 

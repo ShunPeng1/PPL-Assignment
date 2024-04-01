@@ -747,7 +747,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         (envi, exprParam) = param
 
         if len(ast.value) == 0:
-            return ArrayType(0, None)
+            return ArrayType([0], None)
         
         inferredType : ArrayType = exprParam.inferredType
         if inferredType: 
@@ -834,7 +834,7 @@ class CodeGenVisitor(BaseVisitor):
         methodName = "<init>" if isConstructor else consdecl.name.name
 
         # Set the input types based on whether the method is the main method
-        intype = [ArrayType(0, StringType())] if isMain else list(map(lambda x: x.varType, consdecl.param))
+        intype = [ArrayType([0], StringType())] if isMain else list(map(lambda x: x.varType, consdecl.param))
 
         # Create a method type object
         mtype = MethodType(intype, returnType)
@@ -852,7 +852,7 @@ class CodeGenVisitor(BaseVisitor):
         if isConstructor:
             self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "this", ClassType(Id(self.className)), frame.getStartLabel(), frame.getEndLabel(), frame))
         elif isMain:
-            self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "args", ArrayType(0, StringType()), frame.getStartLabel(), frame.getEndLabel(), frame))
+            self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "args", ArrayType([0], StringType()), frame.getStartLabel(), frame.getEndLabel(), frame))
         else:
             local = reduce(lambda env, ele: SubBody(frame, [self.visit(ele, env)]+env.sym), consdecl.param, SubBody(frame, []))
             glenv = local.sym+glenv
@@ -895,7 +895,7 @@ class CodeGenVisitor(BaseVisitor):
     
  
     def visitAttributeDecl(self, ast : AttributeDecl, o : SubBody):
-        print("visitAttributeDecl: ")
+        print("visitAttributeDecl: ", ast)
 
         isStatic = ast.isStatic
         variableSymbol = None
@@ -909,7 +909,7 @@ class CodeGenVisitor(BaseVisitor):
             idx = o.frame.getNewIndex()
             variableSymbol = VariableSymbol(ast.name.name, ast.varType, idx, isStatic, ast)
         
-            if ast.varInit is None:
+            if ast.varInit is None: # No initial value
                 o.sym.append(variableSymbol)
                 return variableSymbol
 
@@ -1162,7 +1162,33 @@ class CodeGenVisitor(BaseVisitor):
             else :
                 return self.emit.emitREADVAR(ast.name, typ, idx, frame), typ
 
-       
+    
+    def visitArrayCell(self, ast : ArrayCell, o : Access):
+        print("VisitArrayCell: ",ast)
+
+        frame = o.frame
+        nenv = o.sym
+        arrType = None
+        innerType = None
+
+        if o.isDeclared:
+
+            if o.isLeft:
+                arrEmit, arrType = self.visit(ast.arr, Access(frame, nenv, o.isLeft, o.isDeclared))
+                
+
+
+                return arrEmit, arrType
+            else :
+                pass
+        else: # Declaration array cell
+            arrEmit, arrType = self.visit(ast.arr, Access(frame, nenv, o.isLeft, o.isDeclared))
+            #idxEmit, idxType = self.visit(ast.idx, Access(frame, nenv, False, True))
+
+            return arrEmit , arrType
+            
+    
+
             
     def visitNumberLiteral(self, ast : NumberLiteral, o : Access):
         return self.emit.emitPUSHFCONST(ast.value, o.frame), NumberType()
@@ -1174,9 +1200,51 @@ class CodeGenVisitor(BaseVisitor):
         print("VisitStringLiteral: ")
         return self.emit.emitPUSHCONST(ast.value, StringType(), o.frame), StringType()
 
-    def visitArrayLiteral(self, ast, param):
-        pass
+    def visitArrayLiteral(self, ast : ArrayLiteral, param : Access):
+        print("VisitArrayLiteral: ",ast)
+
+        ctxt = param
+        frame = ctxt.frame
+        nenv = ctxt.sym
+        eleType = None
+    
+        valueTypes = []
+        size = [len(ast.value)]
+        emitStr = ""
+        
+
+        for i in range(0,len(ast.value)):
+            valueExpr = ast.value[i]
+
+            # Duplicate the array reference
+            emitStr += self.emit.emitDUP(frame)
+
+            # Insert the index of the element
+            emitStr += self.emit.emitPUSHICONST(i, frame)
+
+            # Visit the value of the element            
+            valueEmit, valueType = self.visit(valueExpr, Access(frame, nenv, False, True))
+            emitStr += valueEmit
+
+            emitStr += self.emit.emitASTORE(valueType, frame)
+
+            valueTypes.append(valueType)
+
+
+        
+        eleType = valueTypes[0]
+
+        if type(eleType) == ArrayType:
+            size = [len(ast.value)] + eleType.size
+            eleType = eleType.eleType
+
+        arrayType = ArrayType(size, eleType)
+
+        emitStr = self.emit.emitPUSHCONST(str(len(ast.value)), arrayType, frame) + emitStr # The in the array is empty
+
+        print("ArrayLiteral: ",emitStr, arrayType)
+
+        return emitStr, arrayType
+    
 
     
-    def visitArrayCell(self, ast, param):
-        pass

@@ -25,7 +25,8 @@ class Emitter():
         elif type(inType) is BoolType:
             return "Z"
         elif type(inType) is ArrayType:
-            return "[" + self.getJVMType(inType.eleType)
+            size = len(inType.size)
+            return "["*size + self.getJVMType(inType.eleType)
         elif type(inType) is cgen.MethodType:
             return "(" + "".join(list(map(lambda x: self.getJVMType(x), inType.partype))) + ")" + self.getJVMType(inType.rettype)
         elif type(inType) is cgen.ClassType:
@@ -33,14 +34,19 @@ class Emitter():
         else:
             return "Ljava/lang/Object;"
 
-    def getFullType(inType):
+    def getFullType(self, inType):
         typeIn = type(inType)
         if typeIn is NumberType:
-            return "int"
+            return "float"
+        elif typeIn is BoolType:
+            return "bool"
         elif typeIn is StringType:
             return "java/lang/String"
         elif typeIn is VoidType:
             return "void"
+        elif typeIn is ArrayType:
+            return self.getFullType(inType.eleType) + "[" + str(len(inType.size)) + "]"
+        
 
     def emitPUSHICONST(self, in_, frame):
         # in: Int or Sring
@@ -94,7 +100,14 @@ class Emitter():
             frame.push()
             return self.jvm.emitLDC("\""+in_+"\"")
         elif type(typ) is ArrayType:
-            return self.jvm.emitANEWARRAY(typ.eleType) # TODO check again
+            
+            firstSize = self.emitPUSHFCONST(in_, frame)
+            if len(typ.size) == 1:
+                jvmType = self.getFullType(typ.eleType)
+                return firstSize + self.jvm.emitNEWARRAY(jvmType)
+            else :
+                jvmType = self.getFullType(typ)
+                return firstSize + self.jvm.emitANEWARRAY(jvmType)
         else:
             raise IllegalOperandException(in_)
 
@@ -107,9 +120,15 @@ class Emitter():
 
         frame.pop()
         if type(in_) is NumberType:
+            return self.jvm.emitFALOAD()
+        if type(in_) is BoolType:
             return self.jvm.emitIALOAD()
         # elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
-        elif type(in_) is cgen.ClassType or type(in_) is StringType:
+        elif type(in_) is StringType:
+            return self.jvm.emitAALOAD()
+        elif type(in_) is cgen.ClassType:
+            return self.jvm.emitAALOAD()
+        elif type(in_) is ArrayType:
             return self.jvm.emitAALOAD()
         else:
             raise IllegalOperandException(str(in_))
@@ -124,9 +143,13 @@ class Emitter():
         frame.pop()
         if type(in_) is NumberType:
             return self.jvm.emitFASTORE()
+        if type(in_) is BoolType:
+            return self.jvm.emitIASTORE()
         # elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
         elif type(in_) is cgen.ClassType or type(in_) is StringType:
-            return self.jvm.emitAASTORE()
+            return self.jvm.emitASTORE()
+        elif type(in_) is ArrayType:
+            return self.jvm.emitASTORE()
         else:
             raise IllegalOperandException(str(in_))
 
@@ -162,7 +185,9 @@ class Emitter():
         elif type(inType) is BoolType:
             return self.jvm.emitILOAD(index)
         # elif type(inType) is cgen.ArrayPointerType or type(inType) is cgen.ClassType or type(inType) is StringType:
-        elif type(inType) is cgen.ClassType or type(inType) is StringType or type(inType) is ArrayType:
+        elif type(inType) is cgen.ClassType or type(inType) is StringType:
+            return self.jvm.emitALOAD(index)
+        elif type(inType) is ArrayType:
             return self.jvm.emitALOAD(index)
         else:
             raise IllegalOperandException(name)
@@ -191,15 +216,20 @@ class Emitter():
         # index: Int
         # frame: Frame
         # ..., value -> ...
-
+        
         frame.pop()
-
-        if type(inType) is NumberType:
+        
+        if type(inType) is NumberType:    
+            
             return self.jvm.emitFSTORE(index)
         elif type(inType) is BoolType:
+            
             return self.jvm.emitISTORE(index)
         # elif type(inType) is cgen.ArrayPointerType or type(inType) is cgen.ClassType or type(inType) is StringType:
-        elif type(inType) is cgen.ClassType or type(inType) is StringType or type(inType) is ArrayType:
+        elif type(inType) is cgen.ClassType or type(inType) is StringType:
+            
+            return self.jvm.emitASTORE(index)
+        elif type(inType) is ArrayType:
             return self.jvm.emitASTORE(index)
         else:
             raise IllegalOperandException(name)
@@ -299,7 +329,7 @@ class Emitter():
                 frame.push()
             return self.jvm.emitINVOKESPECIAL(lexeme, self.getJVMType(in_))
         elif lexeme is None and in_ is None:
-            frame.pop()
+            #frame.pop()
             return self.jvm.emitINVOKESPECIAL()
 
     ''' generate code to invoke a virtual method

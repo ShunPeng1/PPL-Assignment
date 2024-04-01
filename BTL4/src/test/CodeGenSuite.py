@@ -823,7 +823,7 @@ Move disk from A to C
 4.0
 5.0
 """
-        #!self.assertTrue(TestCodeGen.test(input, expect, 552))
+        #self.assertTrue(TestCodeGen.test(input, expect, 552))
 
     def test_array_2(self):
         input = """
@@ -833,4 +833,4 @@ Move disk from A to C
         end
         """
         expect = """"""
-        #!self.assertTrue(TestCodeGen.test(input, expect, 553))
+        #self.assertTrue(TestCodeGen.test(input, expect, 553))
