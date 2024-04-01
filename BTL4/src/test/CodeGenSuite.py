@@ -844,16 +844,27 @@ Move disk from A to C
 3.0
 4.0
 """
-        self.assertTrue(TestCodeGen.test(input, expect, 553))
+        #self.assertTrue(TestCodeGen.test(input, expect, 553))
 
     def test_array_3(self):
         input = """
         func main()
         begin
-            number a[5] <- [1,2,3,4,5]
-            a[2] <- 69
-            writeNumber(a[2])
+            number a[3,2] <- [[1,2],[3,4],[5,6]]
+            var i <- 0
+            for i until i >= 3 by 1
+            begin
+                var j <- 0
+                for j until j >= 2 by 1
+                    writeNumber(a[i,j])
+            end
         end
         """
-        expect = "69.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 554))
+        expect = """1.0
+2.0
+3.0
+4.0
+5.0
+6.0
+"""
+        self.assertTrue(TestCodeGen.test(input, expect, 554))

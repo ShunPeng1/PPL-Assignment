@@ -103,10 +103,10 @@ class Emitter():
             
             firstSize = self.emitPUSHFCONST(in_, frame)
             if len(typ.size) == 1:
-                jvmType = self.getFullType(typ.eleType)
-                return firstSize + self.jvm.emitNEWARRAY(jvmType)
+                fullType = self.getFullType(typ.eleType)
+                return firstSize + self.jvm.emitNEWARRAY(fullType)
             else :
-                jvmType = self.getFullType(typ)
+                jvmType = self.getJVMType(ArrayType(typ.size[1:], typ.eleType))
                 return firstSize + self.jvm.emitANEWARRAY(jvmType)
         else:
             raise IllegalOperandException(in_)

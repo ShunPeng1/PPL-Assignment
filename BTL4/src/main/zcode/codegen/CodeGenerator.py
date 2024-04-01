@@ -1263,6 +1263,7 @@ class CodeGenVisitor(BaseVisitor):
         size = [len(ast.value)]
         emitStr = ""
         
+        frame.push() # Mock the array reference
 
         for i in range(0,len(ast.value)):
             valueExpr = ast.value[i]
@@ -1281,7 +1282,7 @@ class CodeGenVisitor(BaseVisitor):
 
             valueTypes.append(valueType)
 
-
+        frame.pop() # Pop the array reference
         
         eleType = valueTypes[0]
 
@@ -1292,8 +1293,6 @@ class CodeGenVisitor(BaseVisitor):
         arrayType = ArrayType(size, eleType)
 
         emitStr = self.emit.emitPUSHCONST(str(len(ast.value)), arrayType, frame) + emitStr # The in the array is empty
-
-        print("ArrayLiteral: ",emitStr, arrayType)
 
         return emitStr, arrayType
     
