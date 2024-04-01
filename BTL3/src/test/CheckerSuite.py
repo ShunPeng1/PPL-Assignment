@@ -1824,4 +1824,65 @@ end
         expect = ""
         self.assertTrue(TestChecker.test(input, expect, 524))
 
-    
+    def test_uninfer_or_mismatch_15(self):
+        input = """
+            func main()
+            begin
+                dynamic a <- a
+            end
+            """
+        expect = "Type Cannot Be Inferred: VarDecl(Id(a), None, dynamic, Id(a))"
+        self.assertTrue(TestChecker.test(input, expect, 525))
+
+    def test_uninfer_or_mismatch_16(self):      
+        input = """
+            func a()
+            begin
+                number a <- a()
+            end
+            func main()
+            begin
+                dynamic a <- a()
+            end
+            """
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 526))   
+
+    def test_uninfer_or_mismatch_17(self):
+        input = """
+            func f()
+            begin
+                return 1
+            end
+            func main()
+            begin
+                dynamic a <- f
+            end
+            """
+        expect = "Undeclared Identifier: f"
+        self.assertTrue(TestChecker.test(input, expect, 527))   
+
+    def test_uninfer_or_mismatch_18(self):
+        input = """
+            func readNumber()
+            begin
+                return 1
+            end
+            func main()
+            begin
+                readNumber()
+            end
+            """
+        expect = "Redeclared Function: readNumber"
+        self.assertTrue(TestChecker.test(input, expect, 528))
+
+    def test_uninfer_or_mismatch_19(self):
+        input = """
+            func main()
+            begin
+                dynamic x
+
+                x <- (x = 1) or ("abc" == "abc")
+            end
+            """
+        expect = "Type Mismatch In Statement: AssignStmt(Id(x), BinaryOp(or, BinaryOp(=, Id(x), NumLit(1.0)), BinaryOp(==, StringLit(abc), StringLit(abc))))"

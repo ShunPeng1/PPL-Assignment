@@ -800,7 +800,7 @@ class StaticChecker(BaseVisitor, Utils):
         (envi, exprParam) = param
 
         if len(ast.value) == 0:
-            return ArrayType(0, None)
+            return ArrayType([0], None)
         
         inferredType = exprParam.inferredType
         if inferredType: 
