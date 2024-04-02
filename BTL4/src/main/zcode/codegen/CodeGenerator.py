@@ -208,10 +208,6 @@ class ExprParam:
     def __str__(self) -> str:
         return f"IdParam({self.isRHS}, {self.inferredType})"
 
-class VarDeclParam():
-    def __init__(self, isStatic, index):
-        self.isStatic = isStatic
-        self.index = index
 
 
 class StmtParam:
@@ -304,12 +300,12 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
     def visitProgram(self, ast : Program, c):
         result = []
         for i in range(len(ast.decl)):
-            decl = self.visit(ast.decl[i], (self.env, VarDeclParam(True, i)))
+            decl = self.visit(ast.decl[i], (self.env, None))
             if decl:
                 result.append(decl)
         return ClassDecl(self.className, result)
 
-    def visitVarDecl(self, ast : VarDecl, param : tuple[Envi,VarDeclParam]):
+    def visitVarDecl(self, ast : VarDecl, param : tuple[Envi, None]):
         
         (envi, varDeclParam) = param
         name = ast.name.name
@@ -388,7 +384,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             if ast.param:
                 for i in range(0,len(ast.param)):
                     paramDecl = ast.param[i]
-                    paramAttributeDecl = self.visit(paramDecl, (envi, VarDeclParam(False , i)))
+                    paramAttributeDecl = self.visit(paramDecl, (envi, None))
                     parameters.append(paramAttributeDecl)
                 
                 #print(len(envi),envi.getLast())
@@ -601,7 +597,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         i = 0
         for stmt in ast.stmt:
             if type(stmt) == VarDecl:
-                stmts = stmts + [self.visit(stmt, (envi, VarDeclParam(False, i)))]
+                stmts = stmts + [self.visit(stmt, (envi, stmtParam))]
                 i += 1
             else:
                 stmts = stmts + [self.visit(stmt, (envi, stmtParam))]
