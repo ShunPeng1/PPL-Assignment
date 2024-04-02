@@ -895,10 +895,10 @@ Move disk from A to C
             end
         end
         """
-        expect = """5.0
+        expect = """4.0
+3.0
 6.0
-1.0
-2.0
+5.0
 3.0
 4.0
 """
