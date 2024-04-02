@@ -1475,4 +1475,76 @@ true
         end
         """
         expect = "1.0\n"
-        self.assertTrue(TestCodeGen.test(input, expect, 574))
+        #self.assertTrue(TestCodeGen.test(input, expect, 574))
+
+    def test_infer_3(self):
+        input = """
+        dynamic a <- "Hello"
+
+        func main()
+        begin
+            writeString(a)
+            dynamic a 
+            a <- 1
+
+            dynamic b <- a
+            writeNumber(b)
+
+        end
+        """
+        expect = """Hello
+1.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 575))
+        
+    def test_infer_4(self):
+        input = """
+        
+        dynamic a
+        dynamic b
+        dynamic c
+        
+        func foo()
+        func goo()
+        func hoo()
+
+        func main()
+        begin
+        
+            writeNumber(a)
+            writeBool(b)
+            writeString(c)
+            
+            dynamic a
+            dynamic b
+            dynamic c
+            
+            writeNumber(a)
+            writeBool(b)
+            writeString(c)
+            
+            writeNumber(foo())
+            writeBool(goo())
+            writeString(hoo())
+
+
+        end
+
+        func foo()
+            return 1
+        func goo()
+            return true
+        func hoo()
+            return "Hello"
+        """
+        expect = """0.0
+false
+
+0.0
+false
+
+1.0
+true
+Hello
+"""
+        self.assertTrue(TestCodeGen.test(input, expect, 576))

@@ -428,22 +428,24 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             # Visit function parameters and body
             visitFuncParamAndBody(functionSymbol)
 
-            methodDecl = MethodDecl(Instance(), ast.name , functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body) if functionSymbol.body else None
-            if methodDecl:
-                functionSymbol.astMethodDecl = methodDecl
+            methodDecl = MethodDecl(Instance(), ast.name , functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body) if functionSymbol.body else MethodDecl(Instance(), Id(functionSymbol.name), None, None , None)
+            
+            functionSymbol.astMethodDecl = methodDecl
             return methodDecl
 
     
         elif type(functionSymbol) == FunctionSymbol: # implement the body function
-        
+            
             # Check for redeclared parameters
             visitFuncParamAndBody(functionSymbol)
 
-            methodDecl = MethodDecl(Instance(), Id(functionSymbol.name), functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body)
+            methodDecl = functionSymbol.astMethodDecl
+            methodDecl.param = functionSymbol.param
+            methodDecl.body = functionSymbol.body
             
             functionSymbol.astMethodDecl = methodDecl # update astMethodDecl
             
-            return methodDecl
+            return None # no need to return method declaration
     
         else:
             pass # Solved in StaticChecker
@@ -840,7 +842,14 @@ class CodeGenVisitor(BaseVisitor):
                 globalEnvi.append(symbol)
             
         # generate static constructor
-        staticAttributeAssign = [x.varInit for x in ast.memlist if type(x) == AttributeDecl and type(x.varInit) == Assign]
+                
+        staticAttributeAssign = []
+        
+        for decl in ast.memlist:
+            if type(decl) == AttributeDecl and decl.isStatic:
+                assignStmt = decl.varInit if type(decl.varInit) == Assign else Assign(decl.name, self.getDefaultValue(decl.varType))
+                staticAttributeAssign.append(assignStmt)
+
         self.genMETHOD(MethodDecl(Instance(), Id("<clinit>"), list(), VoidType(), Block(staticAttributeAssign)), globalEnvi, Frame("<clinit>", VoidType()))
 
         
@@ -922,7 +931,20 @@ class CodeGenVisitor(BaseVisitor):
         self.genMETHOD(ast, o.sym, frame)
         return functionSymbol
 
-    
+    def getDefaultValue(self, varType : Type):
+        if type(varType) == NumberType:
+            return NumberLiteral(0.0)
+        elif type(varType) == BoolType:
+            return BooleanLiteral(False)
+        elif type(varType) == StringType:
+            return StringLiteral("")
+        elif type(varType) == ArrayType:
+            
+            if len(varType.size) == 1:
+                return ArrayLiteral([self.getDefaultValue(varType.eleType) for i in range(varType.size[0])])
+            else:
+                return ArrayLiteral([self.getDefaultValue(ArrayType(varType.size[1:], varType.eleType)) for i in range(varType.size[0])])
+            
  
     def visitAttributeDecl(self, ast : AttributeDecl, o : SubBody):
         print("visitAttributeDecl: ", ast)
@@ -932,7 +954,7 @@ class CodeGenVisitor(BaseVisitor):
         if isStatic: # static variable
             self.emit.printout(self.emit.emitATTRIBUTE(ast.name.name, ast.varType, False, None))
             variableSymbol = VariableSymbol(ast.name.name, ast.varType, 0, isStatic, ast)
-            o.sym.append(variableSymbol)
+            #o.sym.append(variableSymbol)
             
             # Ignore the initial value of the static variable because it will be initialized in the static constructor
 
@@ -942,7 +964,7 @@ class CodeGenVisitor(BaseVisitor):
         
             if ast.varInit is None: # No initial value
                 #o.sym.append(variableSymbol)
-                return variableSymbol
+                ast.varInit = self.getDefaultValue(ast.varType)
 
             initEmit, initType = self.visit(ast.varInit, Access(o.frame, o.sym, False))
             self.emit.printout(initEmit)
