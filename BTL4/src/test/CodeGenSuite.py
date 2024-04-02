@@ -1166,3 +1166,179 @@ Move disk from A to C
 20.0
 """
         #self.assertTrue(TestCodeGen.test(input, expect, 561))
+
+    def test_array_11(self):
+        input = """
+        number a[2,2] <- [[1,2],[3,4]]
+        number b[2,2] <- [a[1],a[0]]
+
+
+        func main()
+        begin
+    
+
+            var i <- 0
+            for i until i >= 2 by 1
+            begin
+                var j <- 0
+                for j until j >= 2 by 1
+                begin    
+                
+                    ##writeNumber(a[i,j])
+                    ##writeNumber(b[i,j])
+                    
+                    a[i,j] <- b[i,j] + 1
+
+                    writeNumber(a[i,j])
+                end
+            end
+
+
+
+        end
+        """
+        expect = """4.0
+5.0
+5.0
+6.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 562))
+
+
+    def test_block_1(self):
+        input = """
+        func main()
+        begin
+            var i <- 0
+            begin
+                var i <- 1
+                writeNumber(i)
+            end
+            writeNumber(i)
+        end
+        """
+        expect = """1.0
+0.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 563))
+
+    def test_block_2(self):
+        input = """
+        func main()
+        begin
+            var i <- 0
+            begin
+                i <- 1
+                writeNumber(i)
+            end
+            writeNumber(i)
+        end
+        """
+        expect = """1.0
+1.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 564))
+
+    def test_block_3(self):
+        input = """
+        var i <- -1
+
+        func main()
+        begin
+            writeNumber(i)
+            var i <- 0
+            begin
+                var i <- 1
+                begin
+                    var i <- 2
+                    writeNumber(i)
+                end
+                writeNumber(i)
+            end
+            writeNumber(i)
+        end
+        """
+        expect = """-1.0
+2.0
+1.0
+0.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 565))
+
+    def test_block_4(self):
+        input = """
+        var i <- "Hello"
+
+        func main()
+        begin
+            writeString(i)
+            var i <- 0
+            begin
+                var i <- true
+                begin
+                    number i[1] <- [2]
+                    writeNumber(i[0])
+                end
+                writeBool(i)
+            end
+            writeNumber(i)
+        end
+        """
+        expect = """Hello
+2.0
+true
+0.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 566))
+
+    def test_block_5(self):
+        input = """
+        var i <- 5
+
+        func main()
+        begin
+            writeNumber(i)
+            
+            for i until i >= 10 by 1
+            begin
+                writeNumber(i)
+                var i <- i - 1
+                writeNumber(i)
+            end
+            writeNumber(i)
+        end
+        """
+        expect = """5.0
+5.0
+4.0
+6.0
+5.0
+7.0
+6.0
+8.0
+7.0
+9.0
+8.0
+10.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 567))
+
+    def test_block_6(self):
+        input = """
+        var i <- 5
+
+        func main()
+        begin
+            writeNumber(i)
+            
+            if (true)
+                i <- 10
+            
+            writeNumber(i)
+        end
+        """
+        expect = """5.0
+10.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 568))
+

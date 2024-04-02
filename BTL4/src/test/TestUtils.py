@@ -6,6 +6,7 @@ if not './main/zcode/parser/' in sys.path:
     sys.path.append('./main/zcode/parser/')
 if os.path.isdir('../target/main/zcode/parser') and not '../target/main/zcode/parser/' in sys.path:
     sys.path.append('../target/main/zcode/parser/')
+from StaticCheck import StaticChecker
 from ZCodeLexer import ZCodeLexer
 from ZCodeParser import ZCodeParser
 from lexererr import *
@@ -173,6 +174,7 @@ class TestCodeGen():
             parser = Parser(tokens)
             tree = parser.program()
             asttree = ASTGeneration().visit(tree)
+
         else:
             inputfile = TestUtil.makeSource(str(input), num)
             asttree = input
@@ -196,6 +198,9 @@ class TestCodeGen():
             os.mkdir(path)
         f = open(os.path.join(soldir, str(num) + ".txt"), "w")
         try:
+            #checker = StaticChecker(asttree)
+            #res = checker.check()
+
             codeGen.gen(asttree, path)
 
             # Move the .j file to the desired directory

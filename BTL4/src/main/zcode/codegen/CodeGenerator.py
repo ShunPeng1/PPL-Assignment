@@ -57,18 +57,17 @@ class MethodType(Type):
 
 
 class AttributeDecl(Decl):
-    def __init__(self, isStatic, name, varType, idx, varInit):
+    def __init__(self, isStatic, name, varType, varInit):
         self.isStatic = isStatic
         self.name = name # Id
         self.varType = varType
-        self.idx = idx
         self.varInit = varInit # Assign (if isStatic) or Expr
 
     def accept(self, visitor, param):
         return visitor.visitAttributeDecl(self, param)
 
     def __str__(self):
-        return f"AttributeDecl({self.name}, {self.idx}, {self.varType}, {self.varInit})"
+        return f"AttributeDecl({self.name}, {self.varType}, {self.varInit})"
         
 
 class MethodDecl(Decl):
@@ -108,7 +107,7 @@ class VariableSymbol(Symbol):
         self.astVarDecl = astVarDecl
 
     def __str__(self):
-        return f"VariableSymbol({self.name}, {self.type})"
+        return f"VariableSymbol({self.name}, {self.type}. {self.idx}, {self.isStatic})"
 
 
 class FunctionSymbol(Symbol):
@@ -129,20 +128,23 @@ class FunctionSymbol(Symbol):
 
    
 class SubBody():
-    def __init__(self, frame : Frame, sym : list[Symbol]):
+    def __init__(self, frame : Frame, sym : list[Symbol], isStatic = False):
         self.frame : Frame = frame
         self.sym : list[Symbol] = sym # list of Symbol
+        self.isStatic : bool = isStatic
 
     def __str__(self):
         return f"SubBody([{', '.join(str(i) for i in self.sym)}])"
 
 
 class Access():
-    def __init__(self,  frame : Frame, sym : list[Symbol], isLeft, isDeclared=False):
+    def __init__(self,  frame : Frame, sym : list[Symbol], isLeft):
         self.frame : Frame = frame
         self.sym : list[Symbol] = sym # list of Symbol
         self.isLeft = isLeft
-        self.isDeclared = isDeclared
+
+    def __str__(self):
+        return f"Access({self.frame}, [{', '.join(str(i) for i in self.sym)}], {self.isLeft})"
 
 
 class Scope:
@@ -267,6 +269,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         self.astTree = astTree
         self.env = env
         self.className = ClassName("ZCodeClass")
+    
         
 
     def lookup(self, name : str, symbols : list[Symbol], getName) -> Symbol:
@@ -312,19 +315,20 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         name = ast.name.name
         self.visit(ast.name, (envi, ExprParam(False, False)))
         
+        isStatic = len(envi.scopes) == 1
         current_scope = envi.getLast()
         
         # Visit variable type
         if ast.modifier == "var":
             varInitType = self.visit(ast.varInit, (envi, ExprParam(True, True))) 
-            varSymbol = VariableSymbol(name, varInitType, varDeclParam.index, varDeclParam.isStatic, ast)
+            varSymbol = VariableSymbol(name, varInitType, 0, isStatic, ast)
 
             attributeDecl = None
-            if varDeclParam.isStatic:
+            if isStatic:
                 varInit = Assign(ast.name, ast.varInit) if ast.varInit else None
-                attributeDecl = AttributeDecl(varDeclParam.isStatic, ast.name, varInitType, varDeclParam.index, varInit)
+                attributeDecl = AttributeDecl(isStatic, ast.name, varInitType, varInit)
             else:
-                attributeDecl = AttributeDecl(varDeclParam.isStatic, ast.name, varInitType, varDeclParam.index, ast.varInit)
+                attributeDecl = AttributeDecl(isStatic, ast.name, varInitType, ast.varInit)
             
             current_scope.define(varSymbol)
             return attributeDecl
@@ -333,15 +337,15 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             varSymbol = VariableSymbol(name, None)  
             if ast.varInit:
                 varInitType = self.visit(ast.varInit, (envi, ExprParam(True, True))) if ast.varInit else None
-                varSymbol = VariableSymbol(name, varInitType, varDeclParam.index, varDeclParam.isStatic, ast)
+                varSymbol = VariableSymbol(name, varInitType, 0, isStatic, ast)
                 
 
             attributeDecl = None
-            if varDeclParam.isStatic:
+            if isStatic:
                 varInit = Assign(ast.name, ast.varInit) if ast.varInit else None
-                attributeDecl = AttributeDecl(varDeclParam.isStatic, ast.name, varSymbol.type, varDeclParam.index, varInit)
+                attributeDecl = AttributeDecl(isStatic, ast.name, varSymbol.type, varInit)
             else:
-                attributeDecl = AttributeDecl(varDeclParam.isStatic, ast.name, varSymbol.type, varDeclParam.index, ast.varInit)
+                attributeDecl = AttributeDecl(isStatic, ast.name, varSymbol.type, ast.varInit)
                 
             current_scope.define(varSymbol)
             return attributeDecl
@@ -349,14 +353,14 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         else: # no modifier
             varType = self.visit(ast.varType, (envi, None))
             
-            varSymbol = VariableSymbol(name, varType, varDeclParam.index, varDeclParam.isStatic, ast)
+            varSymbol = VariableSymbol(name, varType, 0, isStatic, ast)
             
             attributeDecl = None
-            if varDeclParam.isStatic:
+            if isStatic:
                 varInit = Assign(ast.name, ast.varInit) if ast.varInit else None
-                attributeDecl = AttributeDecl(varDeclParam.isStatic, ast.name, varType, varDeclParam.index, varInit)
+                attributeDecl = AttributeDecl(isStatic, ast.name, varType, varInit)
             else:
-                attributeDecl = AttributeDecl(varDeclParam.isStatic, ast.name, varType, varDeclParam.index, ast.varInit)
+                attributeDecl = AttributeDecl(isStatic, ast.name, varType, ast.varInit)
               
             current_scope.define(varSymbol)
             return attributeDecl
@@ -614,7 +618,8 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
         ifConditionType = self.visit(ast.expr, (envi, ExprParam(True, True, BoolType())))
         
-        thenStmt = self.visit(ast.thenStmt, (envi, stmtParam))
+        
+        thenStmt = self.visit(ast.thenStmt, (envi, stmtParam)) 
 
         elifListTuple = []
         for (elifExpr, elifStmt) in ast.elifStmt:
@@ -809,8 +814,10 @@ class CodeGenVisitor(BaseVisitor):
 
         
         # generate static classes
-        for symbol in ast.memlist:   
-            self.visit(symbol, SubBody(None, globalEnvi))
+        for decl in ast.memlist:   
+            symbol =  self.visit(decl, SubBody(None, globalEnvi))
+            if type(symbol) == FunctionSymbol or type(symbol) == VariableSymbol:
+                globalEnvi.append(symbol)
             
         # generate static constructor
         staticAttributeAssign = [x.varInit for x in ast.memlist if type(x) == AttributeDecl and type(x.varInit) == Assign]
@@ -857,8 +864,8 @@ class CodeGenVisitor(BaseVisitor):
         elif isMain:
             self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "args", ArrayType([0], StringType()), frame.getStartLabel(), frame.getEndLabel(), frame))
         else:
-            local = reduce(lambda env, ele: SubBody(frame, [self.visit(ele, env)]+env.sym), consdecl.param, SubBody(frame, []))
-            glenv = local.sym+glenv
+            local = reduce(lambda env, ele: SubBody(frame, env.sym + [self.visit(ele, env)]), consdecl.param, SubBody(frame, []))
+            glenv = glenv + local.sym
 
         # Get the method body
         body = consdecl.body
@@ -890,7 +897,7 @@ class CodeGenVisitor(BaseVisitor):
 
         frame = Frame(ast.name, ast.returnType)
         functionSymbol = FunctionSymbol(ast.name.name, MethodType([x.varType for x in ast.param], ast.returnType), ClassName(self.className))
-        o.sym.append(functionSymbol)
+        #o.sym.append(functionSymbol)
         
         self.genMETHOD(ast, o.sym, frame)
         return functionSymbol
@@ -906,6 +913,7 @@ class CodeGenVisitor(BaseVisitor):
             self.emit.printout(self.emit.emitATTRIBUTE(ast.name.name, ast.varType, False, None))
             variableSymbol = VariableSymbol(ast.name.name, ast.varType, 0, isStatic, ast)
             o.sym.append(variableSymbol)
+            
             # Ignore the initial value of the static variable because it will be initialized in the static constructor
 
         else: # local variable
@@ -913,17 +921,17 @@ class CodeGenVisitor(BaseVisitor):
             variableSymbol = VariableSymbol(ast.name.name, ast.varType, idx, isStatic, ast)
         
             if ast.varInit is None: # No initial value
-                o.sym.append(variableSymbol)
+                #o.sym.append(variableSymbol)
                 return variableSymbol
 
-            initEmit, initType = self.visit(ast.varInit, Access(o.frame, o.sym, False, False))
+            initEmit, initType = self.visit(ast.varInit, Access(o.frame, o.sym, False))
             self.emit.printout(initEmit)
             #self.emit.printout(self.emit.emitPUSHCONST(idx, ast.varType, o.frame))
             
-            o.sym.append(variableSymbol)
+            self.emit.printout(self.emit.emitWRITEVAR(ast.name.name, ast.varType, idx, o.frame))
 
-            leftEmit, leftType = self.visit(ast.name, Access(o.frame, o.sym, True, False))
-            self.emit.printout(leftEmit)
+            #o.sym.append(variableSymbol)
+
         
         return variableSymbol
 
@@ -932,7 +940,17 @@ class CodeGenVisitor(BaseVisitor):
         print("VisitBlock: ",ast)
 
         o.frame.enterScope(False)
-        list(map(lambda x: self.visit(x, o), ast.stmt))
+
+        blockSymbols = []
+        for stmt in ast.stmt:
+            stmtReturn = self.visit(stmt, o)
+            if type(stmtReturn) == FunctionSymbol or type(stmtReturn) == VariableSymbol:
+                o.sym.append(stmtReturn)
+                blockSymbols.append(stmtReturn)
+
+        for symbol in blockSymbols:
+            o.sym.pop() # remove the symbol from the symbol table
+        
         o.frame.exitScope()
         return
 
@@ -943,7 +961,7 @@ class CodeGenVisitor(BaseVisitor):
         ifFalseLabel = o.frame.getNewLabel()
         endLabel = o.frame.getNewLabel()
 
-        exprEmit, exprType = self.visit(ast.expr, Access(o.frame, o.sym, False, True))
+        exprEmit, exprType = self.visit(ast.expr, Access(o.frame, o.sym, False))
         self.emit.printout(exprEmit)
 
         # If the condition is false, jump to the elif statement
@@ -954,7 +972,7 @@ class CodeGenVisitor(BaseVisitor):
 
         for (elifExpr, elifStmt) in ast.elifStmt:
             elifFalseLabel = o.frame.getNewLabel()
-            elifExprEmit, elifExprType = self.visit(elifExpr, Access(o.frame, o.sym, False, True))
+            elifExprEmit, elifExprType = self.visit(elifExpr, Access(o.frame, o.sym, False))
             self.emit.printout(elifExprEmit)
 
             # If the condition is false, jump to the next condition
@@ -993,7 +1011,7 @@ class CodeGenVisitor(BaseVisitor):
 
         # Visit the condition of the loop
         self.emit.printout(self.emit.emitLABEL(conditionLabel, o.frame))
-        condEmit, condType = self.visit(ast.condExpr, Access(o.frame, o.sym, False, True))
+        condEmit, condType = self.visit(ast.condExpr, Access(o.frame, o.sym, False))
         self.emit.printout(condEmit)
 
         self.emit.printout(self.emit.emitIFTRUE(endLabel, o.frame))
@@ -1027,7 +1045,7 @@ class CodeGenVisitor(BaseVisitor):
         print("VisitReturn: ")
 
         if ast.expr:
-            returnEmit, returnType = self.visit(ast.expr, Access(o.frame, o.sym, False, True))
+            returnEmit, returnType = self.visit(ast.expr, Access(o.frame, o.sym, False))
             self.emit.printout(returnEmit)
             self.emit.printout(self.emit.emitRETURN(returnType, o.frame))
         else:
@@ -1038,9 +1056,9 @@ class CodeGenVisitor(BaseVisitor):
     def visitAssign(self, ast : Assign, o : SubBody):
         
 
-        assignEmit, assignType = self.visit(ast.rhs, Access(o.frame, o.sym, False, True))
+        assignEmit, assignType = self.visit(ast.rhs, Access(o.frame, o.sym, False))
        
-        leftEmit , leftType = self.visit(ast.lhs, Access(o.frame, o.sym, True, True))
+        leftEmit , leftType = self.visit(ast.lhs, Access(o.frame, o.sym, True))
         
         print("visitAssign: ", ast, assignEmit, assignType, leftEmit, leftType)
         if type(ast.lhs) == ArrayCell:
@@ -1111,14 +1129,17 @@ class CodeGenVisitor(BaseVisitor):
         ctxt = o
         frame = ctxt.frame
         nenv = ctxt.sym
-        functionSymbol : FunctionSymbol = next(filter(lambda x: ast.name.name == x.name, nenv), None)
+        #functionSymbol : FunctionSymbol = next(filter(lambda x: ast.name.name == x.name, nenv), None)
+        filtered_symbols = list(filter(lambda x: ast.name.name == x.name, nenv))
+        functionSymbol : FunctionSymbol = filtered_symbols[-1] if filtered_symbols else None
+        
         className = functionSymbol.className.name
         methodType = functionSymbol.methodType
         in_ = ("", list()) # Tuple of emit string and list of types
         
         # Visit arguments
         for x in ast.args:
-            str1, typ1 = self.visit(x, Access(frame, nenv, False, True))
+            str1, typ1 = self.visit(x, Access(frame, nenv, False))
             in_ = (in_[0] + str1, in_[1] + [typ1]) # Concatenate emit string and append type
         
 
@@ -1133,14 +1154,17 @@ class CodeGenVisitor(BaseVisitor):
         ctxt = o
         frame = ctxt.frame
         nenv = ctxt.sym
-        functionSymbol : FunctionSymbol = next(filter(lambda x: ast.name.name == x.name, nenv), None)
+        #functionSymbol : FunctionSymbol = next(filter(lambda x: ast.name.name == x.name, nenv), None)
+        filtered_symbols = list(filter(lambda x: ast.name.name == x.name, nenv))
+        functionSymbol : FunctionSymbol = filtered_symbols[-1] if filtered_symbols else None
+        
         className = functionSymbol.className.name
         methodType = functionSymbol.methodType
         in_ = ("", list()) # Tuple of emit string and list of types
         
         # Visit arguments
         for x in ast.args:
-            str1, typ1 = self.visit(x, Access(frame, nenv, False, True))
+            str1, typ1 = self.visit(x, Access(frame, nenv, False))
             in_ = (in_[0] + str1, in_[1] + [typ1] ) # Concatenate emit string and append type
         
         print("CallExpr: ",in_[0], self.emit.buff)
@@ -1151,16 +1175,22 @@ class CodeGenVisitor(BaseVisitor):
 
     
     def visitId(self, ast : Id, param : Access):
-        print("VisitId: ",ast,param.sym)
+        print("VisitId: ",ast,param)
         
         ctxt = param
         frame = ctxt.frame
         nenv = ctxt.sym
-        symbol : VariableSymbol = next(filter(lambda x: ast.name == x.name, nenv), None)
+        #symbol : VariableSymbol = next(filter(lambda x: ast.name == x.name, nenv), None) 
+        
+        filtered_symbols = list(filter(lambda x: ast.name == x.name, nenv))
+        symbol : VariableSymbol = filtered_symbols[-1] if filtered_symbols else None
+        
+        isStatic = symbol.isStatic
         idx = symbol.idx
         typ = symbol.type
 
-        if symbol.isStatic:
+
+        if isStatic:
             if param.isLeft:
                 return self.emit.emitPUTSTATIC(self.className+"/"+ast.name, typ, frame), typ
             else:
@@ -1180,60 +1210,54 @@ class CodeGenVisitor(BaseVisitor):
         arrType = None
         innerType = None
 
-        if o.isDeclared:
+        if o.isLeft: 
+                        
+            innerEmit , innerType = self.visit(ast.arr, Access(frame, nenv, False)) 
             
-            if o.isLeft: 
-                            
-                innerEmit , innerType = self.visit(ast.arr, Access(frame, nenv, False, True)) 
-                
-                if type(innerType) != ArrayType:
-                    return innerEmit, innerType # TODO : Error
+            if type(innerType) != ArrayType:
+                return innerEmit, innerType # TODO : Error
 
-                # Visit and Load the index of the array
-                for i in range(0,len(ast.idx)):
-                    idxEmit, idxType = self.visit(ast.idx[i], Access(frame, nenv, False, True)) 
+            # Visit and Load the index of the array
+            for i in range(0,len(ast.idx)):
+                idxEmit, idxType = self.visit(ast.idx[i], Access(frame, nenv, False)) 
+                
+                innerEmit += idxEmit + self.emit.emitF2I(frame)
+                
+                # Get the inner type of the array
+                innerType = ArrayType(innerType.size[1:], innerType.eleType) if ( 1 < len(innerType.size)) else innerType.eleType
                     
-                    innerEmit += idxEmit + self.emit.emitF2I(frame)
-                    
-                    # Get the inner type of the array
-                    innerType = ArrayType(innerType.size[1:], innerType.eleType) if ( 1 < len(innerType.size)) else innerType.eleType
-                        
-                    if i + 1 < len(ast.idx):
-                        
-                        # idxType is always NumberType (Float), innerType is the type of the inner array
-                        innerEmit += self.emit.emitALOAD(innerType, frame)
-                        
-                
-                arrEmit = self.emit.emitASTORE(innerType, frame) 
-                
-                return innerEmit + EMIT_SEPARATOR + arrEmit, innerType
-
-            else : # isRight
-                arrEmit, arrType = self.visit(ast.arr, Access(frame, nenv, False, True))
-
-                if type(arrType) != ArrayType:
-                    return arrEmit, arrType # TODO : Error
-                
-                innerType = arrType
-
-                # Visit and Load the index of the array
-                for i in range(0,len(ast.idx)):
-                    idxEmit, idxType = self.visit(ast.idx[i], Access(frame, nenv, False, True)) 
-                    
-                    # Get the inner type of the array
-                    innerType = ArrayType(arrType.size[i+1:], arrType.eleType) if (i + 1 < len(arrType.size)) else arrType.eleType
+                if i + 1 < len(ast.idx):
                     
                     # idxType is always NumberType (Float), innerType is the type of the inner array
-                    arrEmit += idxEmit + self.emit.emitF2I(frame)
-                    arrEmit += self.emit.emitALOAD(innerType, frame)
+                    innerEmit += self.emit.emitALOAD(innerType, frame)
                     
-                return arrEmit, innerType
+            
+            arrEmit = self.emit.emitASTORE(innerType, frame) 
+            
+            return innerEmit + EMIT_SEPARATOR + arrEmit, innerType
 
-        else: # Declaration array cell
-            arrEmit, arrType = self.visit(ast.arr, Access(frame, nenv, o.isLeft, False))
-            #idxEmit, idxType = self.visit(ast.idx, Access(frame, nenv, False, True))
+        else : # isRight
+            arrEmit, arrType = self.visit(ast.arr, Access(frame, nenv, False))
 
-            return arrEmit , arrType
+            if type(arrType) != ArrayType:
+                return arrEmit, arrType # TODO : Error
+            
+            innerType = arrType
+
+            # Visit and Load the index of the array
+            for i in range(0,len(ast.idx)):
+                idxEmit, idxType = self.visit(ast.idx[i], Access(frame, nenv, False)) 
+                
+                # Get the inner type of the array
+                innerType = ArrayType(arrType.size[i+1:], arrType.eleType) if (i + 1 < len(arrType.size)) else arrType.eleType
+                
+                # idxType is always NumberType (Float), innerType is the type of the inner array
+                arrEmit += idxEmit + self.emit.emitF2I(frame)
+                arrEmit += self.emit.emitALOAD(innerType, frame)
+                
+            return arrEmit, innerType
+
+    
             
     
 
@@ -1272,7 +1296,7 @@ class CodeGenVisitor(BaseVisitor):
             emitStr += self.emit.emitPUSHICONST(i, frame)
 
             # Visit the value of the element            
-            valueEmit, valueType = self.visit(valueExpr, Access(frame, nenv, False, True))
+            valueEmit, valueType = self.visit(valueExpr, Access(frame, nenv, False))
             emitStr += valueEmit
 
             emitStr += self.emit.emitASTORE(valueType, frame)
