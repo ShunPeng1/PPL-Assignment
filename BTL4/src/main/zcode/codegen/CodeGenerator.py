@@ -99,19 +99,19 @@ class Symbol:
         return f"Symbol({self.name})"
 
 class VariableSymbol(Symbol):
-    def __init__(self, name : str, type : Type = None, idx = 0, isStatic : bool = False, astVarDecl : VarDecl = None):
+    def __init__(self, name : str, type : Type = None, idx = 0, isStatic : bool = False, astAttributeDecl : AttributeDecl = None):
         self.name = name
         self.type = type
         self.idx = idx
         self.isStatic = isStatic
-        self.astVarDecl = astVarDecl
+        self.astAttributeDecl = astAttributeDecl
 
     def __str__(self):
         return f"VariableSymbol({self.name}, {self.type}. {self.idx}, {self.isStatic})"
 
 
 class FunctionSymbol(Symbol):
-    def __init__(self, name, methodType = MethodType([],None), className : ClassName = None, param : list[AttributeDecl] = None, body = None, astFuncDecl=None):
+    def __init__(self, name, methodType = MethodType([],None), className : ClassName = None, param : list[AttributeDecl] = None, body = None, astMethodDecl : MethodDecl=None):
         self.name = name
         self.methodType : MethodType = methodType  # MethodType
         if param is None:
@@ -119,8 +119,9 @@ class FunctionSymbol(Symbol):
         self.param = param
 
         self.body = body
-        self.astFuncDecl = astFuncDecl
         self.className = className
+        
+        self.astMethodDecl = astMethodDecl
 
     def __str__(self):
         paramStr = ', '.join(str(i) for i in self.param)
@@ -317,15 +318,16 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         # Visit variable type
         if ast.modifier == "var":
             varInitType = self.visit(ast.varInit, (envi, ExprParam(True, True))) 
-            varSymbol = VariableSymbol(name, varInitType, 0, isStatic, ast)
-
+            
             attributeDecl = None
             if isStatic:
                 varInit = Assign(ast.name, ast.varInit) if ast.varInit else None
                 attributeDecl = AttributeDecl(isStatic, ast.name, varInitType, varInit)
             else:
                 attributeDecl = AttributeDecl(isStatic, ast.name, varInitType, ast.varInit)
-            
+
+            varSymbol = VariableSymbol(name, varInitType, 0, isStatic, attributeDecl)
+
             current_scope.define(varSymbol)
             return attributeDecl
             
@@ -333,7 +335,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             varSymbol = VariableSymbol(name, None)  
             if ast.varInit:
                 varInitType = self.visit(ast.varInit, (envi, ExprParam(True, True))) if ast.varInit else None
-                varSymbol = VariableSymbol(name, varInitType, 0, isStatic, ast)
+                varSymbol = VariableSymbol(name, varInitType, 0, isStatic)
                 
 
             attributeDecl = None
@@ -343,13 +345,14 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             else:
                 attributeDecl = AttributeDecl(isStatic, ast.name, varSymbol.type, ast.varInit)
                 
+            varSymbol.astAttributeDecl = attributeDecl
             current_scope.define(varSymbol)
             return attributeDecl
         
         else: # no modifier
             varType = self.visit(ast.varType, (envi, None))
             
-            varSymbol = VariableSymbol(name, varType, 0, isStatic, ast)
+            varSymbol = VariableSymbol(name, varType, 0, isStatic)
             
             attributeDecl = None
             if isStatic:
@@ -358,6 +361,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             else:
                 attributeDecl = AttributeDecl(isStatic, ast.name, varType, ast.varInit)
               
+            varSymbol.astAttributeDecl = attributeDecl
             current_scope.define(varSymbol)
             return attributeDecl
 
@@ -416,15 +420,18 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         
         if functionSymbol is None: # first declaration of function 
             
-            functionSymbol = FunctionSymbol(name, MethodType([],None), self.className, None, None, ast) # TODO : return type of function
+            functionSymbol = FunctionSymbol(name, MethodType([],None), self.className, None, None, None) # TODO : return type of function
 
             # Add function to current scope, add it soon because of recursive call
             envi.getLast().define(functionSymbol) 
 
             # Visit function parameters and body
             visitFuncParamAndBody(functionSymbol)
-        
-            return MethodDecl(Instance(), ast.name , functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body) if functionSymbol.body else None
+
+            methodDecl = MethodDecl(Instance(), ast.name , functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body) if functionSymbol.body else None
+            if methodDecl:
+                functionSymbol.astMethodDecl = methodDecl
+            return methodDecl
 
     
         elif type(functionSymbol) == FunctionSymbol: # implement the body function
@@ -432,7 +439,11 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             # Check for redeclared parameters
             visitFuncParamAndBody(functionSymbol)
 
-            return MethodDecl(Instance(), Id(functionSymbol.name), functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body)
+            methodDecl = MethodDecl(Instance(), Id(functionSymbol.name), functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body)
+            
+            functionSymbol.astMethodDecl = methodDecl # update astMethodDecl
+            
+            return methodDecl
     
         else:
             pass # Solved in StaticChecker
@@ -509,7 +520,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         
         exprType = self.visit(ast.operand, (envi, operandParam))
         
-        return inferredReturnType # No type can be inferred
+        return inferredReturnType # return type of unary operation
 
     def visitCallExpr(self, ast : CallExpr, param : Tuple[Envi, ExprParam]):
         #print("Call Expr: ",ast, param[1])
@@ -528,7 +539,10 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         if functionSymbol.methodType.rettype is None: # function with not yet assigned type
             if exprParam.inferredType:
                 functionSymbol.methodType.rettype = exprParam.inferredType
-            
+        
+        if functionSymbol.astMethodDecl: # Update return type of method declaration
+            if exprParam.inferredType:
+                functionSymbol.astMethodDecl.returnType = exprParam.inferredType
             
         return functionSymbol.methodType.rettype
     
@@ -544,12 +558,15 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
                         return symbol.type
                     elif exprParam.inferredType : # No type in symbol yet so inferred type
                         symbol.type = exprParam.inferredType
+                        symbol.astAttributeDecl.varType = exprParam.inferredType # update type of attribute declaration
+
                         return symbol.type
                 elif type(symbol) is FunctionSymbol:
                     if symbol.methodType.rettype:
                         return symbol.methodType.rettype
                     elif exprParam.inferredType:
                         symbol.methodType.rettype = exprParam.inferredType
+                        symbol.astMethodDecl.returnType = exprParam.inferredType # update return type of method declaration
                         return symbol.methodType.rettype
                     
                 
@@ -643,6 +660,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         if lhsType is None: # LHS first use so infer type
             lhsType = NumberType()
             symbol.type = lhsType
+            symbol.astAttributeDecl.varType = lhsType # update type of attribute declaration
         
             
         # Visit condition of for loop
@@ -679,9 +697,11 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             
                 
                 stmtParam.currentFunctionSymbol.methodType.rettype = returnType
+                stmtParam.currentFunctionSymbol.astMethodDecl.returnType = returnType # update return type of method declaration
 
             else:
                 stmtParam.currentFunctionSymbol.methodType.rettype = VoidType()
+                stmtParam.currentFunctionSymbol.astMethodDecl.returnType = VoidType() # update return type of method declaration
         
         else: # function type is declared
             if ast.expr:
@@ -707,6 +727,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             rhsType = self.visit(ast.rhs, (envi, ExprParam( True, True)))
             
             symbol.type = rhsType
+            symbol.astAttributeDecl.varType = rhsType # update type of attribute declaration
 
         return ast
 
@@ -727,6 +748,9 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
         if functionSymbol.methodType.rettype is None: # function declared-only
             functionSymbol.methodType.rettype = VoidType()
+
+        if functionSymbol.astMethodDecl:
+            functionSymbol.astMethodDecl.returnType = VoidType() # update return type of method declaration
           
         return ast
 
