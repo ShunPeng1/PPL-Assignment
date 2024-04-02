@@ -919,3 +919,250 @@ Move disk from A to C
 8.0
 """
         #self.assertTrue(TestCodeGen.test(input, expect, 556))
+
+    def test_array_6(self):
+        input = """
+        func main()
+        begin
+            number a[2,2,2] <- [[[1,2],[3,4]],[[7,8],[9, 10]]]
+            var i <- 0
+            for i until i >= 2 by 1
+            begin
+                var j <- 0
+                for j until j >= 2 by 1
+                begin
+                    var k <- 0
+                    for k until k >= 2 by 1
+                    begin
+                        a[i,j,k] <- a[i,j,k] * a[k,j,i] * a[j,i,k]
+                        writeNumber(a[i,j,k])
+                    end
+                end
+            end
+
+        end
+        """
+        expect = """1.0
+28.0
+63.0
+288.0
+12348.0
+18432.0
+23328.0
+1000.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 557))
+
+    def test_array_7(self):
+        input = """
+        func main()
+        begin
+            number a[2,2,2] <- [[[1,2],[3,4]],[[7,8],[9, 10]]]
+            number b[2] <- [20,21]
+            var i <- 0
+            for i until i >= 2 by 1
+            begin
+                var j <- 0
+                for j until j >= 2 by 1
+                begin
+                    a[i,j] <- b
+                end
+            end
+
+            var k <- 0
+            for k until k >= 2 by 1
+            begin
+                var l <- 0
+                for l until l >= 2 by 1
+                begin
+                    var m <- 0
+                    for m until m >= 2 by 1
+                    begin
+                        writeNumber(a[k,l,m])
+                    end
+                end
+            end
+
+            number c[2,2] <- [[31,32],[33,34]]
+            var n <- 0
+            for n until n >= 2 by 1
+            begin
+                a[n] <- c
+            end
+
+            var o <- 0
+            for o until o >= 2 by 1
+            begin
+                var p <- 0
+                for p until p >= 2 by 1
+                begin
+                    var q <- 0
+                    for q until q >= 2 by 1
+                    begin
+                        writeNumber(a[o,p,q])
+                    end
+                end
+            end
+        end
+        """
+        expect = """20.0
+21.0
+20.0
+21.0
+20.0
+21.0
+20.0
+21.0
+31.0
+32.0
+33.0
+34.0
+31.0
+32.0
+33.0
+34.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 558))
+
+    def test_array_8(self):
+        input = """
+        func foo(number a[2,2])
+        begin
+            var i <- 0
+            for i until i >= 2 by 1
+            begin
+                var j <- 0
+                for j until j >= 2 by 1
+                begin
+                    writeNumber(a[i,j])
+                    
+                    a[i,j] <- a[i,j] + 1
+                end
+            end
+        end
+
+
+        func main()
+        begin
+            number a[2,2] <- [[1,2],[3,4]]
+            foo(a)
+            foo(a)
+
+            var i <- 0
+            for i until i >= 2 by 1
+            begin
+                var j <- 0
+                for j until j >= 2 by 1
+                begin    
+                    a[i,j] <- a[i,j] + 1
+                end
+            end
+
+            foo(a)
+
+        end
+        """
+        expect = """1.0
+2.0
+3.0
+4.0
+2.0
+3.0
+4.0
+5.0
+4.0
+5.0
+6.0
+7.0
+"""
+
+        #self.assertTrue(TestCodeGen.test(input, expect, 559))
+
+    def test_array_9(self):
+        input = """
+        func foo(number a[2,2])
+        begin
+            number b[2] <- [10,20]
+            
+            var i <- 0
+            for i until i >= 2 by 1
+            begin
+                a[i] <- b
+            end
+        end
+
+
+        func main()
+        begin
+            number a[2,2] <- [[1,2],[3,4]]
+            foo(a)
+
+            var i <- 0
+            for i until i >= 2 by 1
+            begin
+                var j <- 0
+                for j until j >= 2 by 1
+                begin    
+                    writeNumber(a[i,j])
+                end
+            end
+
+        end
+        """
+        expect = """10.0
+20.0
+10.0
+20.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 560))
+
+    def test_array_10(self):
+        input = """
+        func foo()
+        begin
+            number b[2] <- [10,20]
+            return b
+        end
+
+
+        func main()
+        begin
+            number a[2,2] <- [[1,2],[3,4]]
+            
+
+            var i <- 0
+            for i until i >= 2 by 1
+            begin
+                var j <- 0
+                for j until j >= 2 by 1
+                begin    
+                    
+                    a[i,j] <- foo()[j] + i + 1
+                    writeNumber(a[i,j])
+                end
+            end
+
+            var k <- 0
+            for k until k >= 2 by 1
+            begin
+                var l <- 0
+                for l until l >= 2 by 1
+                begin    
+                    a[k] <- foo() 
+                    writeNumber(a[k,l])
+                end
+            end
+
+
+        end
+        """
+        expect = """11.0
+21.0
+12.0
+22.0
+10.0
+20.0
+10.0
+20.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 561))

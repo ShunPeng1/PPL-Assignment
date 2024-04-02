@@ -1036,13 +1036,13 @@ class CodeGenVisitor(BaseVisitor):
     
 
     def visitAssign(self, ast : Assign, o : SubBody):
-        print("visitAssign: ", ast)
+        
 
         assignEmit, assignType = self.visit(ast.rhs, Access(o.frame, o.sym, False, True))
        
         leftEmit , leftType = self.visit(ast.lhs, Access(o.frame, o.sym, True, True))
         
-
+        print("visitAssign: ", ast, assignEmit, assignType, leftEmit, leftType)
         if type(ast.lhs) == ArrayCell:
             innerEmit, arrEmit = leftEmit.split(EMIT_SEPARATOR)
             self.emit.printout(innerEmit)
@@ -1145,11 +1145,9 @@ class CodeGenVisitor(BaseVisitor):
         
         print("CallExpr: ",in_[0], self.emit.buff)
             
-        self.emit.printout(in_[0])
-        self.emit.printout(self.emit.emitINVOKESTATIC(
-            className + "/" + ast.name.name, methodType, frame))
+        emitStr = in_[0] + self.emit.emitINVOKESTATIC(className + "/" + ast.name.name, methodType, frame)
         
-        return "", methodType.rettype
+        return emitStr, methodType.rettype
 
     
     def visitId(self, ast : Id, param : Access):
@@ -1198,7 +1196,7 @@ class CodeGenVisitor(BaseVisitor):
                     innerEmit += idxEmit + self.emit.emitF2I(frame)
                     
                     # Get the inner type of the array
-                    innerType = ArrayType(innerType.size[i+1:], innerType.eleType) if (i + 1 < len(innerType.size)) else innerType.eleType
+                    innerType = ArrayType(innerType.size[1:], innerType.eleType) if ( 1 < len(innerType.size)) else innerType.eleType
                         
                     if i + 1 < len(ast.idx):
                         
