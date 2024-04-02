@@ -129,10 +129,10 @@ class FunctionSymbol(Symbol):
 
    
 class SubBody():
-    def __init__(self, frame : Frame, sym : list[Symbol], isStatic = False):
+    def __init__(self, frame : Frame, sym : list[Symbol], isParam = False):
         self.frame : Frame = frame
         self.sym : list[Symbol] = sym # list of Symbol
-        self.isStatic : bool = isStatic
+        self.isParam : bool = isParam
 
     def __str__(self):
         return f"SubBody([{', '.join(str(i) for i in self.sym)}])"
@@ -419,18 +419,21 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
         
         if functionSymbol is None: # first declaration of function 
+            methodDecl = MethodDecl(Instance(), ast.name, None, None , None)
             
-            functionSymbol = FunctionSymbol(name, MethodType([],None), self.className, None, None, None) # TODO : return type of function
+            functionSymbol = FunctionSymbol(name, MethodType([],None), self.className, None, None, methodDecl) # TODO : return type of function
 
             # Add function to current scope, add it soon because of recursive call
             envi.getLast().define(functionSymbol) 
 
             # Visit function parameters and body
             visitFuncParamAndBody(functionSymbol)
-
-            methodDecl = MethodDecl(Instance(), ast.name , functionSymbol.param, functionSymbol.methodType.rettype , functionSymbol.body) if functionSymbol.body else MethodDecl(Instance(), Id(functionSymbol.name), None, None , None)
             
-            functionSymbol.astMethodDecl = methodDecl
+            methodDecl.param = functionSymbol.param
+            methodDecl.returnType = functionSymbol.methodType.rettype
+            methodDecl.body = functionSymbol.body
+
+        
             return methodDecl
 
     
@@ -893,7 +896,7 @@ class CodeGenVisitor(BaseVisitor):
         elif isMain:
             self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "args", ArrayType([0], StringType()), frame.getStartLabel(), frame.getEndLabel(), frame))
         else:
-            local = reduce(lambda env, ele: SubBody(frame, env.sym + [self.visit(ele, env)]), consdecl.param, SubBody(frame, []))
+            local = reduce(lambda env, ele: SubBody(frame, env.sym + [self.visit(ele, env)], True), consdecl.param, SubBody(frame, [], True))
             glenv = glenv + local.sym
 
         # Get the method body
@@ -950,6 +953,7 @@ class CodeGenVisitor(BaseVisitor):
         print("visitAttributeDecl: ", ast)
 
         isStatic = ast.isStatic
+        isParam = o.isParam
         variableSymbol = None
         if isStatic: # static variable
             self.emit.printout(self.emit.emitATTRIBUTE(ast.name.name, ast.varType, False, None))
@@ -962,7 +966,10 @@ class CodeGenVisitor(BaseVisitor):
             idx = o.frame.getNewIndex()
             variableSymbol = VariableSymbol(ast.name.name, ast.varType, idx, isStatic, ast)
         
-            if ast.varInit is None: # No initial value
+            if isParam:
+                return variableSymbol # Not generate initial for parameter
+            
+            if ast.varInit is None : # No initial value
                 #o.sym.append(variableSymbol)
                 ast.varInit = self.getDefaultValue(ast.varType)
 
@@ -1096,7 +1103,6 @@ class CodeGenVisitor(BaseVisitor):
     
 
     def visitAssign(self, ast : Assign, o : SubBody):
-        
 
         assignEmit, assignType = self.visit(ast.rhs, Access(o.frame, o.sym, False))
        

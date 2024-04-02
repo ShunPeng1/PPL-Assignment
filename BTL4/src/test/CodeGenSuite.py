@@ -11,7 +11,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "1.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 500))
+        self.assertTrue(TestCodeGen.test(input, expect, 500))
 
     def test_string(self):
         input = """func main ()
@@ -20,7 +20,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "Hello World\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 501))
+        self.assertTrue(TestCodeGen.test(input, expect, 501))
 
     def test_boolean(self):
         input = """func main ()
@@ -29,7 +29,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "true\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 502))
+        self.assertTrue(TestCodeGen.test(input, expect, 502))
 
     def test_decl(self):
         input = """func main ()
@@ -39,7 +39,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "1.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 503))
+        self.assertTrue(TestCodeGen.test(input, expect, 503))
 
     def test_decl_2(self):
         input = """
@@ -52,7 +52,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "1.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 504))
+        self.assertTrue(TestCodeGen.test(input, expect, 504))
     
     def test_binary_op_1(self):
         input = """func main ()
@@ -61,7 +61,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "3.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 505))
+        self.assertTrue(TestCodeGen.test(input, expect, 505))
 
     def test_binary_op_2(self):
         input = """func main ()
@@ -70,7 +70,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "-1.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 506))
+        self.assertTrue(TestCodeGen.test(input, expect, 506))
 
     def test_binary_op_3(self):
         input = """func main ()
@@ -79,7 +79,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "2.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 507))
+        self.assertTrue(TestCodeGen.test(input, expect, 507))
 
     def test_binary_op_4(self):
         input = """func main ()
@@ -88,7 +88,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "0.5\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 508))
+        self.assertTrue(TestCodeGen.test(input, expect, 508))
 
     def test_binary_op_5(self):
         input = """func main ()
@@ -97,7 +97,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "1.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 509))
+        self.assertTrue(TestCodeGen.test(input, expect, 509))
 
     def test_binary_op_6(self):
         input = """func main ()
@@ -106,7 +106,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "false\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 510))
+        self.assertTrue(TestCodeGen.test(input, expect, 510))
 
     def test_binary_op_7(self):
         input = """func main ()
@@ -115,7 +115,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "true\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 511))
+        self.assertTrue(TestCodeGen.test(input, expect, 511))
 
     def test_binary_op_8(self):
         input = """func main ()
@@ -124,7 +124,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "false\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 512))
+        self.assertTrue(TestCodeGen.test(input, expect, 512))
 
     def test_binary_op_9(self):
         input = """func main ()
@@ -133,7 +133,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "true\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 513))
+        self.assertTrue(TestCodeGen.test(input, expect, 513))
 
     def test_binary_op_10(self):
         input = """func main ()
@@ -142,7 +142,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "false\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 514))
+        self.assertTrue(TestCodeGen.test(input, expect, 514))
 
     def test_binary_op_11(self):
         input = """func main ()
@@ -151,7 +151,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "true\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 515))
+        self.assertTrue(TestCodeGen.test(input, expect, 515))
 
     def test_binary_op_12(self):
         input = """func main ()
@@ -161,7 +161,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "true\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 516))
+        self.assertTrue(TestCodeGen.test(input, expect, 516))
     
     def test_binary_op_13(self):
         input = """func main ()
@@ -171,7 +171,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "12\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 517))
+        self.assertTrue(TestCodeGen.test(input, expect, 517))
 
     def test_binary_op_14(self):
         input = """func main ()
@@ -180,7 +180,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "true\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 518))
+        self.assertTrue(TestCodeGen.test(input, expect, 518))
 
     def test_binary_op_15(self):
         input = """func main ()
@@ -189,7 +189,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "false\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 519))
+        self.assertTrue(TestCodeGen.test(input, expect, 519))
 
     def test_unary_op_1(self):
         input = """func main ()
@@ -198,7 +198,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "-1.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 520))
+        self.assertTrue(TestCodeGen.test(input, expect, 520))
 
     def test_unary_op_2(self):
         input = """func main ()
@@ -207,7 +207,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "false\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 521))
+        self.assertTrue(TestCodeGen.test(input, expect, 521))
 
     def test_unary_op_3(self):
         input = """func main ()
@@ -216,7 +216,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "true\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 522))
+        self.assertTrue(TestCodeGen.test(input, expect, 522))
 
 
     def test_unary_assign_1(self):
@@ -228,7 +228,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "-1.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 523))
+        self.assertTrue(TestCodeGen.test(input, expect, 523))
 
     def test_unary_assign_2(self):
         input = """
@@ -241,7 +241,7 @@ class CheckCodeGenSuite(unittest.TestCase):
         end
         """
         expect = "false\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 524))
+        self.assertTrue(TestCodeGen.test(input, expect, 524))
 
     def test_unary_assign_3(self):
         input = """
@@ -267,7 +267,7 @@ false
 true
 true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 525))
+        self.assertTrue(TestCodeGen.test(input, expect, 525))
 
     def test_if_1(self):
         input = """func main ()
@@ -279,7 +279,7 @@ true
         end
         """
         expect = "1.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 526))
+        self.assertTrue(TestCodeGen.test(input, expect, 526))
 
     def test_if_2(self):
         input = """
@@ -292,7 +292,7 @@ true
         end
         """
         expect = "2.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 527))
+        self.assertTrue(TestCodeGen.test(input, expect, 527))
 
     def test_if_3(self):
         input = """func main ()
@@ -306,7 +306,7 @@ true
         end
         """
         expect = "2.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 528))
+        self.assertTrue(TestCodeGen.test(input, expect, 528))
 
     def test_if_4(self):
         input = """func main ()
@@ -320,7 +320,7 @@ true
         end
         """
         expect = "3.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 529))
+        self.assertTrue(TestCodeGen.test(input, expect, 529))
 
     def test_if_5(self):
         input = """func main ()
@@ -336,7 +336,7 @@ true
         end
         """
         expect = "3.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 530))
+        self.assertTrue(TestCodeGen.test(input, expect, 530))
 
     def test_if_6(self):
         input = """func main ()
@@ -352,7 +352,7 @@ true
         end
         """
         expect = "4.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 531))
+        self.assertTrue(TestCodeGen.test(input, expect, 531))
 
     def test_if_7(self):
         input = """func main ()
@@ -363,7 +363,7 @@ true
         end
         """
         expect = "4.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 532))
+        self.assertTrue(TestCodeGen.test(input, expect, 532))
 
     def test_if_8(self):
         input = """func main ()
@@ -378,7 +378,7 @@ true
         end
         """
         expect = "4.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 533))
+        self.assertTrue(TestCodeGen.test(input, expect, 533))
 
     def test_for_1(self):
         input = """func main ()
@@ -400,7 +400,7 @@ true
 8.0
 9.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 534))
+        self.assertTrue(TestCodeGen.test(input, expect, 534))
 
     def test_for_2(self):  
         input = """func main ()
@@ -422,7 +422,7 @@ true
 -3.0
 -4.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 535))
+        self.assertTrue(TestCodeGen.test(input, expect, 535))
 
 
     def test_for_3(self):
@@ -443,7 +443,7 @@ true
 2.0
 3.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 536))
+        self.assertTrue(TestCodeGen.test(input, expect, 536))
 
     def test_for_4(self):
         input = """func main ()
@@ -461,7 +461,7 @@ true
         expect = """8.0
 9.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 537))
+        self.assertTrue(TestCodeGen.test(input, expect, 537))
 
     def test_for_5(self):
         input = """func main ()
@@ -497,7 +497,7 @@ true
 2.0
 2.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 538))
+        self.assertTrue(TestCodeGen.test(input, expect, 538))
 
 
     def test_for_6(self):
@@ -525,7 +525,7 @@ true
 12.0
  - divisible by 3
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 539))
+        self.assertTrue(TestCodeGen.test(input, expect, 539))
 
     
     def test_return_1(self):
@@ -537,7 +537,7 @@ true
         end
         """
         expect = "1.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 540))
+        self.assertTrue(TestCodeGen.test(input, expect, 540))
 
     def test_return_2(self):
         input = """
@@ -559,7 +559,7 @@ true
 4.0
 5.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 541))
+        self.assertTrue(TestCodeGen.test(input, expect, 541))
 
     def test_return_3(self):
         input = """
@@ -587,7 +587,7 @@ true
 4.0
 5.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 542))
+        self.assertTrue(TestCodeGen.test(input, expect, 542))
 
     def test_return_4(self):
         input = """
@@ -619,7 +619,7 @@ true
 21.0
 34.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 543))
+        self.assertTrue(TestCodeGen.test(input, expect, 543))
 
     def test_return_5(self):
         input = """
@@ -635,7 +635,7 @@ true
         end
         """
         expect = "69.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 544))
+        self.assertTrue(TestCodeGen.test(input, expect, 544))
 
     def test_return_6(self):
         input = """
@@ -654,7 +654,7 @@ true
         end
         """
         expect = "69.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 545))
+        self.assertTrue(TestCodeGen.test(input, expect, 545))
 
     
     def test_return_7(self):
@@ -674,7 +674,7 @@ true
         end
         """
         expect = "69.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 546))
+        self.assertTrue(TestCodeGen.test(input, expect, 546))
 
     def test_return_8(self):
         input = """
@@ -693,7 +693,7 @@ true
         end
         """
         expect = "69.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 547))
+        self.assertTrue(TestCodeGen.test(input, expect, 547))
 
     def test_return_9(self):
         input = """
@@ -712,7 +712,7 @@ true
         end
         """
         expect = "111111111111111111111\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 548))
+        self.assertTrue(TestCodeGen.test(input, expect, 548))
 
     def test_return_10(self):
         input = """
@@ -739,7 +739,7 @@ true
 4.0
 5.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 549))
+        self.assertTrue(TestCodeGen.test(input, expect, 549))
 
     def test_return_11(self):
         input = """
@@ -775,7 +775,7 @@ Move disk from B to A
 Move disk from B to C
 Move disk from A to C
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 550))
+        self.assertTrue(TestCodeGen.test(input, expect, 550))
 
     def test_return_12(self):
         input = """
@@ -804,7 +804,7 @@ Move disk from B to A
 Move disk from B to C
 Move disk from A to C
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 551))
+        self.assertTrue(TestCodeGen.test(input, expect, 551))
 
 
     def test_array_1(self):
@@ -823,7 +823,7 @@ Move disk from A to C
 4.0
 5.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 552))
+        self.assertTrue(TestCodeGen.test(input, expect, 552))
 
     def test_array_2(self):
         input = """
@@ -844,7 +844,7 @@ Move disk from A to C
 3.0
 4.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 553))
+        self.assertTrue(TestCodeGen.test(input, expect, 553))
 
     def test_array_3(self):
         input = """
@@ -870,7 +870,7 @@ Move disk from A to C
 6.0
 7.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 554))
+        self.assertTrue(TestCodeGen.test(input, expect, 554))
 
     def test_array_4(self):
         input = """
@@ -902,7 +902,7 @@ Move disk from A to C
 3.0
 4.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 555))
+        self.assertTrue(TestCodeGen.test(input, expect, 555))
 
     def test_array_5(self):
         input = """
@@ -918,7 +918,7 @@ Move disk from A to C
         expect = """7.0
 8.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 556))
+        self.assertTrue(TestCodeGen.test(input, expect, 556))
 
     def test_array_6(self):
         input = """
@@ -951,7 +951,7 @@ Move disk from A to C
 23328.0
 1000.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 557))
+        self.assertTrue(TestCodeGen.test(input, expect, 557))
 
     def test_array_7(self):
         input = """
@@ -1022,7 +1022,7 @@ Move disk from A to C
 33.0
 34.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 558))
+        self.assertTrue(TestCodeGen.test(input, expect, 558))
 
     def test_array_8(self):
         input = """
@@ -1076,7 +1076,7 @@ Move disk from A to C
 7.0
 """
 
-        #self.assertTrue(TestCodeGen.test(input, expect, 559))
+        self.assertTrue(TestCodeGen.test(input, expect, 559))
 
     def test_array_9(self):
         input = """
@@ -1114,7 +1114,7 @@ Move disk from A to C
 10.0
 20.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 560))
+        self.assertTrue(TestCodeGen.test(input, expect, 560))
 
     def test_array_10(self):
         input = """
@@ -1165,7 +1165,7 @@ Move disk from A to C
 10.0
 20.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 561))
+        self.assertTrue(TestCodeGen.test(input, expect, 561))
 
     def test_array_11(self):
         input = """
@@ -1202,7 +1202,7 @@ Move disk from A to C
 5.0
 6.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 562))
+        self.assertTrue(TestCodeGen.test(input, expect, 562))
 
 
     def test_block_1(self):
@@ -1220,7 +1220,7 @@ Move disk from A to C
         expect = """1.0
 0.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 563))
+        self.assertTrue(TestCodeGen.test(input, expect, 563))
 
     def test_block_2(self):
         input = """
@@ -1237,7 +1237,7 @@ Move disk from A to C
         expect = """1.0
 1.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 564))
+        self.assertTrue(TestCodeGen.test(input, expect, 564))
 
     def test_block_3(self):
         input = """
@@ -1263,7 +1263,7 @@ Move disk from A to C
 1.0
 0.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 565))
+        self.assertTrue(TestCodeGen.test(input, expect, 565))
 
     def test_block_4(self):
         input = """
@@ -1289,7 +1289,7 @@ Move disk from A to C
 true
 0.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 566))
+        self.assertTrue(TestCodeGen.test(input, expect, 566))
 
     def test_block_5(self):
         input = """
@@ -1321,7 +1321,7 @@ true
 8.0
 10.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 567))
+        self.assertTrue(TestCodeGen.test(input, expect, 567))
 
     def test_block_6(self):
         input = """
@@ -1340,7 +1340,7 @@ true
         expect = """5.0
 10.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 568))
+        self.assertTrue(TestCodeGen.test(input, expect, 568))
 
     def test_block_7(self):
         input = """
@@ -1363,7 +1363,7 @@ true
 10.0
 5.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 569))
+        self.assertTrue(TestCodeGen.test(input, expect, 569))
 
     
     def test_block_8(self):
@@ -1395,7 +1395,7 @@ true
 0.0
 69.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 570))
+        self.assertTrue(TestCodeGen.test(input, expect, 570))
 
     def test_block_9(self):
         input = """
@@ -1430,7 +1430,7 @@ true
 69.0
 69.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 571))
+        self.assertTrue(TestCodeGen.test(input, expect, 571))
 
     def test_block_10(self):
         input = """
@@ -1449,7 +1449,7 @@ true
         """
         expect = """10.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 572))
+        self.assertTrue(TestCodeGen.test(input, expect, 572))
 
     def test_infer_1(self):
         input = """
@@ -1462,7 +1462,7 @@ true
         end
         """
         expect = "3.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 573))
+        self.assertTrue(TestCodeGen.test(input, expect, 573))
 
     def test_infer_2(self):
         input = """
@@ -1475,7 +1475,7 @@ true
         end
         """
         expect = "1.0\n"
-        #self.assertTrue(TestCodeGen.test(input, expect, 574))
+        self.assertTrue(TestCodeGen.test(input, expect, 574))
 
     def test_infer_3(self):
         input = """
@@ -1495,7 +1495,7 @@ true
         expect = """Hello
 1.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 575))
+        self.assertTrue(TestCodeGen.test(input, expect, 575))
         
     def test_infer_4(self):
         input = """
