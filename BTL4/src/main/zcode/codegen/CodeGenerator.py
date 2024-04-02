@@ -1198,7 +1198,7 @@ class CodeGenVisitor(BaseVisitor):
                     innerEmit += idxEmit + self.emit.emitF2I(frame)
                     
                     # Get the inner type of the array
-                    innerType = ArrayType(innerType.size[i+1:], innerType.eleType) if (i + 1 < len(ast.idx)) else innerType.eleType
+                    innerType = ArrayType(innerType.size[i+1:], innerType.eleType) if (i + 1 < len(innerType.size)) else innerType.eleType
                         
                     if i + 1 < len(ast.idx):
                         
@@ -1207,7 +1207,6 @@ class CodeGenVisitor(BaseVisitor):
                         
                 
                 arrEmit = self.emit.emitASTORE(innerType, frame) 
-                
                 
                 return innerEmit + EMIT_SEPARATOR + arrEmit, innerType
 
@@ -1224,7 +1223,7 @@ class CodeGenVisitor(BaseVisitor):
                     idxEmit, idxType = self.visit(ast.idx[i], Access(frame, nenv, False, True)) 
                     
                     # Get the inner type of the array
-                    innerType = ArrayType(arrType.size[i+1:], arrType.eleType) if (i + 1 < len(ast.idx)) else arrType.eleType
+                    innerType = ArrayType(arrType.size[i+1:], arrType.eleType) if (i + 1 < len(arrType.size)) else arrType.eleType
                     
                     # idxType is always NumberType (Float), innerType is the type of the inner array
                     arrEmit += idxEmit + self.emit.emitF2I(frame)
