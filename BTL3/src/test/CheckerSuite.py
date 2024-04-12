@@ -1,1180 +1,671 @@
 import unittest
 from TestUtils import TestChecker
-from AST import *
-
 
 class CheckerSuite(unittest.TestCase):
-    def test_no_entry_point(self):
-        input = """number a
-        """
-        expect = "No Entry Point"
-        self.assertTrue(TestChecker.test(input, expect, 400))
-
-    def test_redeclared_variable(self):
-        input = """number a
-        number a
-        """
-        expect = "Redeclared Variable: a"
-        self.assertTrue(TestChecker.test(input, expect, 401))
-
-    def test_redeclared_function(self):
+    def test401(self):
         input = """
-        func main() 
-            return 0
-        
-        func main() 
-            return 0
-        """
-        expect = "Redeclared Function: main"
-        self.assertTrue(TestChecker.test(input, expect, 402))
+func f()
+begin
+    dynamic x
+    x <- [[1, 2, 3], [4, 5, 6]]
+    return x[0, 0]
+end
 
-    def test_redeclared_parameter(self):
-        input = """
-        func main(number a, number a) 
-            return 0
-        """
-        expect = "Redeclared Parameter: a"
-        self.assertTrue(TestChecker.test(input, expect, 403))
+func main()
+begin
+    number x <- f()
+end
 
-    def test_variable_declare(self):
-        input = """
-            string s1
-            bool b1
-            string s2 <- "1"
-            bool b2 <- true
-        
-        """
-        expect = "No Entry Point"
-        self.assertTrue(TestChecker.test(input, expect, 404))
-
-    def test_variable_declare_2(self):
-        input = """
-            string s2 <- "1" ... "2"
-        """
-        expect = "No Entry Point"
-        self.assertTrue(TestChecker.test(input, expect, 405))
-
-    def test_variable_declare_3(self):
-        input = """
-            string s2 <- "1" ... 2
-        """
-        expect = "Type Mismatch In Expression: BinaryOp(..., StringLit(1), NumLit(2.0))"
-        self.assertTrue(TestChecker.test(input, expect, 406))
-
-    def test_variable_declare_4(self):
-        input = """
-            number s2 <- "1" ... "2"
-        """
-        expect = "Type Mismatch In Statement: VarDecl(Id(s2), NumberType, None, BinaryOp(..., StringLit(1), StringLit(2)))"
-        self.assertTrue(TestChecker.test(input, expect, 407))
-
-    def test_variable_declare_5(self):
-        input = """
-            bool s2 <- ("1" ... "2") == ("12" ... "2") 
-        """
-        expect = "No Entry Point"
-        self.assertTrue(TestChecker.test(input, expect, 408))
-
-    def test_variable_declare_6(self):
-        input = """
-            bool b1 <- true
-            bool b2 <- true and b1
-            bool b3 <- (true and not b1) and b2
-        """
-        expect = "No Entry Point"
-        self.assertTrue(TestChecker.test(input, expect, 409))
-
-    def test_variable_declare_7(self):
-        input = """
-            bool b1 <- (true and not b1)
-        """
-        expect = "Undeclared Identifier: b1"
-        self.assertTrue(TestChecker.test(input, expect, 410))
-
-    def test_variable_declare_7(self):
-        input = """
-            bool b1 <- true
-        
-            func main()
-            begin 
-                bool b2 <- b1 and (1 <= 3)
-                return
-            end
-        """
+"""
         expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 411))
-
-    def test_variable_declare_8(self):
+        self.assertTrue(TestChecker.test(input, expect, 401))
+    
+    def test402(self):
         input = """
-            string s1 <- "1"
-            string s2 <- "1" ... "2"
-            string s3 <- s1 ... s2
-        """
+func f(number x)
+
+func main()
+begin
+    number x <- f(2)
+    writeNumber(x)
+end
+
+func f(number x)
+begin
+    if (x >= 2) return f(x - 1) + f(x - 2)
+    return 1
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 402))
+    
+    def test403(self):
+        input = """
+func main()
+begin
+    var x <- [[1, 2, 3], [4, 5, 6]]
+    var y <- x[0, 0] + 1
+    writeBool(y)
+end
+
+"""
+        expect = "Type Mismatch In Statement: CallStmt(Id(writeBool), [Id(y)])"
+        self.assertTrue(TestChecker.test(input, expect, 403))
+    
+    def test404(self):
+        input = """
+dynamic x
+func main()
+begin
+    var y <- x[0, 0] + 1
+    writeNumber(y)
+end
+
+"""
+        expect = "Type Cannot Be Inferred: VarDecl(Id(y), None, var, BinaryOp(+, ArrayCell(Id(x), [NumLit(0.0), NumLit(0.0)]), NumLit(1.0)))"
+        self.assertTrue(TestChecker.test(input, expect, 404))
+    
+    def test405(self):
+        input = """
+dynamic x
+func main()
+begin
+    x <- [1, 2, 3, 4, 5, 6]
+    var y <- x[0, 0] + 1
+    writeNumber(y)
+end
+
+"""
+        expect = "Type Mismatch In Expression: ArrayCell(Id(x), [NumLit(0.0), NumLit(0.0)])"
+        self.assertTrue(TestChecker.test(input, expect, 405))
+    
+    def test406(self):
+        input = """
+dynamic x <- f(2)
+func f(number x)
+
+func main()
+begin
+
+end
+"""
+        expect = "Undeclared Function: f"
+        self.assertTrue(TestChecker.test(input, expect, 406))
+    
+    def test407(self):
+        input = """
+func f(number x)
+
+dynamic x <- f(2) + 1
+
+func f(number y)
+begin
+    if (y <= 1) return 1
+    return y * f(y - 1)
+end
+
+func main()
+begin
+    return 2
+end
+"""
         expect = "No Entry Point"
+        self.assertTrue(TestChecker.test(input, expect, 407))
+    
+    def test408(self):
+        input = """
+func f(number x)
+
+dynamic x <- f(2) + 1
+
+func main()
+begin
+    return
+end
+"""
+        expect = "No Function Definition: f"
+        self.assertTrue(TestChecker.test(input, expect, 408))
+    
+    def test409(self):
+        input = """
+func f(number x[2, 3])
+    return x[2]
+
+func main()
+begin
+    number x[2, 3] <- [[1, 2, 3], [4, 5, 6]]
+    writeNumber(f()[2])
+end
+"""
+        expect = "Type Mismatch In Expression: CallExpr(Id(f), [])"
+        self.assertTrue(TestChecker.test(input, expect, 409))
+    
+    def test410(self):
+        input = """
+func f(number x[2, 3])
+    return x
+
+func main()
+begin
+    number x[2, 3] <- [[1, 2, 3], [4, 5, 6]]
+    writeNumber(f(x)[0, 1])
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 410))
+    
+    def test411(self):
+        input = """
+func f(number x[2, 3])
+    return x
+
+func main()
+begin
+    dynamic x <- [[1, 2, 3], [4, 5, 6]]
+    var y <- x[0, 0]
+    writeString(y)
+end
+"""
+        expect = "Type Mismatch In Statement: CallStmt(Id(writeString), [Id(y)])"
+        self.assertTrue(TestChecker.test(input, expect, 411))
+    
+    def test412(self):
+        input = """
+func f(number x[2, 3], number i, number j)
+    return x[i, j]
+
+func main()
+begin
+    dynamic x <- [[1, 2, 3], [4, 5, 6]]
+    var i <- 0
+    for i until i >= 2 by 1
+        for j until j >= 3 by 1
+            writeNumber(f(x, i, j))
+end
+"""
+        expect = "Undeclared Identifier: j"
         self.assertTrue(TestChecker.test(input, expect, 412))
     
-
-    def test_function_declare_1(self):
+    def test413(self):
         input = """
-            func foo(number a, number b)
-                return 0
-
-            func main() 
-                return 
-        """
+func main()
+begin
+    number x <- readNumber()
+    if (x <= 10) writeString("Number is less than or equal to 10")
+    elif ((x > 10) and (x <= 20)) writeString("Number is between 11 and 20")
+    else writeString("Invalid number!")
+end
+"""
         expect = ""
         self.assertTrue(TestChecker.test(input, expect, 413))
-        
-    def test_function_declare_2(self):
+    
+    def test414(self):
         input = """
-            func foo(number a, number a)
-                return 0
+func isPrime(number x)
 
-            func main() 
-                return 0
-        """
-        expect = "Redeclared Parameter: a"
+func main()
+begin
+    number x <- readNumber()
+    if (isPrime(x)) writeString("x is a prime number")
+    else writeString("x is not a prime number")
+end
+
+func isPrime(number x)
+begin
+    if (x <= 1) return false
+    var i <- 2
+    for i until i > x / 2 by 1
+    begin
+        if (x % i = 0) return false
+    end
+    return true
+end
+"""
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 414))
-
-    def test_function_declare_3(self):
+    
+    def test415(self):
         input = """
-            func foo(number a, number b)
-            
-            func main() 
-                return
+func areDivisors(number num1, number num2)
+    return ((num1 % num2 = 0) or (num2 % num1 = 0))
 
-            func foo(number c, number d)
-                return 0
-               """
+func main()
+begin
+    var num1 <- readNumber()
+    var num2 <- readNumber()
+    if (areDivisors(num1, num2)) writeString("Yes")
+    else writeString("No")
+end
+"""
         expect = ""
         self.assertTrue(TestChecker.test(input, expect, 415))
-
-    def test_function_declare_4(self):
+    
+    def test416(self):
         input = """
-            func foo(number a, number b)
-            
-            func main() 
-                return 0
+func f()
+begin
+    var i <- 0
+    for i until i > 10 by 1
+    begin
 
-            func foo(bool a, number b)
-                return 0
-               """
+    end
+    continue
+end
 
-        expect = "Redeclared Function: foo"
+func main()
+begin
+    f()
+end
+"""
+        expect = "Continue Not In Loop"
         self.assertTrue(TestChecker.test(input, expect, 416))
-
-    def test_function_declare_5(self):
+    
+    def test417(self):
         input = """
-            func foo(number a, number b)
-            
-            func main() 
-                return 
+func findMax(number x[10], number n)
+begin
+    if (n = 1) return x[0]
+    number k <- findMax(x, n - 1)
+    if (k >= x[n]) return k
+    return x[n]
+end
 
-            func foo(number a, number b, number c)
-                return 0
-               """
-        expect = "Redeclared Function: foo"
+func main()
+begin
+    dynamic x <- [3, 4, 0, 1, 2, 7, 9, 8, 5, 6]
+    writeNumber(findMax(x, 10))
+end
+"""
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 417))
-
-    def test_function_declare_6(self):
+    
+    def test418(self):
         input = """
-            func foo(number a, number b)
-            
-            func main() 
-                return 0
-
-            func foo(number a, number b)
-                return 0
-
-            func foo(number a, number b)
-                return 0
-               """
-        expect = "Redeclared Function: foo"
+func main()
+begin
+    number x <- 2 + true
+    writeNumber(x)
+end
+"""
+        expect = "Type Mismatch In Expression: BinaryOp(+, NumLit(2.0), BooleanLit(True))"
         self.assertTrue(TestChecker.test(input, expect, 418))
-
-    def test_function_declare_7(self):
+    
+    def test419(self):
         input = """
-            func foo(number a, number b)
-            
-            func main() 
-                return 0
-
-            func foo(number a, number b)
-               """
-        expect = "Redeclared Function: foo"
-        self.assertTrue(TestChecker.test(input, expect, 419))
-
-
-    def test_inferring_type_1(self):
+func main()
+begin
+    var x <- [[[[1, 2]], [3, 4, 5]], [[6, 7, 8], [9, 10, 11]]]
+    writeNumber(x)
+end
+"""     
+        expect = "Type Mismatch In Expression: ArrayLit(ArrayLit(ArrayLit(ArrayLit(NumLit(1.0), NumLit(2.0))), ArrayLit(NumLit(3.0), NumLit(4.0), NumLit(5.0))), ArrayLit(ArrayLit(NumLit(6.0), NumLit(7.0), NumLit(8.0)), ArrayLit(NumLit(9.0), NumLit(10.0), NumLit(11.0))))"
+        expectThuan = "Type Mismatch In Expression: ArrayLit(ArrayLit(ArrayLit(NumLit(1.0), NumLit(2.0))), ArrayLit(NumLit(3.0), NumLit(4.0), NumLit(5.0)))"
+        self.assertTrue(TestChecker.test(input, expectThuan, 419))
+    
+    def test420(self):
         input = """
-            var a <- -1 + 1
-            func main()
-                return
-        """
+func main()
+begin
+    dynamic a
+    dynamic b
+    dynamic c
+    number x[3, 3] <- [a, b, c]
+    a <- [1, 2, 3]
+    b <- [4, 5, 6]
+    c <- [7, 8, 9]
+    writeNumber(a[0] + b[0] + c[0])
+end
+"""
         expect = ""
         self.assertTrue(TestChecker.test(input, expect, 420))
-
-    def test_inferring_type_2(self):
+    
+    def test421(self):
         input = """
-            var a <- 1 + true
-            func main()
-                return
-        """
-        expect = "Type Mismatch In Expression: BinaryOp(+, NumLit(1.0), BooleanLit(True))"
+func f(number x[3])
+begin
+    return
+end
+    
+func main()
+begin
+    dynamic a
+    dynamic b
+    dynamic c
+    f([a, b, c])
+    a <- 3
+end
+"""
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 421))
 
-    def test_inferring_type_3(self):
+    def test422(self):
         input = """
-            var a <- 1
-            var b <- 1 + a
-            var c <- -b <= a
-            var d <- b and not c
-            
-            func main()
-                return
-            
-        """
-        expect = "Type Mismatch In Expression: BinaryOp(and, Id(b), UnaryOp(not, Id(c)))"
-        self.assertTrue(TestChecker.test(input, expect, 422))
+func f(number x[2, 3])
+    
+func main()
+begin
+    dynamic a
+    number x[2, 3] <- f(a)
+    a[0] <- [1, 2, 3]
+end
 
-    def test_inferring_type_4(self):
-        input = """
-            var a <- 1
-            var c <- b <= a
-            var d <- 1 + c
-                
-            func main()
-            begin            
-                return
-            end
-        """
-        expect = "Undeclared Identifier: b"
-        self.assertTrue(TestChecker.test(input, expect, 423))
-
-    def test_inferring_type_5(self):
-        input = """
-            var a <- 1
-            var c <- a <= 1
-            var d <- 1 + c
-                
-            func main()
-            begin            
-                return
-            end
-        """
-        expect = "Type Mismatch In Expression: BinaryOp(+, NumLit(1.0), Id(c))"
-        self.assertTrue(TestChecker.test(input, expect, 424))
-
-    def test_function_definition_1(self):
-        input = """
-            func foo(number a, number b)
-                
-            func main() 
-                return 0
-        """
-        expect = "No Function Definition: foo"
-        self.assertTrue(TestChecker.test(input, expect, 425))
-
-    def test_function_definition_2(self):
-        input = """
-            func main() 
-            
-        """
-        expect = "No Function Definition: main"
-        self.assertTrue(TestChecker.test(input, expect, 426))
-
-
-    def test_function_definition_3(self):
-        input = """
-            func main()
-            
-            func main() 
-                return 
-        """
+func f(number x[2, 3])
+    return x
+"""
         expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 427))
-
-    def test_dynamic_type_1(self):
+        self.assertTrue(TestChecker.test(input, expect, 422))
+    
+    def test423(self):
         input = """
-            dynamic a
-            dynamic b
-            dynamic c <- a + b
-            func main()
-                return
-        """
+func f(number x)
+begin
+    if (x = 0) return 0
+    elif (x = 1) return 1
+    else return f(x - 1) + f(x - 2)
+end
+    
+func main()
+begin
+    dynamic a
+    number x <- f(a)
+    a[0] <- [1, 2, 3]
+end
+"""
+        expect = "Type Mismatch In Expression: ArrayCell(Id(a), [NumLit(0.0)])"
+        self.assertTrue(TestChecker.test(input, expect, 423))
+    
+    def test424(self):
+        input = """
+func max(number x, number y)
+begin
+    if (x <= y) return y
+    return x
+end
+
+func main()
+begin
+    number x <- readNumber()
+    number y <- readNumber()
+    number z <- readNumber()
+    writeNumber(max(max(x, y), z))
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 424))
+    
+    def test425(self):
+        input = """
+func pow(number x, number y)
+
+func main()
+begin
+    number x <- readNumber()
+    number y <- readNumber()
+    writeNumber(pow(x, y))
+end
+
+func pow(number a, number b)
+begin
+    if (b = 0) return 1
+    number k <- pow(a, b / 2)
+    if (b % 2 = 0) return k * k
+    return a * k * k
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 425))
+    
+    def test426(self):
+        input = """
+func add(number x, number x)
+
+func main()
+begin
+    number x <- readNumber()
+    number y <- readNumber()
+    writeNumber(add(x, y))
+end
+
+func add(number a, number b)
+begin
+    return a + b
+end
+"""
+        expect = "Redeclared Parameter: x"
+        self.assertTrue(TestChecker.test(input, expect, 426))
+    
+    def test427(self):
+        input = """
+func add(number x, number y)
+
+func main()
+begin
+    number x <- readNumber()
+    number y <- readNumber()
+    writeNumber(pow(x, y))
+end
+
+func add(number a, number b)
+begin
+    return a + b
+end
+"""
+        expect = "Undeclared Function: pow"
+        self.assertTrue(TestChecker.test(input, expect, 427))
+    
+    def test428(self):
+        input = """
+func add(number x, number y)
+
+func main()
+begin
+    var i <- 0
+    for i until i > 10 by 0
+    begin
+        i <- add(i, 1)
+        writeNumber(i)
+    end
+end
+
+func add(number a, number b)
+begin
+    number x <- a + b
+    return x
+end
+"""
         expect = ""
         self.assertTrue(TestChecker.test(input, expect, 428))
-
-    def test_dynamic_type_2(self):
+    
+    def test429(self):
         input = """
-            dynamic a
-            dynamic b <- a
-            func main()
-                return
-        """
-        expect = "Type Cannot Be Inferred: VarDecl(Id(b), None, dynamic, Id(a))"
+func f(number x)
+
+func main()
+begin
+    number x <- 10
+    number y <- f(x)
+    writeNumber(y)
+end
+
+func f(string x)
+begin
+    return x == "Hello"
+end
+"""
+        expect = "Redeclared Function: f"
         self.assertTrue(TestChecker.test(input, expect, 429))
-
-
-    def test_dynamic_type_3(self):
+    
+    def test430(self):
         input = """
-            dynamic a
-            dynamic b
-            dynamic c <- a + b
-            dynamic d <- c and true
-
-            func main()
-                return
-        """
-        expect = "Type Mismatch In Expression: BinaryOp(and, Id(c), BooleanLit(True))"
+func main()
+begin
+    var i <- 0
+    for i until i < 0 by 1
+    begin
+        string x <- readString()
+        if (x == "Hello") 
+        begin
+            x <- x ... ", world!"
+            writeString(x)
+        end
+        else writeString("Try again")
+    end
+    break
+end
+"""
+        expect = "Break Not In Loop"
         self.assertTrue(TestChecker.test(input, expect, 430))
-
-
-    def test_assign_statement_1(self):
+    
+    def test431(self):
         input = """
-            number a
-            number b
-            func main()
-            begin
-                a <- b
-                return
-            end
-        """
-        expect = ""
+func f(number arr[10], number n)
+begin
+    var i <- 0
+    for i until i >= n by 1
+        writeNumber(arr[i])
+end
+
+"""
+        expect = "No Entry Point"
         self.assertTrue(TestChecker.test(input, expect, 431))
-
-    def test_assign_statement_2(self):
+    
+    def test432(self):
         input = """
-            number a
-            number b
-            func main()
-            begin
-                a <- 1 + 1
-                a <- true
-                return
-            end
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(Id(a), BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 432))
+func f(number arr[10], number n)
+begin
+    var i <- 0
+    for i until i >= n by 1
+        writeNumber(arr[i])
+end
 
-    def test_assign_statement_3(self):
-        input = """
-            dynamic a
-            dynamic b
-            func main()
-            begin
-                a <- 1 + 1
-                a <- b
-                return
-            end
-        """
+func main()
+begin
+    dynamic n
+    f([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], n)
+    n <- 10
+end
+"""
         expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 432))
+    
+    def test433(self):
+        input = """
+func main()
+begin
+    dynamic a
+    dynamic b
+    dynamic c
+    number x[2, 2] <- [a, [b, 2]]
+    a <- 2
+    b <- 3
+    c <- true
+end
+"""
+        expect = "Type Mismatch In Statement: AssignStmt(Id(a), NumLit(2.0))"
         self.assertTrue(TestChecker.test(input, expect, 433))
-
-    def test_assign_statement_4(self):
+    
+    def test434(self):
         input = """
-            dynamic a
-            dynamic b
-            func main()
-            begin
-                a <- 1 + 1
-                a <- b
-                b <- true
-                return
-            end
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(Id(b), BooleanLit(True))"
+func main()
+begin
+    dynamic a
+    dynamic b
+    dynamic c
+    number x[3, 2] <- [a, b, [c, 0]]
+    a <- [1]
+    b <- [3, 4]
+    c <- 0
+end
+"""
+        expect = "Type Mismatch In Statement: AssignStmt(Id(a), ArrayLit(NumLit(1.0)))"
         self.assertTrue(TestChecker.test(input, expect, 434))
-
-    def test_assign_statement_5(self):
+    
+    def test435(self):
         input = """
-            dynamic a
-            dynamic b
-            dynamic c
-            func main()
-            begin
-                c <- a + b 
-                return
-            end
-        """
+func main()
+begin
+    dynamic a
+    dynamic b
+    dynamic c
+    dynamic x <- [readNumber(), a, b, c]
+    a <- 3
+    b <- x[0]
+    c <- a + b
+end
+"""
         expect = ""
         self.assertTrue(TestChecker.test(input, expect, 435))
-
-    def test_assign_statement_6(self):
+    
+    def test436(self):
         input = """
-            dynamic a
-            dynamic b
-            dynamic c
-            func main()
-            begin
-                c <- a + b 
-                c <- true
-                return
-            end
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(Id(c), BooleanLit(True))"
+func main()
+begin
+    dynamic x <- readBool()
+    dynamic y <- not readBool()
+    if (x and y) writeNumber(1)
+    else writeNumber(0)
+end
+"""
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 436))
-
-    def test_if_statement_1(self):
+    
+    def test437(self):
         input = """
-            number a
-            number b
-            func main()
-            begin
-                if (a < b) 
-                    return
-                elif (a > b) 
-                    return
-                else
-                    return
-            end
-        """
-        expect = ""
+func main()
+begin
+    dynamic x
+    if (x) writeString("x is infer to true value")
+    else writeString("x is infer to false value")
+    x <- 1 + true
+end
+"""
+        expect = "Type Mismatch In Expression: BinaryOp(+, NumLit(1.0), BooleanLit(True))"
         self.assertTrue(TestChecker.test(input, expect, 437))
-
-    def test_if_statement_2(self):
+    
+    def test438(self):
         input = """
-            dynamic a
-            dynamic b
-            func main()
-            begin
-                if (a) 
-                    return
-                elif (b) 
-                    return
-                else
-                    a <- b
-                    a <- 1
-                    return
-            end
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(Id(a), NumLit(1.0))"
+func main()
+begin
+    dynamic x
+    if (x) writeString("x is infer to true value")
+    else writeString("x is infer to false value")
+    x <- not (true and not false) and not (false and not true)
+end
+"""
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 438))
-
-    def test_callstmt_1(self):
+    
+    def test439(self):
         input = """
-            func foo()
-                return
-            func main()
-            begin
-                foo()
-                return
-            end
-        """
-        expect = ""
+func f(number x)
+begin
+    dynamic x <- (x - 2) * (x + true)
+end
+"""
+        expect = "Undeclared Identifier: x"
         self.assertTrue(TestChecker.test(input, expect, 439))
-
-    def test_callstmt_2(self):
+    
+    def test440(self):
         input = """
-            func foo(number a)
-                return
-            func main()
-            begin
-                dynamic a
-                foo(a)
-                a <- true
-                return
-            end
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(Id(a), BooleanLit(True))"
+func f()
+begin
+    dynamic x
+    x <- (x - 2) * (x + true)
+end
+"""
+        expect = "Type Mismatch In Expression: BinaryOp(+, Id(x), BooleanLit(True))"
         self.assertTrue(TestChecker.test(input, expect, 440))
-
-    def test_callstmt_3(self):
-        input = """
-            func foo()
-                return
-            func main()
-            begin
-                dynamic foo
-                foo()
-                return
-            end
-        """
-        expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 441))
-            
-    def test_callstmt_4(self):
-        input = """
-            func foo()
-                return
-            func main()
-            begin
-                dynamic a
-                foo(a)
-                return
-            end
-        """       
-        expect = "Type Mismatch In Statement: CallStmt(Id(foo), [Id(a)])"
-        self.assertTrue(TestChecker.test(input, expect, 442))
     
-    def test_callepxr_1(self):
-        input = """
-            func foo()
-                return 0
-            func main()
-            begin
-                foo()
-                return
-            end
-        """
-        expect = "Type Mismatch In Statement: CallStmt(Id(foo), [])"
-        self.assertTrue(TestChecker.test(input, expect, 443))
-
-    def test_callepxr_2(self):
-        input = """
-            func foo()
-                return 0
-            func main()
-            begin
-                dynamic a <- foo()
-                a <- true
-            end
-        """       
-        expect = "Type Mismatch In Statement: AssignStmt(Id(a), BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 444))
-
-    def test_callepxr_3(self):
-        input = """
-            func foo()
-                return 0
-            func main()
-            begin
-                bool a <- foo()
-            end
-        """        
-        
-        expect = "Type Mismatch In Statement: VarDecl(Id(a), BoolType, None, CallExpr(Id(foo), []))"
-        self.assertTrue(TestChecker.test(input, expect, 445))
-    
-    def test_callepxr_4(self):
-        input = """
-            func foo()
-            
-            func main()
-            begin
-                dynamic a <- foo()
-                a <- 1
-            end
-
-            func foo()
-                return 0
-        """
-        expect = "Type Cannot Be Inferred: VarDecl(Id(a), None, dynamic, CallExpr(Id(foo), []))"
-        self.assertTrue(TestChecker.test(input, expect, 446))
-
-    def test_callepxr_5(self):
-        input = """
-            func foo()
-                return 0
-            func foo2()
-                return true
-            func main()
-            begin
-                dynamic c <- foo2() + foo()
-
-            end
-        """       
-        expect = "Type Mismatch In Expression: BinaryOp(+, CallExpr(Id(foo2), []), CallExpr(Id(foo), []))"
-        self.assertTrue(TestChecker.test(input, expect, 447))
-
-
-    def test_callepxr_6(self):
-        input = """
-            func foo(number a)
-            
-            func main()
-            begin
-                number a <- foo(1)
-            end
-
-            func foo(number a)
-                return true
-        """
-        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 448))
-
-
-    def test_callepxr_7(self):
-        input = """
-            func foo()
-            begin
-                if (true) 
-                    return 0
-                else 
-                    return true
-            end
-            func main()
-            begin
-                dynamic a <- foo()
-            end
-        """
-        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 449))
-
-    
-    def test_callepxr_8(self):
-        input = """
-            func foo()
-            begin
-                return foo()
-            end
-            func main()
-            begin
-                number a <- foo()
-            end
-        """
-        expect = "Type Cannot Be Inferred: Return(CallExpr(Id(foo), []))"
-        self.assertTrue(TestChecker.test(input, expect, 450))
-
-
-    def test_callepxr_9(self):
-        input = """
-            func foo(number a)
-            begin
-                if (a = 0)
-                    return 0
-                else
-                    return foo(a - 1)        
-            end
-
-            func main()
-            begin
-                var a <- foo(5)
-            end
-        """
-        expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 451))
-
-
-    def test_callepxr_10(self):
-        input = """
-            func foo(number a)
-
-            func main()
-            begin
-                number a <- foo(5)
-            end
-
-            func foo(number a)
-            begin
-                if (a > 0)
-                    return foo(a - 1)
-                elif (a = 0)
-                    return 0    
-                else
-                    return true
-
-            end
-
-        """
-        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 452))
-
-    def test_callepxr_11(self):
-        input = """
-            func foo(number a)
-
-            func main()
-            begin
-                dynamic a <- foo(5) and true
-            end
-
-            func foo(number a)
-            begin
-                if (a > 0)
-                    return foo(a - 1)
-                elif (a = 0)
-                    return true    
-                else
-                    return 0
-
-            end
-
-        """
-        expect = "Type Mismatch In Statement: Return(NumLit(0.0))"
-        self.assertTrue(TestChecker.test(input, expect, 453))
-
-    def test_callepxr_12(self):
-        input = """
-            func foo(number a)
-            begin
-                dynamic b
-                dynamic c <- foo(b) + 1
-                b <- 1 + c
-                if (a > 0)
-                    return b
-                elif (a = 0)
-                    return c
-                elif (a < 0)
-                    return 0    
-                else
-                    return true
-            end
-
-            func main()
-            begin
-                dynamic a <- foo(5) 
-            end
-        """
-        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 454))
-
-    def test_for_1(self):
-        input = """
-            func main()
-            begin
-                var i <- 0
-                for i until i >= 10 by 1
-                    return 0
-            end
-        """
-
-        expect = "No Entry Point"
-        self.assertTrue(TestChecker.test(input, expect, 455))
-
-    def test_for_2(self):
-        input = """
-            func main()
-            begin
-                dynamic i
-                for i until i >= 10 by 1
-                    return 
-                break
-            end
-        """
-        expect = "Break Not In Loop"
-        self.assertTrue(TestChecker.test(input, expect, 456))
-
-    def test_for_3(self):
-        input = """
-            func main()
-            begin
-                for i until i >= 10 by 1
-                    break
-            end
-        """
-        expect = "Undeclared Identifier: i"
-        self.assertTrue(TestChecker.test(input, expect, 457))
-
-
-    def test_for_4(self):
-        input = """
-            func main()
-            begin
-                dynamic i
-                for i until i >= 10 by 1
-                    continue
-                continue
-            end
-        """
-        expect = "Continue Not In Loop"
-        self.assertTrue(TestChecker.test(input, expect, 458))
-
-    def test_for_5(self):
-        input = """
-            func main()
-            begin
-                dynamic i
-                for i until i >= 10 by 1
-                begin
-                    for i until i >= 10 by 1
-                    begin
-                        continue
-                        break
-                    end
-                    continue
-                    break
-                end
-                break                
-            end
-        """
-        expect = "Break Not In Loop"
-        self.assertTrue(TestChecker.test(input, expect, 459))
-
-    def test_for_6(self):
-        input = """
-            func foo()
-            func foo2()
-            func foo3()
-
-            func main()
-            begin
-                dynamic i
-                dynamic j
-                dynamic k
-                dynamic l
-                for i until j >= k by l
-                begin
-                    continue
-                end
-                var a <- i + j + k + l
-
-                for i until foo() by foo2()
-                begin
-                    foo3()
-                end
-
-                number b <- foo2()
-                bool c <- foo()
-                
-            end
-
-            func foo()
-                return true
-            func foo2()
-                return 1
-            func foo3()
-                return 0
-        """
-        expect = "Type Mismatch In Statement: Return(NumLit(0.0))"
-        self.assertTrue(TestChecker.test(input, expect, 460))
-
-
-    def test_if_1(self):
-        input = """
-            func main()
-            begin
-                if (true)
-                    return 0
-                else
-                    return true
-            end
-        """
-        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 461))
-
-    def test_if_2(self):
-        input = """
-            func foo()
-                return 0
-            
-            func main()
-            begin
-                if (foo())
-                    return 0
-                else
-                    return 1
-            end
-        """
-        expect = "Type Mismatch In Statement: If((CallExpr(Id(foo), []), Return(NumLit(0.0))), [], Return(NumLit(1.0)))"
-        self.assertTrue(TestChecker.test(input, expect, 462))
-    
-    def test_if_3(self):
-        input = """
-            func foo()
-            
-            func main()
-            begin
-                dynamic a
-                if (foo())
-                    return true
-                elif (a)
-                    return a
-                else
-                    return foo()
-            end
-
-            func foo()
-                return 0
-        """
-        expect = "Type Mismatch In Statement: Return(NumLit(0.0))"
-        self.assertTrue(TestChecker.test(input, expect, 463))
-
-    def test_array_1(self):
-        input = """
-            func main()
-            begin
-                number a[5]
-                a[0] <- 1
-                a[1] <- 2
-                a[2] <- 3
-                a[3] <- 4
-                a[4] <- 5
-                a[5] <- 6
-                a[6] <- true
-            end
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(ArrayCell(Id(a), [NumLit(6.0)]), BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 464))
-
-    def test_array_2(self):
-        input = """
-            func main()
-            begin
-                number a[5]
-                a[0] <- 1
-                a[1] <- 2
-                a[2] <- 3
-                a[3] <- 4
-                a[4] <- 5
-                a[5] <- 6
-                a <- 1
-            end
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(Id(a), NumLit(1.0))"
-        self.assertTrue(TestChecker.test(input, expect, 465))
-
-    def test_array_3(self):
-        input = """
-            func main()
-            begin
-                dynamic b
-                number a[5]
-                a[0] <- 1
-                a[1] <- 2
-                a[2] <- 3
-                a[3] <- 4
-                a[4] <- 5
-                a[5] <- 6
-                b <- a[5]
-                b <- true
-            end
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(Id(b), BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 466))
-
-    def test_array_4(self):
-        input = """
-            func main()
-            begin
-                dynamic b
-                number a[5]
-                a[0] <- 1
-                a[1] <- 2
-                a[2] <- 3
-                a[3] <- 4
-                a[4] <- 5
-                a[5] <- 6
-                b <- a
-                b <- 1
-            end
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(Id(b), NumLit(1.0))"
-        self.assertTrue(TestChecker.test(input, expect, 467))
-
-    def test_array_5(self):
-        input = """
-            func foo()
-            func foo2()
-            func main()
-            begin
-                dynamic b
-                number a[5]
-                a[0] <- foo()
-                b <- a
-                b <- foo2()
-            end
-
-            func foo()
-                return 0
-            func foo2()
-                return true
-        """
-        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 468))
-
-    def test_array_6(self):
-        input = """
-            func foo()
-            func foo2()
-                return [1,2,3,4,5]
-            func main()
-            begin
-                dynamic b
-                number a[5]
-                b <- a
-                b <- foo2()
-                b[1] <- foo()
-
-            end
-
-            func foo()
-                return foo2()
-
-        """
-        expect = "Type Mismatch In Statement: Return(CallExpr(Id(foo2), []))"
-        self.assertTrue(TestChecker.test(input, expect, 469))
-
-    def test_array_7(self):
-        input = """
-            func foo(number a[5])
-                return a[5]
-            func main()
-            begin
-                number a[5]
-                dynamic b <- foo(a)
-                b <- true
-            end
-
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(Id(b), BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 470))
-
-    def test_array_8(self):
-        input = """
-        
-            func main()
-            begin
-                number a[5] <- [1,2,3,4]
- 
-            end
-
-        """
-        expect = "Type Mismatch In Statement: VarDecl(Id(a), ArrayType([5.0], NumberType), None, ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0), NumLit(4.0)))"
-        self.assertTrue(TestChecker.test(input, expect, 471))
-
-    def test_array_9(self):
-        input = """
-            func main()
-            begin
-                number a <- [1,2,3,4,5]
-                
-            end
-
-        """
-        expect = "Type Mismatch In Statement: VarDecl(Id(a), NumberType, None, ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0), NumLit(4.0), NumLit(5.0)))"
-        self.assertTrue(TestChecker.test(input, expect, 472))
-
-    def test_array_10(self):
-        input = """
-            func foo()
-                return [1,2,3,4,5]
-            func main()
-            begin
-                
-                dynamic a <- [1,2,3,4,5]
-                number b[5] <- [1,2,3,4,5]
-                dynamic c <- b 
-                dynamic d <- foo()
-            end
-        """
-        
-        expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 473))
-
-    def test_array_11(self):
-        input = """
-            func foo(number a[3])
-                return 2
-            func main()
-            begin
-                number a[5] <- [1,2,3,4,5]
-                a[3] <- foo(a) 
-            end
-
-        """
-        expect = "Type Mismatch In Expression: CallExpr(Id(foo), [Id(a)])"
-        self.assertTrue(TestChecker.test(input, expect, 474))
-
-    def test_array_12(self):
-        input = """
-            func foo()
-                return 2
-            func foo2()
-            func foo3()
-            func main()
-            begin
-                dynamic b
-                number a[5] <- [1+1,foo(), foo2(), b, foo3()]
-                a[3] <- b
-            end
-
-            func foo2()
-                return 0
-            func foo3()
-                return true
-        """
-        expect = "Type Mismatch In Statement: Return(BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 475))
-
-    def test_array_13(self):
-        input = """
-            func main()
-            begin
-                number a[3,2] <- [[1,2],[3,4],[5,6]]
-                a[1,1] <- 1
-                a[1] <- [1,2]
-                a[2] <- 1
-            end
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(ArrayCell(Id(a), [NumLit(2.0)]), NumLit(1.0))"
-        self.assertTrue(TestChecker.test(input, expect, 476))
-
-    def test_array_14(self):
-        input = """
-            func main()
-            begin
-                number a[3,2] <- [[1,2],[3,4],[6]]
-                
-            end
-        """       
-        expect = "Type Mismatch In Expression: ArrayLit(ArrayLit(NumLit(1.0), NumLit(2.0)), ArrayLit(NumLit(3.0), NumLit(4.0)), ArrayLit(NumLit(6.0)))"
-        self.assertTrue(TestChecker.test(input, expect, 477))
-
-
-    def test_array_15(self):
-        input = """
-            func foo()
-            func main()
-            begin
-                number a[3,2] <- [foo(), foo(), foo()]
-                a[1] <- foo()
-            end
-
-            func foo()
-                return [1,2,4]
-        """
-        expect = "Type Mismatch In Statement: Return(ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(4.0)))"
-        self.assertTrue(TestChecker.test(input, expect, 478))
-
-    def test_array_16(self):
-        input = """
-            func foo()
-            func main()
-            begin
-                number a[3,2] <- [foo(), [3,4], [5,6]]
-                a[1,1] <- foo()
-            end
-
-            func foo()
-                return [1,2]
-        """
-        expect = "Type Mismatch In Statement: AssignStmt(ArrayCell(Id(a), [NumLit(1.0), NumLit(1.0)]), CallExpr(Id(foo), []))"
-        self.assertTrue(TestChecker.test(input, expect, 479))
-
-    def test_array_17(self):
-        input = """
-            func foo()
-            func main()
-            begin
-                dynamic b
-                number a[3,2] <- [foo(), b, [5,6]]
-                b <- a[3]
-                a[1,1] <- b
-            end
-
-            func foo()
-                return [1,2,3]
-        """       
-        expect = "Type Mismatch In Statement: AssignStmt(ArrayCell(Id(a), [NumLit(1.0), NumLit(1.0)]), Id(b))"
-        self.assertTrue(TestChecker.test(input, expect, 480))
-
-
-
-
-
-
-        # KIEN TESTCASES
-    def test481(self):
+    def test441(self):
         input = """
 number a <- 1 + "Hello"
 func main()
     return
-"""               
+"""
         expect = "Type Mismatch In Expression: BinaryOp(+, NumLit(1.0), StringLit(Hello))"
-        self.assertTrue(TestChecker.test(input, expect, 481))
+        self.assertTrue(TestChecker.test(input, expect, 441))
     
-    def test482(self):
+    def test442(self):
         input = """
 func f()
 
@@ -1184,9 +675,9 @@ begin
 end
 """
         expect = "Undeclared Function: g"
-        self.assertTrue(TestChecker.test(input, expect, 482))
+        self.assertTrue(TestChecker.test(input, expect, 442))
     
-    def test483(self):
+    def test443(self):
         input = """
 number x
 number y
@@ -1196,9 +687,9 @@ func main()
     return
 """
         expect = "No Function Definition: f"
-        self.assertTrue(TestChecker.test(input, expect, 483))
+        self.assertTrue(TestChecker.test(input, expect, 443))
     
-    def test484(self):
+    def test444(self):
         input = """
 func f()
 
@@ -1208,9 +699,9 @@ func main()
     return
 """
         expect = "Redeclared Variable: f"
-        self.assertTrue(TestChecker.test(input, expect, 484))
+        self.assertTrue(TestChecker.test(input, expect, 444))
     
-    def test485(self):
+    def test445(self):
         input = """
 func f()
 begin
@@ -1222,9 +713,9 @@ bool c
 string d
 """
         expect = "No Entry Point"
-        self.assertTrue(TestChecker.test(input, expect, 485))
+        self.assertTrue(TestChecker.test(input, expect, 445))
     
-    def test486(self):
+    def test446(self):
         input = """
 func f(number x)
 begin
@@ -1235,12 +726,11 @@ func main()
 begin
     dynamic d <- f(10)
 end
-"""     
+"""
         expect = "Type Cannot Be Inferred: Return(CallExpr(Id(f), [Id(x)]))"
-        #expect = "Type Cannot Be Inferred: VarDecl(Id(d), None, dynamic, CallExpr(Id(f), [NumLit(10.0)]))"
-        self.assertTrue(TestChecker.test(input, expect, 486))
+        self.assertTrue(TestChecker.test(input, expect, 446))
     
-    def test487(self):
+    def test447(self):
         input = """
 func f(number x)
 begin
@@ -1253,9 +743,9 @@ begin
 end
 """
         expect = "Type Mismatch In Statement: CallStmt(Id(f), [NumLit(2018.0)])"
-        self.assertTrue(TestChecker.test(input, expect, 487))
+        self.assertTrue(TestChecker.test(input, expect, 447))
     
-    def test488(self):
+    def test448(self):
         input = """
 func main()
 begin
@@ -1263,9 +753,9 @@ begin
 end
 """
         expect = "Continue Not In Loop"
-        self.assertTrue(TestChecker.test(input, expect, 488))
+        self.assertTrue(TestChecker.test(input, expect, 448))
     
-    def test489(self):
+    def test449(self):
         input = """
 func main()
 begin
@@ -1273,9 +763,9 @@ begin
 end
 """
         expect = "Break Not In Loop"
-        self.assertTrue(TestChecker.test(input, expect, 489))
+        self.assertTrue(TestChecker.test(input, expect, 449))
     
-    def test490(self):
+    def test450(self):
         input = """
 number x
 number y
@@ -1290,106 +780,699 @@ begin
 end
 """
         expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 490))
-
-
-    def test491(self):
+        self.assertTrue(TestChecker.test(input, expect, 450))
+    
+    def test451(self):
         input = """
-func f(number x)
+func add(number x, number y)
 
-func main()
-begin
-    dynamic d <- f(10)
-end
-
-func f(number x)
-begin
-    return f(x)
-end
-"""               
-        expect = "Type Cannot Be Inferred: VarDecl(Id(d), None, dynamic, CallExpr(Id(f), [NumLit(10.0)]))"
-        self.assertTrue(TestChecker.test(input, expect, 491))
-
-    def test492(self):
-
-        input = """
-
-func max(number x, number y)
-begin
-    if (x <= y) return y
-    return x
-end
 func main()
 begin
     number x <- readNumber()
     number y <- readNumber()
-    number z <- readNumber()
-    writeNumber(max(max(x,y),z))
+    dynamic a <- add(x, y) + 1
 end
 
+func add(number x, number y)
+    return "Hello"
 """
-
-        expect = ""
-
-        self.assertTrue(TestChecker.test(input, expect, 492))
-
-
-    def test493(self):
+        expect = "Type Mismatch In Statement: Return(StringLit(Hello))"
+        self.assertTrue(TestChecker.test(input, expect, 451))
+    
+    def test452(self):
         input = """
-func f(number x)
+func add(number x, number y)
+
+func main()
 begin
-    if (x = 0) return 0
-    elif (x = 1) return 1
-    else return f(x - 1) + f(x - 2)
-end
-
-func main()
-begin 
     dynamic a
-    number x<- f(a)
-    a[0] <- [1,2,3]
+    a[0] <- [1, 2, 3]
 end
-"""               
-        expect = "Type Mismatch In Expression: ArrayCell(Id(a), [NumLit(0.0)])"
-        self.assertTrue(TestChecker.test(input, expect, 493))
 
-    def test494(self):
+func add(number x, number y)
+    return "Hello"
+"""
+        expect = "Type Cannot Be Inferred: AssignStmt(ArrayCell(Id(a), [NumLit(0.0)]), ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0)))"
+        self.assertTrue(TestChecker.test(input, expect, 452))
+    
+    def test453(self):
         input = """
 func main()
-begin 
+begin
+    number arr[3, 2] <- [[1, 2], [3, 4], [5, 6]]
+    number b[2] <- arr[1]
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 453))
+    
+    def test454(self):
+        input = """
+func f(number arr[10], number x)
+
+func main()
+begin
+    dynamic n
+    var i <- 0
+    number arr[10]
+    for i until true by 1
+    begin
+        n <- readNumber()
+        if ((n > 10) or (n <= 0)) writeString("Try again")
+        else break
+    end
+    
+    for i until i >= n by 1
+        arr[i] <- readNumber()
+    
+    f(arr, n)
+end
+
+func f(number a[5], number n)
+    return
+"""
+        expect = "Redeclared Function: f"
+        self.assertTrue(TestChecker.test(input, expect, 454))
+    
+    def test455(self):
+        input = """
+func main()
+begin
+    dynamic a
+    dynamic b
+    number arr[2, 2] <- [[a, b]]
+    number c[2, 2] <- arr
+end
+"""
+        expect = "Type Mismatch In Statement: VarDecl(Id(arr), ArrayType([2.0, 2.0], NumberType), None, ArrayLit(ArrayLit(Id(a), Id(b))))"
+        self.assertTrue(TestChecker.test(input, expect, 455))
+    
+    def test456(self):
+        input = """
+func main()
+begin
     dynamic a
     dynamic b
     dynamic c
-    number x[3,3] <- [a,b,c]
-    a <- [1,2,3]
-    b <- [4,5,6]
-    c <- [7,8,9]
-    writeNumber(a[0] + b[0] + c[0])
+    var arr <- [[a], [b], [c], [1]]
+    arr <- [[1], [2], [3], [4]]
 end
-"""               
+"""
         expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 494))
-
-
-    def test495(self):
+        self.assertTrue(TestChecker.test(input, expect, 456))
+    
+    def test457(self):
         input = """
-func add(number x, number y)
+func main()
+begin
+    dynamic x <- "Hello"
+    if (x == "Hello") writeString(x)
+    else writeString("Something weird!")
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 457))
+    
+    def test458(self):
+        input = """
+func main()
+begin
+    dynamic x <- [1, 2, 3]
+    dynamic a <- x
+    writeNumber(a[0])
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 458))
+    
+    def test459(self):
+        input = """
+func foo(number a)
+
+func main()
+begin
+    number a <- foo(1)
+    return
+end
+
+func foo(number a)
+begin
+    return
+end
+"""
+        expect = "Type Mismatch In Statement: Return()"
+        self.assertTrue(TestChecker.test(input, expect, 459))
+    
+    def test460(self):
+        input = """
+var f <- 10
+func f()
+    return
+
+func main()
+begin
+    dynamic a
+    dynamic b
+    number c
+    dynamic x <- f([a, b, c])
+    x <- ["Hello", ", my name is ", "Kien"]
+end
+"""
+        expect = "Redeclared Function: f"
+        self.assertTrue(TestChecker.test(input, expect, 460))
+    
+    def test461(self):
+        input = """
+func f(number a[3], number b[3])
+    return
+
+func main()
+begin
+    f([1, 3, 2], [1, "Hello", 2])
+end
+"""
+        expect = "Type Mismatch In Expression: ArrayLit(NumLit(1.0), StringLit(Hello), NumLit(2.0))"
+        self.assertTrue(TestChecker.test(input, expect, 461))
+    
+    def test462(self):
+        input = """
+dynamic a <- [[3, 9, 2, 10, -1], [0, -10, 5, 3, 11], [10, 9, -27, 36, 4]]
+func sort(number a[5])
+begin
+    var i <- 0
+    var j <- 0
+    for i until i > 4 by 1
+        for j until j > 4 by 1
+            if (a[i] > a[j])
+            begin
+                var temp <- a[i]
+                a[i] <- a[j]
+                a[j] <- temp
+            end
+end
+
+func main()
+begin
+    var i <- 0
+    for i until i > 2 by 1
+        sort(a[i])
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 462))
+    
+    def test463(self):
+        input = """
+number x <- 10
+func f(number x)
+begin
+    number x <- x + 20
+    writeNumber(x)
+end
+"""
+        expect = "Undeclared Identifier: x"
+        self.assertTrue(TestChecker.test(input, expect, 463))
+    
+    def test464(self):
+        input = """
+func f(number n)
+
+number a[2, 3] <- [[f(1), f(2), f(3)], [f(4), f(5), f(6)]]
+func main()
+begin
+    var i <- 0
+    dynamic j <- 0
+    for i until i > 1 by 1
+        for j until j > 2 by 1
+            writeNumber(a[i, j])
+end
+
+func f(number a)
+    return a
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 464))
+    
+    def test465(self):
+        input = """
+func f(number x[2, 3])
+    return x[0]
+
+func main()
+begin
+    dynamic x <- f([[1, 2, 3], [4, 5, 6]])[2, 3]
+    writeNumber(x)
+end
+"""
+        expect = "Type Mismatch In Expression: ArrayCell(CallExpr(Id(f), [ArrayLit(ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0)), ArrayLit(NumLit(4.0), NumLit(5.0), NumLit(6.0)))]), [NumLit(2.0), NumLit(3.0)])"
+        self.assertTrue(TestChecker.test(input, expect, 465))
+    
+    def test466(self):
+        input = """
+func f(number n)
+
+func main()
+begin
+    var i <- f(2, 3)
+end
+
+func f(number a)
+    return a
+"""
+        expect = "Type Mismatch In Expression: CallExpr(Id(f), [NumLit(2.0), NumLit(3.0)])"
+        self.assertTrue(TestChecker.test(input, expect, 466))
+    
+    def test467(self):
+        input = """
+func f(number x, number y)
+
+func main()
+begin
+    var i <- f(2)
+end
+
+func f(number a)
+    return a
+"""
+        expect = "Type Mismatch In Expression: CallExpr(Id(f), [NumLit(2.0)])"
+        self.assertTrue(TestChecker.test(input, expect, 467))
+    
+    def test468(self):
+        input = """
+dynamic a
+func main()
+begin
+    var i <- a ... 2.75
+end
+"""
+        expect = "Type Mismatch In Expression: BinaryOp(..., Id(a), NumLit(2.75))"
+        self.assertTrue(TestChecker.test(input, expect, 468))
+    
+    def test469(self):
+        input = """
+dynamic a
+func main()
+begin
+    var i <- a[2] ... 2.75
+end
+"""
+        expect = "Type Cannot Be Inferred: VarDecl(Id(i), None, var, BinaryOp(..., ArrayCell(Id(a), [NumLit(2.0)]), NumLit(2.75)))"
+        self.assertTrue(TestChecker.test(input, expect, 469))
+    
+    def test470(self):
+        input = """
+func main()
+begin
+    if (1) writeBool(true)
+    else writeBool(false)
+end
+"""
+        expect = "Type Mismatch In Statement: If((NumLit(1.0), CallStmt(Id(writeBool), [BooleanLit(True)])), [], CallStmt(Id(writeBool), [BooleanLit(False)]))"
+        self.assertTrue(TestChecker.test(input, expect, 470))
+    
+    def test471(self):
+        input = """
+func main()
+
+func main()
+
+func main()
+begin
+    if (1) writeBool(true)
+    else writeBool(false)
+end
+"""
+        expect = "Redeclared Function: main"
+        self.assertTrue(TestChecker.test(input, expect, 471))
+    
+    def test472(self):
+        input = """
+number a
+bool b
+string c
+dynamic d
+func main()
+begin
+    if (b) d <- 1 + a
+    else d <- a - 1.75
+    c <- "Hello, world!"
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 472))
+    
+    def test473(self):
+        input = """
+func f(number arr[10], number n)
+begin
+    if ((n < 0) or (n >= 10)) return -999
+    number i <- 0
+    for i until i >= n by 1
+        if (arr[i] < 10) return i
+    
+    return not (n < 20)
+end
+
+func main()
+begin
+    f([1, 9, 6, 5, 3, 8, 10, 28, 0, -10], 10)
+end
+"""
+        expect = "Type Mismatch In Statement: Return(UnaryOp(not, BinaryOp(<, Id(n), NumLit(20.0))))"
+        self.assertTrue(TestChecker.test(input, expect, 473))
+    
+    def test474(self):
+        input = """
+func main()
+begin
+    dynamic a
+    dynamic b
+    dynamic c
+    var arr <- [[a, 1], [b, true], [c, "Hello"]]
+end
+"""
+        expect = "Type Mismatch In Expression: ArrayLit(ArrayLit(Id(a), NumLit(1.0)), ArrayLit(Id(b), BooleanLit(True)), ArrayLit(Id(c), StringLit(Hello)))"
+        self.assertTrue(TestChecker.test(input, expect, 474))
+    
+    def test475(self):
+        input = """
+dynamic x
+dynamic y
+func main()
+begin
+    dynamic z
+    dynamic arr <- [[1, x], [2, y], [3, z]]
+    x <- 20
+    y <- 30
+    z <- "Hi"
+end
+"""
+        expect = "Type Mismatch In Statement: AssignStmt(Id(z), StringLit(Hi))"
+        self.assertTrue(TestChecker.test(input, expect, 475))
+    
+    def test476(self):
+        input = """
+func main()
+begin
+    var x <- [10, 20, 40]
+    var y <- [true, false, true]
+    number a[2, 3] <- [x, y]
+    writeNumber(a[0, 0])
+end
+"""
+        expect = "Type Mismatch In Expression: ArrayLit(Id(x), Id(y))"
+        self.assertTrue(TestChecker.test(input, expect, 476))
+    
+    def test477(self):
+        input = """
+func main()
+begin
+    dynamic x
+    dynamic y
+    number a[2, 3] <- [x, y]
+    x <- [10, 20, 40]
+    y <- [true, false, true]
+    writeNumber(a[0, 0])
+end
+"""
+        expect = "Type Mismatch In Statement: AssignStmt(Id(y), ArrayLit(BooleanLit(True), BooleanLit(False), BooleanLit(True)))"
+        self.assertTrue(TestChecker.test(input, expect, 477))
+    
+    def test478(self):
+        input = """
+func main()
+begin
+    dynamic x
+    dynamic y
+    number a[2, 3] <- [x, y]
+    y <- [y[1] + y[2], y[2] - y[0], y[0] + y[1] < y[2]]
+    x <- [1, 9, 6]
+    writeNumber(a[0, 0])
+end
+"""
+        expect = "Type Mismatch In Expression: ArrayLit(BinaryOp(+, ArrayCell(Id(y), [NumLit(1.0)]), ArrayCell(Id(y), [NumLit(2.0)])), BinaryOp(-, ArrayCell(Id(y), [NumLit(2.0)]), ArrayCell(Id(y), [NumLit(0.0)])), BinaryOp(<, BinaryOp(+, ArrayCell(Id(y), [NumLit(0.0)]), ArrayCell(Id(y), [NumLit(1.0)])), ArrayCell(Id(y), [NumLit(2.0)])))"
+        self.assertTrue(TestChecker.test(input, expect, 478))
+    
+    def test479(self):
+        input = """
+func f(number x, bool y, string z)
+    return not y
+
+func main()
+begin
+    dynamic x
+    dynamic y
+    dynamic z
+    bool t <- f(x, y, z)
+    writeBool(y and not t)
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 479))
+    
+    def test480(self):
+        input = """
+func main()
+begin
+    var x <- [[1, 2], [3, 4, 5]]
+    writeNumber(x[0, 2])
+end
+"""
+        expect = "Type Mismatch In Expression: ArrayLit(ArrayLit(NumLit(1.0), NumLit(2.0)), ArrayLit(NumLit(3.0), NumLit(4.0), NumLit(5.0)))"
+        self.assertTrue(TestChecker.test(input, expect, 480))
+    
+    def test481(self):
+        input = """
+func test(number x)
+begin
+    var y <- test
+    test(2018)
+end
+"""
+        expect = "Undeclared Identifier: test"
+        self.assertTrue(TestChecker.test(input, expect, 481))
+    
+    def test482(self):
+        input = """
+func test(number x)
+begin
+    var a <- x
+    var b <- -a
+    var c <- a + b
+    writeNumber(a + b + c)
+end
+
+func main()
+begin
+    test(2018)
+    return -1
+end
+"""
+        expect = "No Entry Point"
+        self.assertTrue(TestChecker.test(input, expect, 482))
+    
+    def test483(self):
+        input = """
+dynamic a
+func main()
+begin
+    number a[2, 3] <- [a, [10, 20, 30]]
+    a <- [1, 9, 6]
+    writeNumber(a[0])
+end
+"""
+        expect = "Undeclared Identifier: a"
+        self.assertTrue(TestChecker.test(input, expect, 483))
+    
+    def test484(self):
+        input = """
+dynamic a
+func main()
+begin
+    var x <- [a, [1, 2, 3]]
+    a <- [1, 9, 6]
+    x <- [[3, 9, 6], [1, 3, 2]]
+    writeNumber(x[0, 0])
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 484))
+    
+    def test485(self):
+        input = """
+dynamic a
+func main()
+begin
+    dynamic b
+    dynamic c
+    dynamic d
+    var e <- 1
+    var x <- [a, [b], [[c]], [[[d, e]]]]
+    c <- [-10, 2 / 3 % 0.75]
+    b <- [c]
+    a <- [b]
+end
+"""
+        expect = ""
+        self.assertTrue(TestChecker.test(input, expect, 485))
+
+    def test486(self):
+        input = """
+func main()
+begin
+    dynamic a
+    dynamic b
+    dynamic c
+    dynamic d
+    var x <- [a, b, c, [[1, 2, 3, 4], [5, 6, 7, 8]]]
+    c[0] <- d
+    d <- [0, 3, 1]
+end
+"""
+        expect = "Type Mismatch In Statement: AssignStmt(Id(d), ArrayLit(NumLit(0.0), NumLit(3.0), NumLit(1.0)))"
+        self.assertTrue(TestChecker.test(input, expect, 486))
+    
+    def test487(self):
+        input = """
+func main()
+begin
+    dynamic a
+    dynamic b
+    dynamic c <- a ... ", world!"
+    a <- b
+    b <- [1, 2, 3]
+end
+"""
+        expect = "Type Mismatch In Statement: AssignStmt(Id(b), ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0)))"
+        self.assertTrue(TestChecker.test(input, expect, 487))
+    
+    def test488(self):
+        input = """
+func main()
+begin
+    number x
+    begin
+        number x <- (10 + x) * 2
+    end
+end
+"""
+        expect = "Undeclared Identifier: x"
+        self.assertTrue(TestChecker.test(input, expect, 488))
+    
+    def test489(self):
+        input = """
+func test(number x)
+
+func main()
+begin
+    number test
+    begin
+        number x <- test(2018) + 1
+    end
+end
+"""
+        expect = "No Function Definition: test"
+        self.assertTrue(TestChecker.test(input, expect, 489))
+    
+    def test490(self):
+        input = """
+dynamic x
+func f(number x)
+    return x + 1
+
+func main()
+begin
+    x <- f(20, 30, 40) + 1
+end
+"""
+        expect = "Type Mismatch In Expression: CallExpr(Id(f), [NumLit(20.0), NumLit(30.0), NumLit(40.0)])"
+        self.assertTrue(TestChecker.test(input, expect, 490))
+    
+    def test491(self):
+        input = """
+func main()
+begin
+    number a[1, 2, 3, 4]
+    var b <- a[0]
+    number c[2, 3, 4]
+    b <- c
+    number d[1, 3, 4]
+    b <- d
+end
+"""
+        expect = "Type Mismatch In Statement: AssignStmt(Id(b), Id(d))"
+        self.assertTrue(TestChecker.test(input, expect, 491))
+    
+    def test492(self):
+        input = """
+func f(number x, number y)
+begin
+    if (y == 0) return x
+    return f(y, x % y)
+end
 
 func main()
 begin
     number x <- readNumber()
     number y <- readNumber()
-    writeNumber(pow(x,y))
+    dynamic res <- f(x, y)
+    writeString(res)
 end
-
-func add(number x, number y)
+"""
+        expect = "Type Mismatch In Expression: BinaryOp(==, Id(y), NumLit(0.0))"
+        self.assertTrue(TestChecker.test(input, expect, 492))
+    
+    def test493(self):
+        input = """
+func f(number x, number y)
 begin
-    return x + y
+    if (y = 0) return x
+    return f(y, x % y)
 end
-"""               
-        expect = "Undeclared Function: pow"
-        self.assertTrue(TestChecker.test(input, expect, 495))
 
+func main()
+begin
+    number x[10]
+    number y[10]
+    var i <- 0
+    for i until i >= 10 by 1
+        x[i] <- readNumber()
+    
+    for i until i >= 10 by "Hello"
+        y[i] <- readNumber()
+    
+end
+"""
+        expect = "Type Mismatch In Statement: For(Id(i), BinaryOp(>=, Id(i), NumLit(10.0)), StringLit(Hello), AssignStmt(ArrayCell(Id(y), [Id(i)]), CallExpr(Id(readNumber), [])))"
+        self.assertTrue(TestChecker.test(input, expect, 493))
+    
+    def test494(self):
+        input = """
+func main()
+begin
+    dynamic a
+    dynamic b
+    dynamic c
+    dynamic x <- [a, b, c]
+end
+"""
+        expect = "Type Cannot Be Inferred: VarDecl(Id(x), None, dynamic, ArrayLit(Id(a), Id(b), Id(c)))"
+        self.assertTrue(TestChecker.test(input, expect, 494))
+    
+    def test495(self):
+        input = """
+func main()
+begin
+    dynamic a
+    dynamic b
+    dynamic c
+    dynamic x
+    x <- [a, b, [c]]
+end
+"""
+        expect = "Type Cannot Be Inferred: AssignStmt(Id(x), ArrayLit(Id(a), Id(b), ArrayLit(Id(c))))"
+        self.assertTrue(TestChecker.test(input, expect, 495))
+    
     def test496(self):
         input = """
 func main()
@@ -1397,576 +1480,65 @@ begin
     dynamic a
     dynamic b
     dynamic c
-    number x[2,2] <- [a,[b,2]]
-    a <- 2
-    b <- 3
-    c <- true
+    dynamic x <- (a ... b) ... c
+    writeString(x)
 end
-"""               
-        expect = "Type Mismatch In Statement: AssignStmt(Id(a), NumLit(2.0))"
+"""
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 496))
-
+    
     def test497(self):
         input = """
-number x
-number y
-func add()
-    return x + y
-
 func main()
 begin
-    x <- readNumber()
-    y <- readNumber()
-    writeNumber(add())
+    dynamic a
+    dynamic b
+    dynamic c
+    dynamic x <- [a, [b, c], [2, 3]]
+    writeNumber(a[0] + a[1] + b + c)
 end
 """
         expect = ""
         self.assertTrue(TestChecker.test(input, expect, 497))
-
+    
     def test498(self):
         input = """
-func f()
-begin
-    return 1
-end
-
 func main()
 begin
-    f(2018)
+    dynamic a
+    dynamic b
+    dynamic c
+    dynamic d
+    dynamic x <- [a, [b, c], [2, d]]
+    d <- x[0, 0] + x[0, 1]
+    writeNumber(a[0] + a[1] + b + c + d)
 end
-"""               
-        expect = "Type Mismatch In Statement: CallStmt(Id(f), [NumLit(2018.0)])"
+"""
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 498))
-
+    
     def test499(self):
         input = """
-dynamic x
 func main()
 begin
-    var y <- x[0,0] + 1
+    dynamic a
+    dynamic b
+    dynamic c
+    dynamic d
+    dynamic x <- [a, [b, c], [d + 20, d ... "Hello"]]
+    d <- x[0, 0] + x[0, 1]
+    writeNumber(a[0] + a[1] + b + c + d)
 end
-"""               
-        expect = "Type Cannot Be Inferred: VarDecl(Id(y), None, var, BinaryOp(+, ArrayCell(Id(x), [NumLit(0.0), NumLit(0.0)]), NumLit(1.0)))"
+"""
+        expect = "Type Mismatch In Expression: BinaryOp(..., Id(d), StringLit(Hello))"
         self.assertTrue(TestChecker.test(input, expect, 499))
-
-    def test_redeclare_1(self):
-        input = """
-            func a(number a)
-
-            func main()
-                return
-        """
-        expect = "No Function Definition: a"
-        self.assertTrue(TestChecker.test(input, expect, 500))
-
-    def test_redeclare_2(self):
-        input = """
-            dynamic a <- a[0,1,2]
-            
-            func main()
-                return
-        """
-        expect = "Undeclared Identifier: a"
-        self.assertTrue(TestChecker.test(input, expect, 501))
-
-    def test_redeclare_3(self):
-        input = """
-            func a()
-            dynamic a <- a()
-
-            func main()
-                return
-        """
-        expect = "Redeclared Variable: a"
-        self.assertTrue(TestChecker.test(input, expect, 502))
-
-    def test_redeclare_4(self):
-        input = """
-            
-            func a()
-                return true
-            
-            func main()
-                dynamic a <- a()
-        """
-        expect = "Redeclared Variable: a"
-        self.assertTrue(TestChecker.test(input, expect, 503))
-
-    def test_redeclare_5(self):
-        input = """
-            func a(number a , number a)
-                return true
-            
-            func main()
-                return
-                
-        """
-        expect = "Redeclared Parameter: a"
-        self.assertTrue(TestChecker.test(input, expect, 504))
-
-    def test_redeclare_6(self):
-        input = """
-            func a()
-                return true
-            
-            func main()
-            begin
-                dynamic a <- a()
-                if (a)
-                    return
-                else 
-                    a <- a()
-            end
-
-                
-        """
-        expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 505))
-
-    def test_redeclare_7(self):
-        input = """
-        
-            func a(number a)
-                return a()
-            
-            func main()
-            begin
-                dynamic a <- a()
-        
-            end
-
-                
-        """
-        expect = "Type Mismatch In Expression: CallExpr(Id(a), [])"
-        self.assertTrue(TestChecker.test(input, expect, 506))
-
-    def test_redeclare_8(self):
-        input = """
-            func a()
-                return true
-            
-            func main()
-            begin
-                dynamic b <- a
-                dynamic c <- b()
-                
-            end
-
-                
-        """
-        expect = "Undeclared Identifier: a"
-        self.assertTrue(TestChecker.test(input, expect, 507))
-
-    def test_redeclare_9(self):
-        input = """
-            func a()
-                return true
-            
-            func main()
-            begin
-                dynamic b <- a()
-                dynamic c <- b()
-            end
-
-                
-        """
-        expect = "Undeclared Function: b"
-        self.assertTrue(TestChecker.test(input, expect, 508))
-
-    def test_redeclare_10(self):
-        input = """
-            func a(number a)
-            begin
-                dynamic a <- a
-                return a
-            end
-
-            func main()
-            begin
-                dynamic b
-                b <- a(b)
-
-            end
-        """
-        expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 509))
-
-    def test_redeclare_11(self):
-        input = """
-            func a(number a)
-            begin
-                dynamic a <- a
-                return a
-            end
-
-            func main()
-            begin
-                dynamic b
-                b <- a(b)
-
-            end
-        """
-        expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 510))
-        
-    def test_uninfer_or_mismatch_1(self):
-        input = """
-            func main()
-            begin
-                dynamic a
-                dynamic b
-                dynamic c <- a + b
-                dynamic d <- c and true
-
-            end
-
-        """
-        expect = "Type Mismatch In Expression: BinaryOp(and, Id(c), BooleanLit(True))"
-        self.assertTrue(TestChecker.test(input, expect, 511))
-
-    def test_uninfer_or_mismatch_2(self):
-        input = """
-            func main()
-            begin
-                dynamic a
-                dynamic c <- a[1,2] 
-
-            end
-
-        """
-        expect = "Type Cannot Be Inferred: VarDecl(Id(c), None, dynamic, ArrayCell(Id(a), [NumLit(1.0), NumLit(2.0)]))"
-        self.assertTrue(TestChecker.test(input, expect, 512))
-
-    def test_uninfer_or_mismatch_3(self):
-        input = """
-            func main()
-            begin
-                dynamic a
-                number b[1,2] <- a[1,2]
-
-            end
-
-        """
-        expect = "Type Cannot Be Inferred: VarDecl(Id(b), ArrayType([1.0, 2.0], NumberType), None, ArrayCell(Id(a), [NumLit(1.0), NumLit(2.0)]))"
-        self.assertTrue(TestChecker.test(input, expect, 513))
-
-    def test_uninfer_or_mismatch_4(self):
-        input = """
-            func main()
-            begin
-                number a[2,2]
-                dynamic b <- a[1,2]
-                dynamic c <- a[2]
-                dynamic d <- a
-
-                b <- 2
-                c <- [b,2] 
-                d <- [[1,2],[3,4]]
-                d <- [[b,2],c]
-                d <- [c,[b,[2]]]
-
-            end
-
-        """       
-        expect = "Type Mismatch In Expression: ArrayLit(Id(b), ArrayLit(NumLit(2.0)))"
-        self.assertTrue(TestChecker.test(input, expect, 514))
-
-    def test_uninfer_or_mismatch_5(self):
-        input = """
-            func f()
-            func f2()
-            func main()
-            begin
-                number a <- f()
-                number b[2] <- f2() 
-                b <- [f(), f2()[0]]
-                
-            end
-
-            func f()
-                return f2()[0]
-
-            func f2()
-                return [f(),f()]            
-
-        """
-        expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 515))
-
-    def test_uninfer_or_mismatch_6(self):
-        input = """
-            func f()
-                return [[1,3],[2,3]]
-
-            func f2()
-            func main()
-            begin
-                dynamic a <- f()[2,1]
-                dynamic b <- f2() + a
-            end
-
-            func f2()
-                return [f(),f()]            
-
-        """
-        expect = "Type Mismatch In Statement: Return(ArrayLit(CallExpr(Id(f), []), CallExpr(Id(f), [])))"
-        self.assertTrue(TestChecker.test(input, expect, 516))
-
-    def test_uninfer_or_mismatch_7(self):
-        input = """
-            func main()
-            begin
-                dynamic a
-                a[0] <- [1,2,3]
-            end            
-
-        """
-        expect = "Type Cannot Be Inferred: AssignStmt(ArrayCell(Id(a), [NumLit(0.0)]), ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0)))"
-        self.assertTrue(TestChecker.test(input, expect, 517))
-
-    def test_uninfer_or_mismatch_8(self):
-        input = """
-            func main()
-            begin
-                dynamic a
-                dynamic b <- a[0]
-            end             
-
-        """
-        expect = "Type Cannot Be Inferred: VarDecl(Id(b), None, dynamic, ArrayCell(Id(a), [NumLit(0.0)]))"
-        self.assertTrue(TestChecker.test(input, expect, 518))
-
-    def test_uninfer_or_mismatch_9(self):
-        input = """
-            func main()
-            begin
-                dynamic a
-                dynamic b 
-                number arr[2,2] <- [[a,b]]
-            end             
-
-        """
-        
-        expect = "Type Mismatch In Statement: VarDecl(Id(arr), ArrayType([2.0, 2.0], NumberType), None, ArrayLit(ArrayLit(Id(a), Id(b))))"
-        self.assertTrue(TestChecker.test(input, expect, 519))
-
-    def test_uninfer_or_mismatch_10(self):
-        input = """
-            func main()
-            begin
-                dynamic a
-                dynamic b
-                dynamic c
-                var arr <-[[a],[b],[c],[1]]
-            end             
-
-        """
-        expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 520))
-
-    def test_uninfer_or_mismatch_11(self):
-        input = """
-            func f(number a[3], number b[3])
-                return 
-            func main()
-            begin
-                f([1,3,2], [1, "Hello", 2])
-            end             
-
-        """
-        expect = "Type Mismatch In Expression: ArrayLit(NumLit(1.0), StringLit(Hello), NumLit(2.0))"
-        self.assertTrue(TestChecker.test(input, expect, 521))
-
-    def test_uninfer_or_mismatch_12(self):
-        input = """
-            func main()
-            begin
-                dynamic a
-                var i <- a[2] ... 2.75
-            end
-
-        """
-        expect = "Type Cannot Be Inferred: VarDecl(Id(i), None, var, BinaryOp(..., ArrayCell(Id(a), [NumLit(2.0)]), NumLit(2.75)))"
-        self.assertTrue(TestChecker.test(input, expect, 522))
-
-    def test_uninfer_or_mismatch_13(self):
-        input = """
-            func main()
-            begin
-                number a[2,3] <- [[1,2,3],[4,5,6]]
-                a <- [[1,2,3,4],[4,5,6]]
-            end
-
-        """
-        expect = "Type Mismatch In Expression: ArrayLit(ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0), NumLit(4.0)), ArrayLit(NumLit(4.0), NumLit(5.0), NumLit(6.0)))"
-        self.assertTrue(TestChecker.test(input, expect, 523))
-
-    def test_uninfer_or_mismatch_14(self):
-        input = """
-            func f()
-                return [[1,2],[3,4]]
-            func g()
-            func h() ## h is ArrayType([2.0, 2.0, 2.0], NumberType)
-                return [g(),f()]
-            func g() ## g is ArrayType([2.0, 2.0], NumberType)
-                return h()[1]
     
-            func main()
-            begin
-                number a <- f()[1,2]
-                var b <- f()[1]
-                var c <- g()
-                var d <- h()
-                c <- h()[1]
-            end
-
-        """
-        expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 524))
-
-    def test_uninfer_or_mismatch_15(self):
+    def test500(self):
         input = """
-            func main()
-            begin
-                dynamic a <- a
-            end
-            """
-        expect = "Undeclared Identifier: a"
-        self.assertTrue(TestChecker.test(input, expect, 525))
-
-    def test_uninfer_or_mismatch_16(self):      
-        input = """
-            func a()
-            begin
-                number a <- a()
-            end
-            func main()
-            begin
-                dynamic a <- a()
-            end
-            """
-        expect = ""
-        self.assertTrue(TestChecker.test(input, expect, 526))   
-
-    def test_uninfer_or_mismatch_17(self):
-        input = """
-            func f()
-            begin
-                return 1
-            end
-            func main()
-            begin
-                dynamic a <- f
-            end
-            """
-        expect = "Undeclared Identifier: f"
-        self.assertTrue(TestChecker.test(input, expect, 527))   
-
-    def test_uninfer_or_mismatch_18(self):
-        input = """
-            func readNumber()
-            begin
-                return 1
-            end
-            func main()
-            begin
-                readNumber()
-            end
-            """
-        expect = "Redeclared Function: readNumber"
-        self.assertTrue(TestChecker.test(input, expect, 528))
-
-    def test_uninfer_or_mismatch_19(self):
-        input = """
-            func main()
-            begin
-                dynamic x
-
-                x <- (x = 1) or ("abc" == "abc")
-            end
-            """
-        expect = "Type Mismatch In Statement: AssignStmt(Id(x), BinaryOp(or, BinaryOp(=, Id(x), NumLit(1.0)), BinaryOp(==, StringLit(abc), StringLit(abc))))"
-        self.assertTrue(TestChecker.test(input, expect, 529))
-
-    def test_21st_array_literal(self):
-        """ Array Literals: RHS in VarDecl """
-        input = """
-        func main()
-            begin
-                dynamic num
-                bool arr[2] <- [true, num and (num > num)]
-            end
-        """
-        expect = "Type Mismatch In Expression: BinaryOp(and, Id(num), BinaryOp(>, Id(num), Id(num)))"
-        
-        expect = "Type Mismatch In Expression: BinaryOp(>, Id(num), Id(num))"
-        self.assertTrue(TestChecker.test(input, expect, 530))
-
-    def test_22nd_array_literal(self):
-        """ Array Literals: RHS in AssignStmt """
-        input = """
-        func main()
-            begin
-                dynamic num
-                bool arr <- num and (num > num)
-            end
-        """
-        
-        expect = "Type Mismatch In Expression: BinaryOp(>, Id(num), Id(num))"
-        self.assertTrue(TestChecker.test(input, expect, 532))
-
-    def test_Luo_68(self):
-        input = """
-        func main()
-        begin
-            dynamic a
-            var b <- a
-        end
-        """
-        expect = "Type Cannot Be Inferred: VarDecl(Id(b), None, var, Id(a))"
-        self.assertTrue(TestChecker.test(input, expect, 533))
-
-    def test_Luo_3(self):
-        input = """
-        number foo <- 10
-        func foo()
-
-        func main(number b)
-        begin
-            return foo()
-        end
-
-        func foo()
-        """
-        expect = "Redeclared Function: foo"
-        self.assertTrue(TestChecker.test(input, expect, 534))
-
-    def test_Luo_21(self):
-        input = """
-        func a(number b)
-        
-        func main()
-        begin
-            number b <- a(10) + 1
-        end
-        
-        func a(number b)
-        begin
-            return "Hello World"
-        end
-        """
-        expect = "Type Mismatch In Statement: Return(StringLit(Hello World))"
-        self.assertTrue(TestChecker.test(input, expect, 535))
-
-
-    def test_uninfer_or_mismatch_19(self):
-        input = """
-            func main()
-            begin
-                dynamic x
-
-                x <- x = 1
-            end
-            """
-        expect = "Type Mismatch In Statement: AssignStmt(Id(x), BinaryOp(=, Id(x), NumLit(1.0)))"
-        self.assertTrue(TestChecker.test(input, expect, 537))
+func main()
+begin
+    number arr[2, 2] <- [1, 2, 3, 4]
+end
+"""
+        expect = "Type Mismatch In Statement: VarDecl(Id(arr), ArrayType([2.0, 2.0], NumberType), None, ArrayLit(NumLit(1.0), NumLit(2.0), NumLit(3.0), NumLit(4.0)))"
+        self.assertTrue(TestChecker.test(input, expect, 500))

@@ -214,10 +214,12 @@ class StaticChecker(BaseVisitor, Utils):
                 
         if type(type1) == ArrayType and type(type2) == ArrayType: # the value is an array type
             
-            if len(type1.size) != len(type2.size) or type1.eleType != type2.eleType:
+            print("compareType Array: ", type1.size, type2.size, type1.eleType, type2.eleType)
+            if len(type1.size) != len(type2.size) or type(type1.eleType) != type(type2.eleType):
                 return False # Type cannot be inferred, will raise error in parent node
-
             for i in range(len(type1.size)):
+                print("compareType Array element: ",i, type1.size[i], type2.size[i])
+            
                 if type1.size[i] != type2.size[i]:
                     return False # Type cannot be inferred, will raise error in parent node
 
@@ -840,14 +842,17 @@ class StaticChecker(BaseVisitor, Utils):
             else :
                 innerType = ArrayType( inferredType.size[1:] , inferredType.eleType)
 
+            firstType = self.visit(ast.value[0], (envi, ExprParam(Variable(), True, True, innerType)))
+            if self.compareType(firstType, innerType) == False:
+                return MismatchType() # Not the same type as first will raise error in the parent node
+
             # Check for type of each value in array
             for value in ast.value:
                 valueType = self.visit(value, (envi, ExprParam(Variable(), True, True, innerType)))
                 
-                
                 if self.compareType(valueType, innerType) == False:
                     #return MismatchType()
-                    raise TypeMismatchInExpression(ast)
+                    raise TypeMismatchInExpression(ast) # Not the same type as first will raise error in the current node
 
             return ArrayType(inferredType.size , inferredType.eleType)
 
@@ -869,8 +874,9 @@ class StaticChecker(BaseVisitor, Utils):
             for value in ast.value:
                 valueType = self.visit(value, (envi, ExprParam(Variable(), True, True, firstType)))
                 
+                print("Array Literal Value Type: ", valueType, firstType)
                 if self.compareType(valueType, firstType) == False:
-                    return MismatchType()
+                    raise TypeMismatchInExpression(ast)
                 
 
             if type(firstType) == ArrayType: # the first element is an array type
