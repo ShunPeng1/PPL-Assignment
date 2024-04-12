@@ -737,6 +737,7 @@ class StaticChecker(BaseVisitor, Utils):
             #if type(lhsType) != type(rhsType):
             if self.compareType(lhsType, rhsType) == False:
                 raise TypeMismatchInStatement(ast)
+            
         else: # LHS first use
             rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True)))
             
@@ -745,10 +746,12 @@ class StaticChecker(BaseVisitor, Utils):
             if type(rhsType) == UninferableType:
                 raise TypeCannotBeInferred(ast)
             
-            if type(rhsType) == MismatchType or type(rhsType) != type(symbol.type):
+            if type(rhsType) == MismatchType:
                 raise TypeMismatchInStatement(ast)
             
-
+            if symbol.type is not None and self.compareType(symbol.type, rhsType) == False:
+                raise TypeMismatchInStatement(ast)
+            
 
             symbol.type = rhsType
 
