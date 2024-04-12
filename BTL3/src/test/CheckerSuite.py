@@ -490,7 +490,7 @@ class CheckerSuite(unittest.TestCase):
                 return
             end
         """
-        expect = "Type Mismatch In Statement: CallStmt(Id(foo), [])"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 441))
             
     def test_callstmt_4(self):
@@ -809,7 +809,7 @@ class CheckerSuite(unittest.TestCase):
                 end
                 var a <- i + j + k + l
 
-                for i until foo by foo2
+                for i until foo() by foo2()
                 begin
                     foo3()
                 end
@@ -1520,7 +1520,7 @@ end
 
                 
         """
-        expect = "Type Mismatch In Expression: CallExpr(Id(a), [])"
+        expect = ""
         self.assertTrue(TestChecker.test(input, expect, 505))
 
     def test_redeclare_7(self):
@@ -1554,7 +1554,7 @@ end
 
                 
         """
-        expect = "Type Mismatch In Expression: CallExpr(Id(b), [])"
+        expect = "Undeclared Identifier: a"
         self.assertTrue(TestChecker.test(input, expect, 507))
 
     def test_redeclare_9(self):
@@ -1570,7 +1570,7 @@ end
 
                 
         """
-        expect = "Type Mismatch In Expression: CallExpr(Id(b), [])"
+        expect = "Undeclared Function: b"
         self.assertTrue(TestChecker.test(input, expect, 508))
 
     def test_redeclare_10(self):

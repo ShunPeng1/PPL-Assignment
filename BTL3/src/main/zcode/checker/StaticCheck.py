@@ -143,12 +143,14 @@ class StaticChecker(BaseVisitor, Utils):
     def checkDeclared(self, kind : Kind, name : str, envi : Envi) -> Symbol:
         print("checkDeclared: ", kind, name, envi)
         
+        symbolKind = FunctionSymbol if type(kind) == Function else VariableSymbol
+
         for i in range(len(envi) - 1, -1, -1): # from current scope to global scope
             print("checkDeclared Scope: ", i, envi[i])
             symbols = envi[i].symbols # list of Symbol in scope
            
             for symbol in symbols:
-                if name == getName(symbol):
+                if name == getName(symbol) and type(symbol) == symbolKind :
                     return symbol
 
         kind = kind if type(kind) == Function else Identifier()        
@@ -176,7 +178,7 @@ class StaticChecker(BaseVisitor, Utils):
                 raise NoDefinition(symbol.name)
 
 
-    def getSymbol(self, lhs : Union[Id , ArrayCell] , isOnlyLastScope : bool, envi : Envi) -> Symbol:
+    def getSymbol(self,kind : Kind, lhs : Union[Id , ArrayCell] , isOnlyLastScope : bool, envi : Envi) -> Symbol:
         print("getSymbol: ", lhs, envi)
 
         name = ""
@@ -185,16 +187,21 @@ class StaticChecker(BaseVisitor, Utils):
         elif type(lhs) == ArrayCell:
             name = lhs.arr.name
 
+        symbolKind = FunctionSymbol if type(kind) == Function else VariableSymbol
 
         if isOnlyLastScope:
-            return self.lookup(name, envi.getLast().symbols, getName)
-
+            symbols = envi[-1].symbols # list of Symbol in scope last scope
+           
+            for symbol in symbols:
+                if name == getName(symbol) and type(symbol) == symbolKind :
+                    return symbol
+        
         for i in range(len(envi) - 1, -1, -1): # from current scope to global scope
             print("checkDeclared Scope: ", i, envi[i])
             symbols = envi[i].symbols # list of Symbol in scope
            
             for symbol in symbols:
-                if name == getName(symbol):
+                if name == getName(symbol) and type(symbol) == symbolKind :
                     return symbol
 
         return None # No symbol found
@@ -292,12 +299,12 @@ class StaticChecker(BaseVisitor, Utils):
             return symbol
     
     def visitFuncDecl(self, ast : FuncDecl, param : Tuple[Envi, None]):
-        print(ast)
+        print("FuncDecl: ",ast)
 
         (envi, _) = param
 
         # Get function symbol
-        functionSymbol = self.getSymbol(ast.name, True, envi)
+        functionSymbol = self.getSymbol(Function(), ast.name, True, envi)
         name = ast.name.name
         isDeclared = functionSymbol is not None
 
@@ -489,7 +496,7 @@ class StaticChecker(BaseVisitor, Utils):
         (envi, exprParam) = param
 
         self.visit(ast.name, (envi, ExprParam(Function(), True, True)))
-        functionSymbol = self.getSymbol(ast.name, False, envi)
+        functionSymbol = self.getSymbol(Function(),ast.name, False, envi)
 
         if functionSymbol is None:
             raise Undeclared(Function(), ast.name)
@@ -544,7 +551,7 @@ class StaticChecker(BaseVisitor, Utils):
         
             else : # LHS
                 if exprParam.isDeclared:
-                    symbol = self.checkDeclared(Identifier(), ast.name, envi)
+                    symbol = self.checkDeclared(exprParam.kind, ast.name, envi)
                     return symbol.type
                 else : # not declared
                     self.checkRedeclared(exprParam.kind, ast.name, envi.getLast())
@@ -640,7 +647,7 @@ class StaticChecker(BaseVisitor, Utils):
         (envi, stmtParam) = param
     
         lhsType = self.visit(ast.name, (envi, ExprParam(Variable(), False, True, NumberType())))
-        symbol = self.getSymbol(ast.name, False, envi)
+        symbol = self.getSymbol(Variable(), ast.name, False, envi)
         updType = self.visit(ast.updExpr, (envi, ExprParam(Variable(), True, True, NumberType())))
 
         
@@ -724,7 +731,7 @@ class StaticChecker(BaseVisitor, Utils):
         (envi, stmtParam) = param
 
         lhsType = self.visit(ast.lhs, (envi, ExprParam(Variable(), False, True)))
-        symbol = self.getSymbol(ast.lhs, False, envi)
+        symbol = self.getSymbol(Variable(),ast.lhs, False, envi)
 
         if lhsType: # LHS is declared and has type
             rhsType = self.visit(ast.rhs, (envi, ExprParam(Variable(), True, True, lhsType)))
@@ -765,7 +772,7 @@ class StaticChecker(BaseVisitor, Utils):
         (envi, stmtParam) = param
 
         self.visit(ast.name, (envi, ExprParam(Function(), True, True)))
-        functionSymbol = self.getSymbol(ast.name, False, envi)
+        functionSymbol = self.getSymbol(Function(),ast.name, False, envi)
 
         if functionSymbol is None:
             raise Undeclared(Function(), ast.name)
