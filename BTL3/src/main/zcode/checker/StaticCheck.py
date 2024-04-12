@@ -109,6 +109,10 @@ class MismatchType(Type):
     def __str__(self) -> str:
         return "MismatchType"
 
+class UndeclaredType(Type):
+    def __str__(self) -> str:
+        return "UndeclaredType"
+
 class StaticChecker(BaseVisitor, Utils):
 
     def __init__(self, ast):
@@ -260,32 +264,33 @@ class StaticChecker(BaseVisitor, Utils):
         self.visit(ast.name, (envi, ExprParam(varDeclParam.kind, False, False)))
         
         current_scope = envi.getLast()
+        varSymbol = VariableSymbol(name, UndeclaredType())
+        current_scope.define(varSymbol)
         
         # Visit variable type
         if ast.modifier == "var":
             varInitType = self.visit(ast.varInit, (envi, ExprParam(Identifier(), True, True))) 
-            
+
             if type(varInitType) == UninferableType:
-                raise TypeCannotBeInferred(ast)
+                raise TypeCannotBeInferred(ast)    
             
-            current_scope.define(VariableSymbol(name, varInitType))
+            varSymbol.type = varInitType
         
         elif ast.modifier == "dynamic":  
-            varSymbol = VariableSymbol(name, None)  
+            
             if ast.varInit:
                 varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, True))) if ast.varInit else None
                 
                 if type(varInitType) == UninferableType:
                     raise TypeCannotBeInferred(ast)
                 
-                varSymbol = VariableSymbol(name, varInitType)
-                
-            current_scope.define(varSymbol)
+                varSymbol.type = varInitType
+            else:
+                varSymbol.type = None
 
         else: # no modifier
             varType = self.visit(ast.varType, (envi, None))
-            
-            symbol = VariableSymbol(name, varType)
+
             
             if ast.varInit:
                 varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, True, varType)))
@@ -297,8 +302,8 @@ class StaticChecker(BaseVisitor, Utils):
                 if self.compareType(varType, varInitType) == False:
                     raise TypeMismatchInStatement(ast)
             
-            current_scope.define(symbol)
-            return symbol
+            varSymbol.type = varType
+            return varSymbol
     
     def visitFuncDecl(self, ast : FuncDecl, param : Tuple[Envi, None]):
         print("FuncDecl: ",ast)
@@ -543,7 +548,10 @@ class StaticChecker(BaseVisitor, Utils):
             if exprParam.isRHS:
                 symbol = self.checkDeclared(exprParam.kind, ast.name, envi)
                 
-                if symbol.type :                  
+                if symbol.type:
+                    if type(symbol.type) == UndeclaredType:
+                        
+                        raise Undeclared(Identifier(), ast.name)                  
                     return symbol.type
                 elif exprParam.inferredType : # No type in symbol yet so inferred type
                     symbol.type = exprParam.inferredType

@@ -1152,6 +1152,8 @@ begin
 end
 """
         expect = "Type Mismatch In Expression: ArrayLit(ArrayLit(Id(a), NumLit(1.0)), ArrayLit(Id(b), BooleanLit(True)), ArrayLit(Id(c), StringLit(Hello)))"
+        expectThuan = "Type Mismatch In Expression: ArrayLit(Id(b), BooleanLit(True))"
+        
         self.assertTrue(TestChecker.test(input, expect, 474))
     
     def test475(self):
