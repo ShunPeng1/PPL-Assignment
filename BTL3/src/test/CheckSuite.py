@@ -3,7 +3,7 @@ from TestUtils import TestChecker
 from AST import *
 
 
-class CheckerSuite(unittest.TestCase):
+class CheckSuite(unittest.TestCase):
     def test_no_entry_point(self):
         input = """number a
         """
@@ -1207,7 +1207,7 @@ dynamic x
 func main()
     return
 """
-        expect = "Redeclared Variable: f"
+        expect = "No Function Definition: f"
         self.assertTrue(TestChecker.test(input, expect, 484))
     
     def test485(self):
@@ -1477,7 +1477,7 @@ end
             func main()
                 return
         """
-        expect = "Redeclared Variable: a"
+        expect = "Type Cannot Be Inferred: VarDecl(Id(a), None, dynamic, CallExpr(Id(a), []))"
         self.assertTrue(TestChecker.test(input, expect, 502))
 
     def test_redeclare_4(self):
@@ -1489,7 +1489,7 @@ end
             func main()
                 dynamic a <- a()
         """
-        expect = "Redeclared Variable: a"
+        expect = "No Function Definition: main"
         self.assertTrue(TestChecker.test(input, expect, 503))
 
     def test_redeclare_5(self):
@@ -1938,7 +1938,7 @@ end
 
         func foo()
         """
-        expect = "Redeclared Function: foo"
+        expect = "Type Cannot Be Inferred: Return(CallExpr(Id(foo), []))"
         self.assertTrue(TestChecker.test(input, expect, 534))
 
     def test_Luo_21(self):
@@ -1970,3 +1970,50 @@ end
             """
         expect = "Type Mismatch In Statement: AssignStmt(Id(x), BinaryOp(=, Id(x), NumLit(1.0)))"
         self.assertTrue(TestChecker.test(input, expect, 537))
+
+
+    def test_uninfer_or_mismatch_20(self):
+        input = """
+        
+            func main()
+            begin
+            
+            end
+
+            func foo()
+
+            func foo2()
+                return foo()
+
+
+            func foo()
+                return 1
+            """
+        expect = "Type Cannot Be Inferred: Return(CallExpr(Id(foo), []))"
+        self.assertTrue(TestChecker.test(input, expect, 538))
+
+    def test_uninfer_or_mismatch_21(self):
+        input = """
+            func foo()
+
+            func main()
+            begin
+                return foo()
+            end
+
+            func foo()
+                return 1
+        """
+        
+        expect = "Type Cannot Be Inferred: Return(CallExpr(Id(foo), []))"
+        self.assertTrue(TestChecker.test(input, expect, 539))
+
+    def test_uninfer_or_mismatch_22(self):
+        input = """
+dynamic a
+string x <- [a]
+func main() return
+        """
+        
+        expect = "Type Mismatch In Statement: VarDecl(Id(x), StringType, None, ArrayLit(Id(a)))"
+        self.assertTrue(TestChecker.test(input, expect, 540))
