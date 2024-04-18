@@ -160,26 +160,23 @@ def compareType(type1 : Type, type2 : Type) -> bool:
         return False # Type cannot be inferred, will raise error in parent node
             
     if type(type1) == ArrayType and type(type2) == ArrayType: # the value is an array type
-        
-        #print("compareType Array: ", type1.size, type2.size, type1.eleType, type2.eleType)
-        if len(type1.size) != len(type2.size) or type(type1.eleType) != type(type2.eleType):
-            return False # Type cannot be inferred, will raise error in parent node
-        for i in range(len(type1.size)):
-            #print("compareType Array element: ",i, type1.size[i], type2.size[i])
-        
-            if type1.size[i] != type2.size[i]:
-                return False # Type cannot be inferred, will raise error in parent node
+        return compareArraySize(type1.size, type2.size) and compareType(type1.eleType, type2.eleType)
 
     return True
     
+def compareArraySize(size1 : List[int], size2 : List[int]) -> bool:
+    if len(size1) != len(size2):
+        return False
+    for i in range(len(size1)):
+        if size1[i] != size2[i]:
+            return False
+    return True
 
 class StaticChecker(BaseVisitor, Utils):
 
     def __init__(self, ast):
         self.ast = ast
         
-
-    
 
     def checkEntry(self):
         #print("checkEntry: ", self.envi[0].symbols)
@@ -202,9 +199,6 @@ class StaticChecker(BaseVisitor, Utils):
                 raise NoDefinition(symbol.name)
 
 
-    
-    
-
     def check(self):
         self.envi : Envi = Envi([]) # global scope
 
@@ -224,15 +218,17 @@ class StaticChecker(BaseVisitor, Utils):
         return self.visit(self.ast, self.envi)
 
 
-    def visitProgram(self, ast : Program, param):
+    def visitProgram(self, ast : Program, param : Envi):
         #print(ast)
+
+        envi = param
 
         # Visit all declaration in program
         for decl in ast.decl:
             if type(decl) == VarDecl:
-                self.visit(decl, (self.envi, VarDeclParam(Variable(), len(self.envi)-1)))
+                self.visit(decl, (envi, VarDeclParam(Variable(), len(envi)-1)))
             elif type(decl) == FuncDecl:
-                self.visit(decl, (self.envi, None))
+                self.visit(decl, (envi, None))
 
         
         # Check for function defined
@@ -241,7 +237,7 @@ class StaticChecker(BaseVisitor, Utils):
         # Check for entry point
         self.checkEntry()
 
-        self.envi.pop()
+        envi.pop()
 
         return 
         
@@ -258,16 +254,7 @@ class StaticChecker(BaseVisitor, Utils):
         current_scope.define(varSymbol)
         
         # Visit variable type
-        if ast.modifier == "var":
-            varInitType = self.visit(ast.varInit, (envi, ExprParam(Identifier(), True, True))) 
-
-            if type(varInitType) == UninferableType:
-                raise TypeCannotBeInferred(ast)    
-            
-            varSymbol.type = varInitType
-        
-        elif ast.modifier == "dynamic":  
-            
+        if ast.modifier == "dynamic":
             if ast.varInit:
                 varInitType = self.visit(ast.varInit, (envi, ExprParam(Variable(), True, True))) if ast.varInit else None
                 
@@ -277,6 +264,15 @@ class StaticChecker(BaseVisitor, Utils):
                 varSymbol.type = varInitType
             else:
                 varSymbol.type = None
+        
+        elif ast.modifier == "var":  
+            varInitType = self.visit(ast.varInit, (envi, ExprParam(Identifier(), True, True))) 
+
+            if type(varInitType) == UninferableType:
+                raise TypeCannotBeInferred(ast)    
+            
+            varSymbol.type = varInitType
+            
 
         else: # no modifier
             varType = self.visit(ast.varType, (envi, None))
@@ -612,7 +608,7 @@ class StaticChecker(BaseVisitor, Utils):
         envi.pop()
 
 
-        return True # TODO : return of a statement
+        return ast # TODO : return of a statement
 
     
     def visitIf(self, ast : If, param : Tuple[Envi, StmtParam]):
@@ -649,7 +645,7 @@ class StaticChecker(BaseVisitor, Utils):
                 self.visit(ast.elseStmt, (envi, stmtParam))
     
 
-        return True # TODO : return of a statement
+        return ast # TODO : return of a statement
 
     
     def visitFor(self, ast : For, param : Tuple[Envi, StmtParam]):
@@ -686,7 +682,7 @@ class StaticChecker(BaseVisitor, Utils):
 
         stmtParam.insideLoopCount -= 1
 
-        return True # TODO : return of a statement
+        return ast # TODO : return of a statement
 
     
     def visitContinue(self, ast : Continue, param : Tuple[Envi, StmtParam]):
@@ -697,7 +693,7 @@ class StaticChecker(BaseVisitor, Utils):
         if stmtParam.insideLoopCount == 0:
             raise MustInLoop(ast)
         
-        return True # TODO : return of a statement
+        return ast # TODO : return of a statement
 
     
     def visitBreak(self, ast : Break, param : Tuple[Envi, StmtParam]):
@@ -708,7 +704,7 @@ class StaticChecker(BaseVisitor, Utils):
         if stmtParam.insideLoopCount == 0:
             raise MustInLoop(ast)
 
-        return True # TODO : return of a statement
+        return ast # TODO : return of a statement
     
     def visitReturn(self, ast : Return, param : Tuple[Envi, StmtParam]):
         
@@ -738,7 +734,7 @@ class StaticChecker(BaseVisitor, Utils):
                     raise TypeMismatchInStatement(ast)
 
         
-        return True # TODO : return of a statement
+        return ast # TODO : return of a statement
 
 
     
@@ -779,7 +775,7 @@ class StaticChecker(BaseVisitor, Utils):
             symbol.type = rhsType
 
         
-        return True # TODO : return of a statement
+        return ast # TODO : return of a statement
 
     
     def visitCallStmt(self, ast : CallStmt, param : Tuple[Envi, StmtParam]):
@@ -812,7 +808,7 @@ class StaticChecker(BaseVisitor, Utils):
         elif type(functionSymbol.type) != VoidType: # this must be a void function
             raise TypeMismatchInStatement(ast)    
            
-        return True # TODO : return of a statement
+        return ast # TODO : return of a statement
 
 
     
