@@ -5,6 +5,7 @@
         "./BTL3/src/main/zcode/astgen",
         "./BTL3/src/main/zcode/checker",
         "./BTL3/src/main/zcode/utils",
+        "./BTL3/src/test/",
         "./BTL4/src/main/zcode/codegen",
     ]
 }

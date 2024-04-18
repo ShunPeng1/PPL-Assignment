@@ -38,8 +38,21 @@ class FunctionSymbol(Symbol):
 class Scope:
     def __init__(self, symbols = None):
         self.symbols = symbols if symbols is not None else []  # Initialize as empty list if None is provided
+    
     def define(self, symbol : Symbol):
         self.symbols.append(symbol)
+        
+    
+    def checkRedeclared(self, kind : Union[Function, Variable, Parameter], name: str):
+        #print("checkRedeclared: ", kind, name, lst)
+        
+        symbolKind = FunctionSymbol if type(kind) == Function else VariableSymbol
+       
+        for symbol in self.symbols:
+            if name == getName(symbol) and type(symbol) == symbolKind :
+                raise Redeclared(kind, name)
+
+        return None # No symbol found
 
     def __str__(self) -> str:
         return f"Scope([{', '.join(str(i) for i in self.symbols)}])"
@@ -58,6 +71,23 @@ class Envi:
 
     def getLast(self) -> Scope:
         return self.scope[-1]
+
+    
+    def checkDeclared(self, kind : Kind, name : str) -> Symbol:
+        #print("checkDeclared: ", kind, name, envi)
+        
+        symbolKind = FunctionSymbol if type(kind) == Function else VariableSymbol
+
+        for i in range(len(self.scope) - 1, -1, -1): # from current scope to global scope
+            #print("checkDeclared Scope: ", i, envi[i])
+            symbols = self.scope[i].symbols # list of Symbol in scope
+           
+            for symbol in symbols:
+                if name == getName(symbol) and type(symbol) == symbolKind :
+                    return symbol
+
+        kind = kind if type(kind) == Function else Identifier()        
+        raise Undeclared(kind, name)
 
     def __getitem__(self, index : int):
         return self.scope[index]
@@ -117,48 +147,8 @@ class StaticChecker(BaseVisitor, Utils):
 
     def __init__(self, ast):
         self.ast = ast
-        self.envi : Envi = Envi([]) # global scope
-
-        global_scope = Scope([ # global scope built-in functions
-            FunctionSymbol("readNumber", NumberType(), [], Stmt()),
-            FunctionSymbol("readString", StringType(), [], Stmt()),
-            FunctionSymbol("readBool", BoolType(), [], Stmt()),
-
-            FunctionSymbol("writeNumber", VoidType(), [VariableSymbol("n", NumberType())], Stmt()),
-            FunctionSymbol("writeString", VoidType(), [VariableSymbol("s", StringType())], Stmt()),
-            FunctionSymbol("writeBool", VoidType(), [VariableSymbol("b", BoolType())], Stmt())
-        ])
-
-
-        self.envi.append(global_scope) # global scope
-
-
-    def checkRedeclared(self, kind : Union[Function, Variable, Parameter], name: str, lst : Scope):
-        #print("checkRedeclared: ", kind, name, lst)
-
-        symbols = lst.symbols
-        symbol = self.lookup(name, symbols, getName)
-        if symbol:
-            raise Redeclared(kind, name)
-
-        return None # No symbol found
-
-    
-    def checkDeclared(self, kind : Kind, name : str, envi : Envi) -> Symbol:
-        #print("checkDeclared: ", kind, name, envi)
         
-        symbolKind = FunctionSymbol if type(kind) == Function else VariableSymbol
 
-        for i in range(len(envi) - 1, -1, -1): # from current scope to global scope
-            #print("checkDeclared Scope: ", i, envi[i])
-            symbols = envi[i].symbols # list of Symbol in scope
-           
-            for symbol in symbols:
-                if name == getName(symbol) and type(symbol) == symbolKind :
-                    return symbol
-
-        kind = kind if type(kind) == Function else Identifier()        
-        raise Undeclared(kind, name)
     
 
     def checkEntry(self):
@@ -231,6 +221,21 @@ class StaticChecker(BaseVisitor, Utils):
         
 
     def check(self):
+        self.envi : Envi = Envi([]) # global scope
+
+        global_scope = Scope([ # global scope built-in functions
+            FunctionSymbol("readNumber", NumberType(), [], Stmt()),
+            FunctionSymbol("readString", StringType(), [], Stmt()),
+            FunctionSymbol("readBool", BoolType(), [], Stmt()),
+
+            FunctionSymbol("writeNumber", VoidType(), [VariableSymbol("n", NumberType())], Stmt()),
+            FunctionSymbol("writeString", VoidType(), [VariableSymbol("s", StringType())], Stmt()),
+            FunctionSymbol("writeBool", VoidType(), [VariableSymbol("b", BoolType())], Stmt())
+        ])
+
+
+        self.envi.append(global_scope) # global scope
+
         return self.visit(self.ast, self.envi)
 
 
@@ -546,7 +551,7 @@ class StaticChecker(BaseVisitor, Utils):
         (envi, exprParam) = param
         if type(exprParam) == ExprParam:
             if exprParam.isRHS:
-                symbol = self.checkDeclared(exprParam.kind, ast.name, envi)
+                symbol = envi.checkDeclared(exprParam.kind, ast.name)
                 
                 if symbol.type:
                     if type(symbol.type) == UndeclaredType:
@@ -561,10 +566,10 @@ class StaticChecker(BaseVisitor, Utils):
         
             else : # LHS
                 if exprParam.isDeclared:
-                    symbol = self.checkDeclared(exprParam.kind, ast.name, envi)
+                    symbol = envi.checkDeclared(exprParam.kind, ast.name)
                     return symbol.type
                 else : # not declared
-                    self.checkRedeclared(exprParam.kind, ast.name, envi.getLast())
+                    envi.getLast().checkRedeclared(exprParam.kind, ast.name)
                     return UninferableType() # No type can be inferred, will raise error in parent node
 
         else:
@@ -635,7 +640,10 @@ class StaticChecker(BaseVisitor, Utils):
         if type(ifConditionType) != BoolType:
             raise TypeMismatchInStatement(ast)
         
-        self.visit(ast.thenStmt, (envi, stmtParam))
+        if type(ast.thenStmt) == VarDecl:
+            self.visit(ast.thenStmt, (envi, VarDeclParam(Variable(), len(self.envi)-1))) 
+        else:
+            self.visit(ast.thenStmt, (envi, stmtParam))
 
         for (elifExpr, elifStmt) in ast.elifStmt:
             elifConditionType = self.visit(elifExpr, (envi, ExprParam(Variable(), True, True, BoolType())))
@@ -643,15 +651,23 @@ class StaticChecker(BaseVisitor, Utils):
             if type(elifConditionType) != BoolType:
                 raise TypeMismatchInStatement(ast)
 
-            self.visit(elifStmt, (envi, stmtParam))
+            if type(elifStmt) == VarDecl:
+                self.visit(elifStmt, (envi, VarDeclParam(Variable(), len(self.envi)-1))) 
+            else:
+                self.visit(elifStmt, (envi, stmtParam))
+                
         
         if ast.elseStmt:
-            self.visit(ast.elseStmt, (envi, stmtParam))
+            if type(ast.elseStmt) == VarDecl:
+                self.visit(ast.elseStmt, (envi, VarDeclParam(Variable(), len(self.envi)-1))) 
+            else:
+                self.visit(ast.elseStmt, (envi, stmtParam))
+    
 
         return True # TODO : return of a statement
 
     
-    def visitFor(self, ast : For, param):
+    def visitFor(self, ast : For, param : Tuple[Envi, StmtParam]):
         #print("Visit For: ", ast)
 
         (envi, stmtParam) = param
@@ -677,7 +693,12 @@ class StaticChecker(BaseVisitor, Utils):
         
         # Visit body of for loop
         stmtParam.insideLoopCount += 1
-        self.visit(ast.body, (envi, stmtParam))
+        
+        if type(ast.body) == VarDecl:
+            self.visit(ast.body, (envi, VarDeclParam(Variable(), len(self.envi)-1))) 
+        else:
+            self.visit(ast.body, (envi, stmtParam))
+
         stmtParam.insideLoopCount -= 1
 
         return True # TODO : return of a statement
