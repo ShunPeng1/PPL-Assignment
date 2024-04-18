@@ -19,8 +19,6 @@ class VariableSymbol(Symbol):
         self.name = name
         self.type = type
 
-    def __str__(self):
-        return f"VariableSymbol({self.name}, {self.type})"
 
 class FunctionSymbol(Symbol):
     def __init__(self, name: str, type: Type = None, param: List[VariableSymbol] = None, body:Stmt =None):
@@ -32,8 +30,6 @@ class FunctionSymbol(Symbol):
         self.param = param
         self.body = body
 
-    def __str__(self):
-        return f"FunctionSymbol({self.name}, {self.type}, [{', '.join(str(i) for i in self.param)}], {self.body})"
 
 class Scope:
     def __init__(self, symbols = None):
@@ -54,8 +50,6 @@ class Scope:
 
         return None # No symbol found
 
-    def __str__(self) -> str:
-        return f"Scope([{', '.join(str(i) for i in self.symbols)}])"
 
 class Envi:
     def __init__(self, scope : None):
@@ -127,9 +121,6 @@ class Envi:
     def __len__(self):
         return len(self.scope)
 
-    def __str__(self) -> str:
-        return f"Environtment({self.scope})"
-
 class ExprParam: 
     def __init__(self, kind : Kind, isRHS : bool = False, isDeclared : bool = False, inferredType : Type = None) -> None:
         self.kind = kind
@@ -137,16 +128,12 @@ class ExprParam:
         self.isDeclared = isDeclared
         self.inferredType = inferredType
 
-    def __str__(self) -> str:
-        return f"IdParam({self.kind}, {self.isRHS}, {self.inferredType})"
 
 class VarDeclParam:
     def __init__(self, kind : Kind, scopeIndex : int) -> None:
         self.kind = kind
         self.scopeIndex = scopeIndex
 
-    def __str__(self) -> str:
-        return f"VarDeclParam({self.kind}, {self.scopeIndex})"
 
 class StmtParam:
     def __init__(self, currentFunctionSymbol : FunctionSymbol = None, insideLoopCount : int = 0) -> None:
@@ -157,22 +144,14 @@ class StmtParam:
         pass
        
         
-    def __str__(self) -> str:
-        pass
-        
 class UninferableType(Type):
-    def __str__(self) -> str:
-        return "UninferableType"
+    pass
     
 class MismatchType(Type):
-    def __str__(self) -> str:
-        return "MismatchType"
+    pass
 
 class UndeclaredType(Type):
-    def __str__(self) -> str:
-        return "UndeclaredType"
-
-
+    pass
 
 def compareType(type1 : Type, type2 : Type) -> bool:
     #print("compareType: ", type1, type2)
