@@ -618,8 +618,9 @@ class StaticChecker(BaseVisitor, Utils):
 
         ifConditionType = self.visit(ast.expr, (envi, ExprParam(Variable(), True, True, BoolType())))
 
-        if type(ifConditionType) != BoolType:
+        if type(ifConditionType) != BoolType or type(ifConditionType) == MismatchType:
             raise TypeMismatchInStatement(ast)
+            
         
         if type(ast.thenStmt) == VarDecl:
             self.visit(ast.thenStmt, (envi, VarDeclParam(Variable(), len(self.envi)-1))) 
@@ -661,16 +662,25 @@ class StaticChecker(BaseVisitor, Utils):
         if lhsType is None: # LHS first use so infer type
             lhsType = NumberType()
             symbol.type = lhsType
-        else:
-        
-            if type(lhsType) != NumberType or type(updType) != NumberType:
+
+        if type(lhsType) != NumberType or type(updType) != NumberType:
                 raise TypeMismatchInStatement(ast)
+            
+        if type(updType) == UninferableType or type(lhsType) == UninferableType:
+            raise TypeCannotBeInferred(ast)
+        
+        if type(lhsType) == MismatchType or type(updType) == MismatchType:
+            raise TypeMismatchInStatement(ast)
+        
             
 
         # Visit condition of for loop
         condType = self.visit(ast.condExpr, (envi, ExprParam(Variable(), True, True, BoolType())))
-        if type(condType) != BoolType:
+        if type(condType) != BoolType or type(condType) == MismatchType:
             raise TypeMismatchInStatement(ast)
+        
+        if type(condType) == UninferableType:
+            raise TypeCannotBeInferred(ast)
         
         # Visit body of for loop
         stmtParam.insideLoopCount += 1
@@ -852,14 +862,19 @@ class StaticChecker(BaseVisitor, Utils):
             else :
                 innerType = ArrayType( inferredType.size[1:] , inferredType.eleType)
 
-            firstType = self.visit(ast.value[0], (envi, ExprParam(Variable(), True, True, innerType)))
-            if compareType(firstType, innerType) == False:
-                return MismatchType() # Not the same type as first will raise error in the parent node
+            #firstType = self.visit(ast.value[0], (envi, ExprParam(Variable(), True, True, innerType)))
+            #if compareType(firstType, innerType) == False:
+            #    return MismatchType() # Not the same type as first will raise error in the parent node
 
             # Check for type of each value in array
-            for value in ast.value:
+            for i in range(0,len(ast.value)):
+                value = ast.value[i]
                 valueType = self.visit(value, (envi, ExprParam(Variable(), True, True, innerType)))
                 
+                #print("Array Literal Value Type: ", valueType, innerType)
+                if type(valueType) == UninferableType:
+                    return UninferableType()
+
                 if compareType(valueType, innerType) == False:
                     #return MismatchType()
                     raise TypeMismatchInExpression(ast) # Not the same type as first will raise error in the current node
@@ -884,6 +899,9 @@ class StaticChecker(BaseVisitor, Utils):
             for value in ast.value:
                 valueType = self.visit(value, (envi, ExprParam(Variable(), True, True, firstType)))
                 
+                if type(valueType) == UninferableType:
+                    return UninferableType()
+
                 #print("Array Literal Value Type: ", valueType, firstType)
                 if compareType(valueType, firstType) == False:
                     raise TypeMismatchInExpression(ast)
