@@ -2017,3 +2017,26 @@ func main() return
         
         expect = "Type Mismatch In Statement: VarDecl(Id(x), StringType, None, ArrayLit(Id(a)))"
         self.assertTrue(TestChecker.test(input, expect, 540))
+
+    def test_uninfer_or_mismatch_23(self):
+        input = """
+        func main()
+            begin
+                number a
+                a[2] <- 2
+            end
+    """
+        expect = "Type Mismatch In Expression: ArrayCell(Id(a), [NumLit(2.0)])"
+        self.assertTrue(TestChecker.test(input, expect, 541))
+
+    def test_uninfer_or_mismatch_24(self):
+        input = """
+        func main()
+            begin
+                dynamic b
+                number a <- [b]
+            end
+
+        """
+        expect = "Type Mismatch In Statement: VarDecl(Id(a), NumberType, None, ArrayLit(Id(b)))"
+        self.assertTrue(TestChecker.test(input, expect, 542))

@@ -1548,3 +1548,54 @@ true
 Hello
 """
         self.assertTrue(TestCodeGen.test(input, expect, 576))
+
+
+    def test_infer_5(self):
+        input = """
+        dynamic a <- 1
+        dynamic b 
+        func main()
+        begin
+
+            number c <- 1
+            begin 
+                number d <- 2
+            end
+            string e <- "e"
+            string f <- "f"
+
+            writeString(e ... f)
+
+            for c until c >= 10 by 1
+            begin
+            
+            end
+            writeNumber(c)
+            writeNumber(a)
+            writeNumber(b)
+        end
+        """
+        expect = """10.0
+1.0
+0.0
+"""
+        #self.assertTrue(TestCodeGen.test(input, expect, 577))
+
+    def test_infer_6(self):
+        input = """
+        func foo()
+        begin
+            if (false)
+                return 1
+            
+        end
+
+
+        func main()
+        begin
+            number a <- foo()
+            writeNumber(a)
+        end
+        """
+        expect = """0.0"""
+        self.assertTrue(TestCodeGen.test(input, expect, 578))
