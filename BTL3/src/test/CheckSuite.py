@@ -3,6 +3,11 @@ from TestUtils import TestChecker
 from AST import *
 
 
+# Student : Banh Tan Thuan
+# Student ID : 2153011
+# Class : CC03
+
+
 class CheckSuite(unittest.TestCase):
     def test_no_entry_point(self):
         input = """number a
@@ -2015,7 +2020,7 @@ string x <- [a]
 func main() return
         """
         
-        expect = "Type Mismatch In Statement: VarDecl(Id(x), StringType, None, ArrayLit(Id(a)))"
+        expect = "Type Cannot Be Inferred: VarDecl(Id(x), StringType, None, ArrayLit(Id(a)))"
         self.assertTrue(TestChecker.test(input, expect, 540))
 
     def test_uninfer_or_mismatch_23(self):
@@ -2038,5 +2043,102 @@ func main() return
             end
 
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(a), NumberType, None, ArrayLit(Id(b)))"
+        expect = "Type Cannot Be Inferred: VarDecl(Id(a), NumberType, None, ArrayLit(Id(b)))"
+    
         self.assertTrue(TestChecker.test(input, expect, 542))
+
+    def test_uninfer_or_mismatch_25(self):
+        input = """
+            dynamic x
+            number a[3] <- [x, 1, "1"]
+            func  main()
+            begin
+                x <- 1
+            end
+        """
+        expect = "Type Mismatch In Expression: ArrayLit(Id(x), NumLit(1.0), StringLit(1))"
+        self.assertTrue(TestChecker.test(input, expect, 543))
+
+    def test_uninfer_or_mismatch_26(self):
+        input = """
+            func main()
+            begin
+                dynamic a
+                var i <- a[2] ... 2.75
+            end
+
+        """
+        expect = "Type Cannot Be Inferred: VarDecl(Id(i), None, var, BinaryOp(..., ArrayCell(Id(a), [NumLit(2.0)]), NumLit(2.75)))"
+        self.assertTrue(TestChecker.test(input, expect, 544))
+
+    def test455(self):
+        input = """
+func main()
+begin
+    dynamic a
+    dynamic b
+    number c[2] <- [3,4]
+    number arr[2,2] <- [[a],c]
+end
+"""
+        expect = "Type Mismatch In Expression: ArrayLit(ArrayLit(Id(a)), Id(c))"
+        self.assertTrue(TestChecker.test(input, expect, 545))
+
+    def test_me507(self):
+        input = """
+func test(string a[2], number b)
+
+func test1()
+    var a <- test(["abc", "def"], 1)
+
+func test1(string a[2], number b)
+    return a[b]...a[b-1]
+
+func main()
+begin
+    test1()
+end
+"""
+        expect = "Type Cannot Be Inferred: VarDecl(Id(a), None, var, CallExpr(Id(test), [ArrayLit(StringLit(abc), StringLit(def)), NumLit(1.0)]))"
+        self.assertTrue(TestChecker.test(input, expect, 546))
+
+    def test_me523(self):
+        input = """
+func foo() return 1
+
+func main()
+begin
+    number a
+    for foo until a > 1 by 1
+    writeNumber(a)
+end
+"""
+        expect = "Undeclared Identifier: foo"
+        self.assertTrue(TestChecker.test(input, expect, 547))
+
+    def test_me527(self):
+        input = """
+func f()begin
+number c[3,2] <- [[6,7],[4,5],[4,5]]
+return c[2]
+end
+func main() begin
+number a <- f()
+end
+"""
+        expect = "Type Mismatch In Statement: VarDecl(Id(a), NumberType, None, CallExpr(Id(f), []))"
+        # Type Mismatch In Statement: VarDecl(Id(a), NumberType, None, CallExpr(Id(f), []))
+        self.assertTrue(TestChecker.test(input, expect, 548))
+
+    def test_arraylit(self):
+        
+        input = """
+            dynamic x
+            number a <- [x]
+        """
+        expect = "Type Cannot Be Inferred: VarDecl(Id(a), NumberType, None, ArrayLit(Id(x)))"
+        # Type Mismatch In Statement: VarDecl(Id(a), NumberType, None, ArrayLit(Id(x)))
+        self.assertTrue(TestChecker.test(input, expect, 549))
+
+class CheckerSuite(CheckSuite):
+    pass

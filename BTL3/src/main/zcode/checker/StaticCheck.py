@@ -6,6 +6,11 @@ from functools import reduce
 
 from typing import List, Union, Tuple
 
+# Student : Banh Tan Thuan
+# Student ID : 2153011
+# Class : CC03
+
+
 class Symbol:
     def __init__(self, name : str, type : Type = None):
         self.name = name
@@ -846,6 +851,15 @@ class StaticChecker(BaseVisitor, Utils):
         inferredType = exprParam.inferredType
         if inferredType: 
             if type(inferredType) != ArrayType: # inferred type is not an array
+                for i in range(0,len(ast.value)):
+                    value = ast.value[i]
+                    valueType = self.visit(value, (envi, ExprParam(Variable(), True, True, None)))
+                    
+                    #print("Array Literal Value Type: ", valueType, innerType)
+                    if type(valueType) == UninferableType:
+                        return UninferableType()
+
+
                 return MismatchType() # TODO : check again and raise error
                 
             # Check for size of array
