@@ -965,7 +965,8 @@ class CodeGenVisitor(BaseVisitor):
         else: # local variable
             idx = o.frame.getNewIndex()
             variableSymbol = VariableSymbol(ast.name.name, ast.varType, idx, isStatic, ast)
-        
+            self.emit.printout(self.emit.emitVAR(idx, ast.name.name, ast.varType, o.frame.getStartLabel(), o.frame.getEndLabel(), o.frame))
+            
             if isParam:
                 return variableSymbol # Not generate initial for parameter
             
@@ -989,6 +990,7 @@ class CodeGenVisitor(BaseVisitor):
         print("VisitBlock: ",ast)
 
         o.frame.enterScope(False)
+        self.emit.printout(self.emit.emitLABEL(o.frame.getStartLabel(), o.frame))
 
         blockSymbols = []
         for stmt in ast.stmt:
@@ -1000,6 +1002,8 @@ class CodeGenVisitor(BaseVisitor):
         for symbol in blockSymbols:
             o.sym.pop() # remove the symbol from the symbol table
         
+        
+        self.emit.printout(self.emit.emitLABEL(o.frame.getEndLabel(), o.frame))
         o.frame.exitScope()
         return
 
