@@ -2,6 +2,8 @@ import sys
 import os
 from antlr4 import *
 from antlr4.error.ErrorListener import ConsoleErrorListener, ErrorListener
+
+from StaticError import StaticError
 if not './main/zcode/parser/' in sys.path:
     sys.path.append('./main/zcode/parser/')
 if os.path.isdir('../target/main/zcode/parser') and not '../target/main/zcode/parser/' in sys.path:
