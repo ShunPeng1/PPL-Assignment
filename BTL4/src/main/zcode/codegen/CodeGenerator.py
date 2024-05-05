@@ -1060,7 +1060,8 @@ class CodeGenVisitor(BaseVisitor):
         # Declare the loop variable
         incrementIndex = o.frame.getNewIndex()
         self.emit.printout(self.emit.emitVAR(incrementIndex, "until", NumberType(), o.frame.getStartLabel(), o.frame.getEndLabel(), o.frame))
-        o.sym.append(VariableSymbol("until", NumberType(), incrementIndex, False, None))
+        untilSymbol = VariableSymbol("until", NumberType(), incrementIndex, False, None)
+        o.sym.append(untilSymbol)
 
         incrementAssign = Assign(Id("until"), ast.updExpr)
         self.visit(incrementAssign, SubBody(o.frame, o.sym))
@@ -1069,7 +1070,8 @@ class CodeGenVisitor(BaseVisitor):
         # Initialize the loop variable
         iterationIndex = o.frame.getNewIndex()
         self.emit.printout(self.emit.emitVAR(iterationIndex, "for", NumberType(), o.frame.getStartLabel(), o.frame.getEndLabel(), o.frame))
-        o.sym.append(VariableSymbol("for", NumberType(), iterationIndex, False, None))
+        forSymbol = VariableSymbol("for", NumberType(), iterationIndex, False, None)
+        o.sym.append(forSymbol)
 
         iterationIndexAssign = Assign(Id("for"), ast.name)
         self.visit(iterationIndexAssign, SubBody(o.frame, o.sym))
@@ -1099,6 +1101,8 @@ class CodeGenVisitor(BaseVisitor):
 
         revertAssign = Assign(ast.name, Id("for"))
         self.visit(revertAssign, SubBody(o.frame, o.sym))
+        o.sym.remove(forSymbol)
+        o.sym.remove(untilSymbol)
 
 
         # Exit the loop
