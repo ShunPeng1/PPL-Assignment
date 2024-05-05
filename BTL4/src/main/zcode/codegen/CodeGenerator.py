@@ -935,6 +935,7 @@ class CodeGenVisitor(BaseVisitor):
         return functionSymbol
 
     def getDefaultValue(self, varType : Type):
+        print("Get Default Value: ", varType)
         if type(varType) == NumberType:
             return NumberLiteral(0.0)
         elif type(varType) == BoolType:
@@ -942,11 +943,11 @@ class CodeGenVisitor(BaseVisitor):
         elif type(varType) == StringType:
             return StringLiteral("")
         elif type(varType) == ArrayType:
-            
+            print("Get Default Value Array: ", varType.size, varType.eleType)
             if len(varType.size) == 1:
-                return ArrayLiteral([self.getDefaultValue(varType.eleType) for i in range(varType.size[0])])
+                return ArrayLiteral([self.getDefaultValue(varType.eleType) for i in range(int(varType.size[0]))])
             else:
-                return ArrayLiteral([self.getDefaultValue(ArrayType(varType.size[1:], varType.eleType)) for i in range(varType.size[0])])
+                return ArrayLiteral([self.getDefaultValue(ArrayType(varType.size[1:], varType.eleType)) for i in range(int(varType.size[0]))])
             
  
     def visitAttributeDecl(self, ast : AttributeDecl, o : SubBody):
@@ -1051,32 +1052,59 @@ class CodeGenVisitor(BaseVisitor):
 
         o.frame.enterLoop()
 
-        loopLabel = o.frame.getContinueLabel()
-        endLabel = o.frame.getBreakLabel()
+        continueLabel = o.frame.getContinueLabel()
+        breakLabel = o.frame.getBreakLabel()
         conditionLabel = o.frame.getNewLabel()
 
-        self.emit.printout(self.emit.emitGOTO(conditionLabel, o.frame))
-        self.emit.printout(self.emit.emitLABEL(loopLabel, o.frame))
 
-        # Update the loop variable
-        updateExpr = Assign(ast.name, BinaryOp("+", ast.name ,ast.updExpr))
-        self.visit(updateExpr, SubBody(o.frame, o.sym))
+        # Declare the loop variable
+        incrementIndex = o.frame.getNewIndex()
+        self.emit.printout(self.emit.emitVAR(incrementIndex, "until", NumberType(), o.frame.getStartLabel(), o.frame.getEndLabel(), o.frame))
+        o.sym.append(VariableSymbol("until", NumberType(), incrementIndex, False, None))
+
+        incrementAssign = Assign(Id("until"), ast.updExpr)
+        self.visit(incrementAssign, SubBody(o.frame, o.sym))
+        
+
+        # Initialize the loop variable
+        iterationIndex = o.frame.getNewIndex()
+        self.emit.printout(self.emit.emitVAR(iterationIndex, "for", NumberType(), o.frame.getStartLabel(), o.frame.getEndLabel(), o.frame))
+        o.sym.append(VariableSymbol("for", NumberType(), iterationIndex, False, None))
+
+        iterationIndexAssign = Assign(Id("for"), ast.name)
+        self.visit(iterationIndexAssign, SubBody(o.frame, o.sym))
+
+        initEmit, initType = self.visit(ast.name, Access(o.frame, o.sym, False))
 
         # Visit the condition of the loop
         self.emit.printout(self.emit.emitLABEL(conditionLabel, o.frame))
         condEmit, condType = self.visit(ast.condExpr, Access(o.frame, o.sym, False))
         self.emit.printout(condEmit)
 
-        self.emit.printout(self.emit.emitIFTRUE(endLabel, o.frame))
+        self.emit.printout(self.emit.emitIFTRUE(breakLabel, o.frame))
 
         # Visit the body of the loop
         self.visit(ast.body, o)
+
+        self.emit.printout(self.emit.emitLABEL(continueLabel, o.frame))
+
+        # Update the loop variable
+        updateExpr = Assign(ast.name, BinaryOp("+", ast.name, Id("until")))
+        self.visit(updateExpr, SubBody(o.frame, o.sym))
+
+        self.emit.printout(self.emit.emitGOTO(conditionLabel, o.frame))
+
         
+        self.emit.printout(self.emit.emitLABEL(breakLabel, o.frame))
 
-        self.emit.printout(self.emit.emitGOTO(loopLabel, o.frame))
+        revertAssign = Assign(ast.name, Id("for"))
+        self.visit(revertAssign, SubBody(o.frame, o.sym))
 
+
+        # Exit the loop
         o.frame.exitLoop()
-        self.emit.printout(self.emit.emitLABEL(endLabel, o.frame))
+
+
 
         return ast
 
