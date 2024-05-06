@@ -125,7 +125,7 @@ class FunctionSymbol(Symbol):
 
     def __str__(self):
         paramStr = ', '.join(str(i) for i in self.param)
-        return f"FunctionSymbol({self.name}, {self.methodType}, {paramStr})"
+        return f"FunctionSymbol({self.name}, {self.methodType}, [{paramStr}], {self.className}, {self.astMethodDecl})"
 
    
 class SubBody():
@@ -404,11 +404,11 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             body = self.visit(ast.body, (envi, stmtParam)) if ast.body else None # declare only or implement function
             
             if body: # function has body so it must have a type
-                
                 if functionSymbol.methodType.rettype is None:
                     methodType.rettype = VoidType()
                 else:
                     methodType.rettype = functionSymbol.methodType.rettype 
+                print("Function Body JAVA: ", functionSymbol )
 
             # Add method type to function symbol after visit body
             functionSymbol.methodType = methodType
@@ -433,6 +433,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             methodDecl.returnType = functionSymbol.methodType.rettype
             methodDecl.body = functionSymbol.body
 
+            print("Function Symbol JAVA: ", functionSymbol, methodDecl)
         
             return methodDecl
 
@@ -700,10 +701,10 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             if ast.expr:
                 returnType = self.visit(ast.expr, (envi, ExprParam(True, True, stmtParam.currentFunctionSymbol.methodType.rettype)))
             
-                
                 stmtParam.currentFunctionSymbol.methodType.rettype = returnType
                 stmtParam.currentFunctionSymbol.astMethodDecl.returnType = returnType # update return type of method declaration
-
+                
+                print("Return Type JAVA : ", returnType, stmtParam.currentFunctionSymbol)
             else:
                 stmtParam.currentFunctionSymbol.methodType.rettype = VoidType()
                 stmtParam.currentFunctionSymbol.astMethodDecl.returnType = VoidType() # update return type of method declaration
@@ -1366,7 +1367,10 @@ class CodeGenVisitor(BaseVisitor):
 
             
     def visitNumberLiteral(self, ast : NumberLiteral, o : Access):
-        return self.emit.emitPUSHFCONST(ast.value, o.frame), NumberType()
+        #value = "{:.39f}".format(ast.value)
+        value = float(ast.value)
+        
+        return self.emit.emitPUSHFCONST(value, o.frame), NumberType()
 
     def visitBooleanLiteral(self, ast : BooleanLiteral, o : Access):
         return self.emit.emitPUSHICONST(str(ast.value).lower(), o.frame), BoolType()
