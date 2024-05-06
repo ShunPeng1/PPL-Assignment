@@ -1365,7 +1365,8 @@ class CodeGenVisitor(BaseVisitor):
 
     def visitStringLiteral(self, ast : StringLiteral, o : Access):
         print("VisitStringLiteral: ")
-        return self.emit.emitPUSHCONST(ast.value, StringType(), o.frame), StringType()
+        escaped_value = ast.value.replace('"', '\\"')
+        return self.emit.emitPUSHCONST(escaped_value, StringType(), o.frame), StringType()
 
     def visitArrayLiteral(self, ast : ArrayLiteral, param : Access):
         print("VisitArrayLiteral: ",ast)
