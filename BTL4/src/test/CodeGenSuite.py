@@ -1350,11 +1350,12 @@ skip
             return t + 3
         end
         func main() begin
-            var t <- foo2()
+            writeNumber(foo2())
         end
         """
         expect = """false
 4.5
+13.0
 """
         self.assertTrue(TestCodeGen.test(input, expect, 566))
     
@@ -1362,7 +1363,7 @@ skip
         input = """func foo1(number a, number b)
         number m
         func foo2(number x) begin
-            dynamic t
+            number t
             t <- foo1(m, x)
         end
         func main() begin
@@ -1726,7 +1727,7 @@ end
         input = """func foo1()
         func foo2()
         func foo3()
-        var arr <- [[foo1(), foo2()],[foo3(), foo1()]]
+        number arr[2,2] <- [[foo1(), foo2()],[foo3(), foo1()]]
         func main() begin
             ##var arr <- [[foo1(), foo2()],[foo3(), foo1()]]
             arr[foo3()-foo1()] <- [foo2()*3,6.2]
@@ -1859,7 +1860,7 @@ end
         func f2(number a)
         func f3()
         func main() begin
-            dynamic u <- f2(2)
+            number u[2] <- f2(2)
             writeNumber(u[0]+u[1])
         end
         func f1(number a, number b) return a + b
@@ -1871,7 +1872,7 @@ end
         self.assertTrue(TestCodeGen.test(input, expect, 592))
     
     def test93(self):
-        input = """func foo()
+        input = """func foo(number n)
         func main() begin
             foo(5)
         end
