@@ -1,3 +1,4 @@
+import math
 from Emitter import Emitter
 from functools import reduce
 
@@ -697,7 +698,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         
         (envi, stmtParam) = param
 
-        if stmtParam.currentFunctionSymbol.methodType.rettype is None: # function type is not declared
+        if stmtParam.currentFunctionSymbol.astMethodDecl.returnType is None: # function type is not declared
             if ast.expr:
                 returnType = self.visit(ast.expr, (envi, ExprParam(True, True, stmtParam.currentFunctionSymbol.methodType.rettype)))
             
@@ -1367,8 +1368,13 @@ class CodeGenVisitor(BaseVisitor):
 
             
     def visitNumberLiteral(self, ast : NumberLiteral, o : Access):
-        #value = "{:.39f}".format(ast.value)
-        value = float(ast.value)
+        value = ast.value
+        if isinstance(value, float):
+            # Calculate the number of decimal places required
+            decimal_places = abs(int(math.floor(math.log10(abs(value)))))
+            # Convert the float to a string in decimal notation with the calculated number of decimal places
+            print("VisitNumberLiteral: ",value, "{:.{}f}".format(value, decimal_places))
+            value = "{:.{}f}".format(value, decimal_places)
         
         return self.emit.emitPUSHFCONST(value, o.frame), NumberType()
 

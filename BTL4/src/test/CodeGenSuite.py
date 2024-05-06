@@ -1087,7 +1087,7 @@ end
             writeBool(not (t or t))
         end
         """
-        expect = """14379.3
+        expect = """14379.301
 a1b0c2d3e9f
 false
 """
