@@ -104,6 +104,8 @@ class Emitter():
             firstSize = self.emitPUSHFCONST(in_, frame)
             if len(typ.size) == 1:
                 fullType = self.getFullType(typ.eleType)
+                if type(typ.eleType) is StringType: 
+                    return firstSize + self.jvm.emitANEWARRAY(fullType)
                 return firstSize + self.jvm.emitNEWARRAY(fullType)
             else :
                 jvmType = self.getJVMType(ArrayType(typ.size[1:], typ.eleType))
