@@ -39,7 +39,7 @@ class Emitter():
         if typeIn is NumberType:
             return "float"
         elif typeIn is BoolType:
-            return "bool"
+            return "boolean"
         elif typeIn is StringType:
             return "java/lang/String"
         elif typeIn is VoidType:
@@ -124,7 +124,7 @@ class Emitter():
         if type(in_) is NumberType:
             return self.jvm.emitFALOAD()
         if type(in_) is BoolType:
-            return self.jvm.emitIALOAD()
+            return self.jvm.emitBALOAD()
         # elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
         elif type(in_) is StringType:
             return self.jvm.emitAALOAD()
@@ -146,7 +146,7 @@ class Emitter():
         if type(in_) is NumberType:
             return self.jvm.emitFASTORE()
         if type(in_) is BoolType:
-            return self.jvm.emitIASTORE()
+            return self.jvm.emitBASTORE()
         # elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
         elif type(in_) is cgen.ClassType or type(in_) is StringType:
             return self.jvm.emitAASTORE()

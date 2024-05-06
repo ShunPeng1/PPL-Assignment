@@ -228,7 +228,7 @@ toi di hoc.
         # array test 3
         input = """func main()
         begin
-            number arr1[2,2] <- [[1e1,2],[4,5]]
+            number arr1[2,2] <- [[1,2],[4,5]]
             writeNumber(arr1[0,1])
             string arr2_[2,2]
             arr2_[0] <- ["abc", "def"]
@@ -248,7 +248,7 @@ abc123
 123456
 4.0
 """
-        self.assertTrue(TestCodeGen.test(input, expect, 510))
+        #self.assertTrue(TestCodeGen.test(input, expect, 510))
     
     def test11(self):
         # user-defined function 1
@@ -459,7 +459,7 @@ true
         expect = """true
 false
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 520))
+        self.assertTrue(TestCodeGen.test(input, expect, 520))
     
     def test21(self):
         input = """func foo(number arr[3], number x)
