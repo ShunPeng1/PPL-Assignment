@@ -838,11 +838,19 @@ class CodeGenVisitor(BaseVisitor):
             self.className, "java.lang.Object"))
 
         
-        # generate static classes
+        # generate static variable
         for decl in ast.memlist:   
-            symbol =  self.visit(decl, SubBody(None, globalEnvi))
-            if type(symbol) == FunctionSymbol or type(symbol) == VariableSymbol:
+            if type(decl) == AttributeDecl:
+                
+                symbol =  self.visit(decl, SubBody(None, globalEnvi))  
                 globalEnvi.append(symbol)
+
+        # generate static function
+        for decl in ast.memlist:   
+            if type(decl) == MethodDecl:            
+                symbol =  self.visit(decl, SubBody(None, globalEnvi))
+                
+                globalEnvi.append(symbol)  
             
         # generate static constructor
                 

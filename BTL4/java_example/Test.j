@@ -12,6 +12,8 @@
 .class public Test
 .super java/lang/Object
 
+.field public static arr [I
+
 .method public <init>()V
   .limit stack 1
   .limit locals 1
@@ -21,47 +23,136 @@
   4: return
 .end method
 
-.method public static foo([Z)V
-  .limit stack 3
-  .limit locals 1
+.method public static foo([ILjava/lang/String;)I
+  .limit stack 4
+  .limit locals 3
   .line 5
-  0: aload_0
-  1: iconst_0
-  2: iconst_1
-  3: bastore
+  0: iconst_0
+  1: istore_2
+Label2:
+  2: iload_2
+  3: iconst_5
+  4: if_icmpge Label21
   .line 6
-  4: return
+  7: aload_0
+  8: iload_2
+  9: iload_2
+  10: iload_2
+  11: imul
+  12: iconst_5
+  13: iadd
+  14: iastore
+  .line 5
+  15: iinc 2 1
+  18: goto Label2
+Label21:
+  .line 8
+  21: iconst_m1
+  22: ireturn
+  ; append_frame (frameNumber = 0)
+  ; frame_type = 252, offset_delta = 2
+  ; frame bytes: 252 0 2 1 
+  .stack 
+    offset 2
+    locals Integer
+    .end stack
+  ; chop_frame (frameNumber = 1)
+  ; frame_type = 250, offset_delta = 18
+  ; frame bytes: 250 0 18 
+  .stack 
+    offset 21
+    .end stack
 .end method
 
 .method public static main([Ljava/lang/String;)V
-  .limit stack 4
-  .limit locals 2
-  .line 9
-  0: iconst_2
-  1: newarray boolean
-  3: dup
-  4: iconst_0
-  5: iconst_0
-  6: bastore
-  7: dup
-  8: iconst_1
-  9: iconst_0
-  10: bastore
-  11: astore_1
-  .line 10
-  12: aload_1
-  13: invokestatic Test/foo([Z)V
-  .line 11
-  16: aload_1
-  17: iconst_0
-  18: baload
-  19: invokestatic io/writeBool(Z)V
-  .line 12
-  22: aload_1
-  23: iconst_1
-  24: baload
-  25: invokestatic io/writeBool(Z)V
+  .limit stack 3
+  .limit locals 4
   .line 13
-  28: return
+  0: ldc "mommy"
+  2: astore_1
+  .line 14
+  3: getstatic Test/arr [I
+  6: aload_1
+  7: invokestatic Test/foo([ILjava/lang/String;)I
+  10: istore_2
+  .line 15
+  11: getstatic java/lang/System/out Ljava/io/PrintStream;
+  14: iload_2
+  15: ifge Label22
+  18: iconst_1
+  19: goto Label23
+Label22:
+  22: iconst_0
+Label23:
+  23: invokevirtual java/io/PrintStream/println(Z)V
+  .line 16
+  26: iconst_0
+  27: istore_3
+Label28:
+  28: iload_3
+  29: iconst_5
+  30: if_icmpge Label50
+  .line 17
+  33: getstatic java/lang/System/out Ljava/io/PrintStream;
+  36: getstatic Test/arr [I
+  39: iload_3
+  40: iaload
+  41: invokevirtual java/io/PrintStream/println(I)V
+  .line 16
+  44: iinc 3 1
+  47: goto Label28
+Label50:
+  .line 19
+  50: return
+  ; full_frame (frameNumber = 0)
+  ; frame_type = 255, offset_delta = 22
+  ; frame bytes: 255 0 22 0 3 7 0 39 7 0 41 1 0 1 7 0 26 
+  .stack 
+    offset 22
+    locals Object [Ljava/lang/String;
+    locals Object java/lang/String
+    locals Integer
+    stack Object java/io/PrintStream
+    .end stack
+  ; full_frame (frameNumber = 1)
+  ; frame_type = 255, offset_delta = 0
+  ; frame bytes: 255 0 0 0 3 7 0 39 7 0 41 1 0 2 7 0 26 1 
+  .stack 
+    offset 23
+    locals Object [Ljava/lang/String;
+    locals Object java/lang/String
+    locals Integer
+    stack Object java/io/PrintStream
+    stack Integer
+    .end stack
+  ; append_frame (frameNumber = 2)
+  ; frame_type = 252, offset_delta = 4
+  ; frame bytes: 252 0 4 1 
+  .stack 
+    offset 28
+    locals Object [Ljava/lang/String;
+    locals Object java/lang/String
+    locals Integer
+    locals Integer
+    .end stack
+  ; chop_frame (frameNumber = 3)
+  ; frame_type = 250, offset_delta = 21
+  ; frame bytes: 250 0 21 
+  .stack 
+    offset 50
+    locals Object [Ljava/lang/String;
+    locals Object java/lang/String
+    locals Integer
+    .end stack
+.end method
+
+.method static <clinit>()V
+  .limit stack 1
+  .limit locals 0
+  .line 10
+  0: iconst_5
+  1: newarray int
+  3: putstatic Test/arr [I
+  6: return
 .end method
 
