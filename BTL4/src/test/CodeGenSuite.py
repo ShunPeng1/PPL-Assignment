@@ -17,7 +17,7 @@ class CheckCodeGenSuite(unittest.TestCase):
 aoisd
 true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 500))
+        self.assertTrue(TestCodeGen.test(input, expect, 500))
     
     def test1(self):
         # number operators
@@ -50,7 +50,7 @@ true
 true
 true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 501))
+        self.assertTrue(TestCodeGen.test(input, expect, 501))
     
     def test2(self):
         # string operators
@@ -66,7 +66,7 @@ abcdef
 false
 true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 502))
+        self.assertTrue(TestCodeGen.test(input, expect, 502))
     
     def test3(self):
         # boolean operators
@@ -83,7 +83,7 @@ true
 false
 false
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 503))
+        self.assertTrue(TestCodeGen.test(input, expect, 503))
     
     def test4(self):
         # variable declaration
@@ -102,7 +102,7 @@ end
 oasifiweoabcd
 true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 504))
+        self.assertTrue(TestCodeGen.test(input, expect, 504))
     
     def test5(self):
         # implicit variable
@@ -127,7 +127,7 @@ oe[]; 829 odo
 true
 true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 505))
+        self.assertTrue(TestCodeGen.test(input, expect, 505))
     
     def test6(self):
         # global variable 1
@@ -148,7 +148,7 @@ true
 \tHe says: \'\"no\'\".\n
 false
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 506))
+        self.assertTrue(TestCodeGen.test(input, expect, 506))
     
     def test7(self):
         # global variable 2
@@ -170,7 +170,7 @@ murasaki
 1.5
 false
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 507))
+        self.assertTrue(TestCodeGen.test(input, expect, 507))
     
     def test8(self):
         # array 1
@@ -204,7 +204,7 @@ true
 true
 false
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 508))
+        self.assertTrue(TestCodeGen.test(input, expect, 508))
     
     def test9(self):
         # array test 2
@@ -222,7 +222,7 @@ false
 toi di hoc.
 
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 509))
+        self.assertTrue(TestCodeGen.test(input, expect, 509))
     
     def test10(self):
         # array test 3
@@ -248,7 +248,7 @@ abc123
 123456
 4.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 510))
+        self.assertTrue(TestCodeGen.test(input, expect, 510))
     
     def test11(self):
         # user-defined function 1
@@ -278,7 +278,7 @@ di hoc.toi
 false
 false
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 511))
+        self.assertTrue(TestCodeGen.test(input, expect, 511))
     
     def test12(self):
         # array test 4
@@ -295,7 +295,7 @@ false
         expect = """3.0
 1.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 512))
+        self.assertTrue(TestCodeGen.test(input, expect, 512))
     
     def test13(self):
         # user-defined function 2
@@ -316,7 +316,7 @@ false
         expect = """23.48
 false
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 513))
+        self.assertTrue(TestCodeGen.test(input, expect, 513))
     
     def test14(self):
         # user-defined function 3
@@ -337,7 +337,7 @@ false
 7.0
 3.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 514))
+        self.assertTrue(TestCodeGen.test(input, expect, 514))
     
     def test15(self):
         # if statement 1
@@ -358,7 +358,7 @@ false
 0.0
 B
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 515))
+        self.assertTrue(TestCodeGen.test(input, expect, 515))
     
     def test16(self):
         # if statement 2
@@ -384,7 +384,7 @@ B
 End program!
 
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 516))
+        self.assertTrue(TestCodeGen.test(input, expect, 516))
     
     def test17(self):
         input = """func foo(number x1, number x2, number x3)
@@ -405,7 +405,7 @@ End program!
         """
         expect = """-0.25
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 517))
+        self.assertTrue(TestCodeGen.test(input, expect, 517))
     
     def test18(self):
         # for statement 1
@@ -423,7 +423,7 @@ End program!
 4.0
 0.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 518))
+        self.assertTrue(TestCodeGen.test(input, expect, 518))
     
     def test19(self):
         # for statement 2
@@ -441,7 +441,7 @@ false
 true
 true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 519))
+        self.assertTrue(TestCodeGen.test(input, expect, 519))
     
     def test20(self):
         input = """func foo(bool arr[2])
@@ -477,7 +477,7 @@ false
         expect = """3.5
 6.06
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 521))
+        self.assertTrue(TestCodeGen.test(input, expect, 521))
     
     def test22(self):
         input = """func foo(string sarr[5])
@@ -496,7 +496,7 @@ false
         """
         expect = """abcdef12345ewo
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 522))
+        self.assertTrue(TestCodeGen.test(input, expect, 522))
     
     def test23(self):
         input = """func foo(number arr[5])
@@ -514,7 +514,7 @@ false
         expect = """2.0
 3.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 523))
+        self.assertTrue(TestCodeGen.test(input, expect, 523))
     
     def test24(self):
         input = """var x <- "String"
@@ -533,7 +533,7 @@ false
 8.4
 3928
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 524))
+        self.assertTrue(TestCodeGen.test(input, expect, 524))
     
     def test25(self):
         # global variable 3
@@ -545,7 +545,7 @@ false
         """
         expect = """true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 525))
+        self.assertTrue(TestCodeGen.test(input, expect, 525))
     
     def test26(self):
         input = """func foo() return [12.38, 49.53]
@@ -566,7 +566,7 @@ false
         expect = """49.53
 12.38
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 526))
+        self.assertTrue(TestCodeGen.test(input, expect, 526))
     
     def test27(self):
         input = """number a <- 2.38
@@ -582,7 +582,7 @@ false
         expect = """2.38
 5.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 527))
+        self.assertTrue(TestCodeGen.test(input, expect, 527))
     
     def test28(self):
         input = """var arr <- [4.36, 5.07]
@@ -601,7 +601,7 @@ false
         expect = """5.07
 4.36
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 528))
+        self.assertTrue(TestCodeGen.test(input, expect, 528))
     
     def test29(self):
         input = """dynamic vip
@@ -617,7 +617,7 @@ false
         """
         expect = """true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 529))
+        self.assertTrue(TestCodeGen.test(input, expect, 529))
     
     def test30(self):
         input = """string arr1[3,2]
@@ -637,7 +637,7 @@ false
         """
         expect = """true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 530))
+        self.assertTrue(TestCodeGen.test(input, expect, 530))
     
     def test31(self):
         input = """func isPrime(number x)
@@ -659,7 +659,7 @@ false
         """
         expect = """No
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 531))
+        self.assertTrue(TestCodeGen.test(input, expect, 531))
     
     def test32(self):
         input = """func areDivisors(number num1, number num2)
@@ -672,7 +672,7 @@ false
         """
         expect = """true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 532))
+        self.assertTrue(TestCodeGen.test(input, expect, 532))
     
     def test33(self):
         # scope
@@ -695,7 +695,7 @@ false
 abcdef
 1234567
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 533))
+        self.assertTrue(TestCodeGen.test(input, expect, 533))
     
     def test34(self):
         # break statement
@@ -712,7 +712,7 @@ abcdef
 456
 789
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 534))
+        self.assertTrue(TestCodeGen.test(input, expect, 534))
     
     def test35(self):
         # continue statement
@@ -731,13 +731,13 @@ abcdef
 9.0
 10.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 535))
+        self.assertTrue(TestCodeGen.test(input, expect, 535))
     
     def test36(self):
         input = """func main() return
         """
         expect = """"""
-        #self.assertTrue(TestCodeGen.test(input, expect, 536))
+        self.assertTrue(TestCodeGen.test(input, expect, 536))
     
     def test37(self):
         input = """func foo(number a[5], string b)
@@ -763,7 +763,7 @@ abcdef
 14.0
 21.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 537))
+        self.assertTrue(TestCodeGen.test(input, expect, 537))
     
     def test38(self):
         # complex indexing
@@ -782,7 +782,7 @@ abcdef
 4.0
 5.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 538))
+        self.assertTrue(TestCodeGen.test(input, expect, 538))
     
     def test39(self):
         input = """func main() begin
@@ -805,7 +805,7 @@ abcdef
 2.0
 0.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 539))
+        self.assertTrue(TestCodeGen.test(input, expect, 539))
     
     def test40(self):
         input = """func _fari123(number x[5,1], string b)
@@ -830,7 +830,7 @@ abcdef
 4.0
 5.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 540))
+        self.assertTrue(TestCodeGen.test(input, expect, 540))
     
     def test41(self):
         input = """number arr[5] <- [12,4,7,20,1]
@@ -860,7 +860,7 @@ abcdef
 7.0
 1.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 541))
+        self.assertTrue(TestCodeGen.test(input, expect, 541))
     
     def test42(self):
         input = """func foo2(number x, number y)
@@ -881,7 +881,7 @@ abcdef
         """
         expect = """568.242
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 542))
+        self.assertTrue(TestCodeGen.test(input, expect, 542))
 
     def test43(self):
         input = """func main() begin
@@ -893,7 +893,7 @@ abcdef
         expect = """7.0
 14.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 543))
+        self.assertTrue(TestCodeGen.test(input, expect, 543))
     
     def test44(self):
         input = """string s <- ("dsi" ... "oe[]") ... ("od" ... "389")
@@ -903,7 +903,7 @@ abcdef
         """
         expect = """false
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 544))
+        self.assertTrue(TestCodeGen.test(input, expect, 544))
     
     def test45(self):
         input = """func main() begin
@@ -933,7 +933,7 @@ failed
 0.0
 1.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 545))
+        self.assertTrue(TestCodeGen.test(input, expect, 545))
     
     def test46(self):
         input = """func main()
@@ -945,7 +945,7 @@ failed
         """
         expect = """9.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 546))
+        self.assertTrue(TestCodeGen.test(input, expect, 546))
     
     def test47(self):
         input = """number t
@@ -961,7 +961,7 @@ failed
         expect = """0.87750006
 true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 547))
+        self.assertTrue(TestCodeGen.test(input, expect, 547))
     
     def test48(self):
         input = """func foo1(number arr[2])
@@ -980,7 +980,7 @@ func foo1(number arr[2]) return foo2(arr[0],arr[1])
 """
         expect = """9.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 548))
+        self.assertTrue(TestCodeGen.test(input, expect, 548))
     
     def test49(self):
         input = """func fio(number n)
@@ -999,7 +999,7 @@ func foo1(number arr[2]) return foo2(arr[0],arr[1])
         expect = """abcabcabcabcabc
 
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 549))
+        self.assertTrue(TestCodeGen.test(input, expect, 549))
     
     def test50(self):
         input = """func main() begin
@@ -1018,7 +1018,7 @@ func foo1(number arr[2]) return foo2(arr[0],arr[1])
         """
         expect = """256.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 550))
+        self.assertTrue(TestCodeGen.test(input, expect, 550))
     
     def test51(self):
         input = """func main() begin
@@ -1034,7 +1034,7 @@ func foo1(number arr[2]) return foo2(arr[0],arr[1])
         """
         expect = """71.44
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 551))
+        self.assertTrue(TestCodeGen.test(input, expect, 551))
     
     def test52(self):
         input = """## start
@@ -1058,7 +1058,7 @@ end
 """
         expect = """true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 552))
+        self.assertTrue(TestCodeGen.test(input, expect, 552))
     
     def test53(self):
         input = """func main() begin
@@ -1074,7 +1074,7 @@ end
         """
         expect = """0.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 553))
+        self.assertTrue(TestCodeGen.test(input, expect, 553))
     
     def test54(self):
         input = """dynamic t <- true and (not false)
@@ -1091,7 +1091,7 @@ end
 a1b0c2d3e9f
 false
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 554))
+        self.assertTrue(TestCodeGen.test(input, expect, 554))
     
     def test55(self):
         ## indexing function that returns array
@@ -1109,7 +1109,7 @@ false
 ab
 true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 555))
+        self.assertTrue(TestCodeGen.test(input, expect, 555))
     
     def test56(self):
         input = """func foo1(number x)
@@ -1125,7 +1125,7 @@ true
         expect = """Hello!\t\t
 false
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 556))
+        self.assertTrue(TestCodeGen.test(input, expect, 556))
     
     def test57(self):
         input = """
@@ -1151,7 +1151,7 @@ end
 20.37
 0.8999996
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 557))
+        self.assertTrue(TestCodeGen.test(input, expect, 557))
     
     def test58(self):
         input = """func foo(number arr[10], number x) begin
@@ -1169,7 +1169,7 @@ end
         expect = """true
 false
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 558))
+        self.assertTrue(TestCodeGen.test(input, expect, 558))
     
     def test59(self):
         input = """func main() begin
@@ -1228,7 +1228,7 @@ false
 28.0
 14.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 559))
+        self.assertTrue(TestCodeGen.test(input, expect, 559))
     
     def test60(self):
         input = """func foo(number n) return n + 0.5
@@ -1251,7 +1251,7 @@ false
 skip
 1.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 560))
+        self.assertTrue(TestCodeGen.test(input, expect, 560))
     
     def test61(self):
         input = """func foo(number n) return n + 0.5
@@ -1265,7 +1265,7 @@ skip
         """
         expect = """5.5
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 561))
+        self.assertTrue(TestCodeGen.test(input, expect, 561))
     
     def test62(self):
         input = """func foo1(number x) return x * 2
@@ -1280,7 +1280,7 @@ skip
         """
         expect = """19.109999
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 562))
+        self.assertTrue(TestCodeGen.test(input, expect, 562))
     
     def test63(self):
         input = """func foo() begin
@@ -1293,7 +1293,7 @@ skip
         """
         expect = """1.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 563))
+        self.assertTrue(TestCodeGen.test(input, expect, 563))
     
     def test64(self):
         input = """func main() begin
@@ -1317,7 +1317,7 @@ skip
 0.0
 \tKhorman\b
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 564))
+        self.assertTrue(TestCodeGen.test(input, expect, 564))
     
     def test65(self):
         input = """func oip(string arr[3])
@@ -1336,7 +1336,7 @@ skip
         expect = """-1.0
 [][][]
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 565))
+        self.assertTrue(TestCodeGen.test(input, expect, 565))
     
     def test66(self):
         input = """func foo1(number arr[3]) begin
@@ -1356,7 +1356,7 @@ skip
         expect = """false
 4.5
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 566))
+        self.assertTrue(TestCodeGen.test(input, expect, 566))
     
     def test67(self):
         input = """func foo1(number a, number b)
@@ -1378,7 +1378,7 @@ skip
         expect = """-0.75
 abc
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 567))
+        self.assertTrue(TestCodeGen.test(input, expect, 567))
     
     def test68(self):
         input = """func getMax(number arr[5])
@@ -1400,7 +1400,7 @@ abc
 91.0
 85.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 568))
+        self.assertTrue(TestCodeGen.test(input, expect, 568))
     
     def test69(self):
         input = """var char_lst <- ["a","b","c","d","e","f"]
@@ -1419,7 +1419,7 @@ abc
         """
         expect = """fedc
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 569))
+        self.assertTrue(TestCodeGen.test(input, expect, 569))
     
     def test70(self):
         input = """number arr[3,5] <- [[9,2,1,5,3],[2,9,1,5,6],[0,9,10,2,7]]
@@ -1450,7 +1450,7 @@ end
 1.0
 6.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 570))
+        self.assertTrue(TestCodeGen.test(input, expect, 570))
     
     def test71(self):
         input = """func main() begin
@@ -1465,7 +1465,7 @@ end
 """
         expect = """def123
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 571))
+        self.assertTrue(TestCodeGen.test(input, expect, 571))
     
     def test72(self):
         input = """func tuva()
@@ -1487,7 +1487,7 @@ end
 1.45
 true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 572))
+        self.assertTrue(TestCodeGen.test(input, expect, 572))
     
     def test73(self):
         input = """number arr[3,4]
@@ -1513,7 +1513,7 @@ end
 729.0
 2187.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 573))
+        self.assertTrue(TestCodeGen.test(input, expect, 573))
     
     def test74(self):
         input = """func amar() begin
@@ -1531,7 +1531,7 @@ end
 
 84.700005
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 574))
+        self.assertTrue(TestCodeGen.test(input, expect, 574))
     
     def test75(self):
         input = """func foo1()
@@ -1566,7 +1566,7 @@ end
 true
 OK!
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 575))
+        self.assertTrue(TestCodeGen.test(input, expect, 575))
     
     def test76(self):
         input = """number aio[5] <- [5.8,2.13,100e-2,57e-1,0.14e1]
@@ -1583,7 +1583,7 @@ OK!
         """
         expect = """8.2
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 576))
+        self.assertTrue(TestCodeGen.test(input, expect, 576))
     
     def test77(self):
         input = """func foo(number a, bool b)
@@ -1603,7 +1603,7 @@ end
         expect = """10.0
 true
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 577))
+        self.assertTrue(TestCodeGen.test(input, expect, 577))
     
     def test78(self):
         input = """dynamic t <- [14.5,98e-1,0.00121e4]
@@ -1616,7 +1616,7 @@ true
         expect = """10.0
 12.1
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 578))
+        self.assertTrue(TestCodeGen.test(input, expect, 578))
     
     def test79(self):
         input = """var oip <- [[[1,2,3]],[[5,1,8]]]
@@ -1636,7 +1636,7 @@ true
         """
         expect = """4.5
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 579))
+        self.assertTrue(TestCodeGen.test(input, expect, 579))
     
     def test80(self):
         input = """## alskdfjaposid soapdfi vcoxi we   asfdp
@@ -1658,7 +1658,7 @@ end
 """
         expect = """d
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 580))
+        self.assertTrue(TestCodeGen.test(input, expect, 580))
 
     def test81(self):
         input = """func foo(number n) begin
@@ -1676,7 +1676,7 @@ end
         expect = """1.0
 24.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 581))
+        self.assertTrue(TestCodeGen.test(input, expect, 581))
     
     def test82(self):
         input = """func main() begin
@@ -1687,7 +1687,7 @@ end
         """
         expect = """5.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 582))
+        self.assertTrue(TestCodeGen.test(input, expect, 582))
     
     def test83(self):
         input = """func main() begin
@@ -1699,7 +1699,7 @@ end
         """
         expect = """342234d
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 583))
+        self.assertTrue(TestCodeGen.test(input, expect, 583))
     
     def test84(self):
         input = """func foo1(number a)
@@ -1720,7 +1720,7 @@ end
         """
         expect = """16.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 584))
+        self.assertTrue(TestCodeGen.test(input, expect, 584))
 
     def test85(self):
         input = """func foo1()
@@ -1738,7 +1738,7 @@ end
         """
         expect = """4.5
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 585))
+        self.assertTrue(TestCodeGen.test(input, expect, 585))
     
     def test86(self):
         input = """func f(number n) return n + 1
@@ -1755,7 +1755,7 @@ end
         expect = """6.0
 108.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 586))
+        self.assertTrue(TestCodeGen.test(input, expect, 586))
     
     def test87(self):
         input = """func f1(number n)
@@ -1776,7 +1776,7 @@ end
         """
         expect = """2.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 587))
+        self.assertTrue(TestCodeGen.test(input, expect, 587))
     
     def test88(self):
         input = """func foo1() return [1,2,3]
@@ -1787,7 +1787,7 @@ end
         """
         expect = """2.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 588))
+        self.assertTrue(TestCodeGen.test(input, expect, 588))
     
     def test89(self):
         input = """func f1()
@@ -1808,7 +1808,7 @@ end
         """
         expect = """3.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 589))
+        self.assertTrue(TestCodeGen.test(input, expect, 589))
 
     def test90(self):
         input = """func f1() return "string"
@@ -1825,7 +1825,7 @@ end
         """
         expect = """stringstringstringstringstring
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 590))
+        self.assertTrue(TestCodeGen.test(input, expect, 590))
     
     def test91(self):
         input = """func average(number arr[10]) begin
@@ -1852,7 +1852,7 @@ end
 """
         expect = """-0.5
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 591))
+        self.assertTrue(TestCodeGen.test(input, expect, 591))
 
     def test92(self):
         input = """func f1(number a, number b)
@@ -1868,7 +1868,7 @@ end
         """
         expect = """7.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 592))
+        self.assertTrue(TestCodeGen.test(input, expect, 592))
     
     def test93(self):
         input = """func foo()
@@ -1901,7 +1901,7 @@ N
 N
 KO
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 593))
+        self.assertTrue(TestCodeGen.test(input, expect, 593))
     
     def test94(self):
         input = """func f1() return 1
@@ -1915,7 +1915,7 @@ KO
         """
         expect = """5.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 594))
+        self.assertTrue(TestCodeGen.test(input, expect, 594))
     
     def test95(self):
         input = """func mappa(string s[2,2], number a[2,2])
@@ -1935,7 +1935,7 @@ end
 """
         expect = """false
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 595))
+        self.assertTrue(TestCodeGen.test(input, expect, 595))
     
     def test96(self):
         input = """func f1()
@@ -1952,7 +1952,7 @@ func f2(number n) return n + 2
 """
         expect = """-48.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 596))
+        self.assertTrue(TestCodeGen.test(input, expect, 596))
     
     def test97(self):
         input = """bool aiowap[3,2] <- [[true, 14 < 26e-1],["12930"=="4930",(1=1)and(4.5!=7)],[false,false]]
@@ -1966,7 +1966,7 @@ end
 See you next time!
 
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 597))
+        self.assertTrue(TestCodeGen.test(input, expect, 597))
     
     def test98(self):
         input = """func main() begin
@@ -1982,7 +1982,7 @@ end
 sopa8
 zxcvototot
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 598))
+        self.assertTrue(TestCodeGen.test(input, expect, 598))
     
     def test99(self):
         input = """func fami(number arr1[3,3], number arr2[3,3]) begin
@@ -2007,4 +2007,4 @@ end
 11.0
 19.0
 """
-        #self.assertTrue(TestCodeGen.test(input, expect, 599))
+        self.assertTrue(TestCodeGen.test(input, expect, 599))

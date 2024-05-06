@@ -1140,17 +1140,30 @@ class CodeGenVisitor(BaseVisitor):
 
     def visitAssign(self, ast : Assign, o : SubBody):
 
-        assignEmit, assignType = self.visit(ast.rhs, Access(o.frame, o.sym, False))
-       
-        leftEmit , leftType = self.visit(ast.lhs, Access(o.frame, o.sym, True))
         
-        print("visitAssign: ", ast, assignEmit, assignType, leftEmit, leftType)
         if type(ast.lhs) == ArrayCell:
+            o.frame.push()
+            o.frame.push()
+
+            assignEmit, assignType = self.visit(ast.rhs, Access(o.frame, o.sym, False))
+            
+            o.frame.pop()
+            o.frame.pop()
+
+            leftEmit , leftType = self.visit(ast.lhs, Access(o.frame, o.sym, True))
+            print("visitAssign: ", ast, assignEmit, assignType, leftEmit, leftType)
+        
             innerEmit, arrEmit = leftEmit.split(EMIT_SEPARATOR)
+            
             self.emit.printout(innerEmit)
             self.emit.printout(assignEmit)
             self.emit.printout(arrEmit)
         else:
+            
+            assignEmit, assignType = self.visit(ast.rhs, Access(o.frame, o.sym, False))
+        
+            leftEmit , leftType = self.visit(ast.lhs, Access(o.frame, o.sym, True))
+
             self.emit.printout(assignEmit)
             self.emit.printout(leftEmit)
 
@@ -1298,8 +1311,6 @@ class CodeGenVisitor(BaseVisitor):
                         
             innerEmit , innerType = self.visit(ast.arr, Access(frame, nenv, False)) 
             
-            if type(innerType) != ArrayType:
-                return innerEmit, innerType # TODO : Error
 
             # Visit and Load the index of the array
             for i in range(0,len(ast.idx)):
