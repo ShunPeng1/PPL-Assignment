@@ -247,10 +247,10 @@ class CodeGenerator:
         # dir_: String
 
         global_envi = self.init()
-        print("Global Envi: ", global_envi)
+        #print"Global Envi: ", global_envi)
         java_ast_visitor = AstConvertToJavaAstVisitor(ast, Envi([Scope(global_envi)]) )
         java_ast = java_ast_visitor.visit(ast, None)
-        print("Java AST: ", java_ast)
+        #print"Java AST: ", java_ast)
         gc = CodeGenVisitor(java_ast, global_envi, path)
         gc.visit(java_ast, global_envi)
 
@@ -277,7 +277,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         return None
 
     def getSymbol(self, lhs : Union[Id , ArrayCell] , isOnlyLastScope : bool, envi : Envi) -> Symbol:
-        #print("getSymbol: ", lhs, envi)
+        ##print"getSymbol: ", lhs, envi)
 
         name = ""
         if type(lhs) == Id:
@@ -290,7 +290,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             return self.lookup(name, envi.getLast().symbols, getName)
 
         for i in range(len(envi) - 1, -1, -1): # from current scope to global scope
-            #print("checkDeclared Scope: ", i, envi[i])
+            ##print"checkDeclared Scope: ", i, envi[i])
             symbols = envi[i].symbols # list of Symbol in scope
            
             for symbol in symbols:
@@ -369,7 +369,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         
 
     def visitFuncDecl(self, ast : FuncDecl, param : tuple[Envi,None]):
-        print("VisitFuncDecl: ",ast, param)
+        #print"VisitFuncDecl: ",ast, param)
         
         (envi, _) = param
 
@@ -392,7 +392,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
                     paramAttributeDecl = self.visit(paramDecl, (envi, None))
                     parameters.append(paramAttributeDecl)
                 
-                #print(len(envi),envi.getLast())
+                ##printlen(envi),envi.getLast())
             
             # Add function Symbol before visit body for recursive
             functionSymbol.param = parameters
@@ -409,7 +409,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
                     methodType.rettype = VoidType()
                 else:
                     methodType.rettype = functionSymbol.methodType.rettype 
-                print("Function Body JAVA: ", functionSymbol )
+                #print"Function Body JAVA: ", functionSymbol )
 
             # Add method type to function symbol after visit body
             functionSymbol.methodType = methodType
@@ -434,7 +434,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             methodDecl.returnType = functionSymbol.methodType.rettype
             methodDecl.body = functionSymbol.body
 
-            print("Function Symbol JAVA: ", functionSymbol, methodDecl)
+            #print"Function Symbol JAVA: ", functionSymbol, methodDecl)
         
             return methodDecl
 
@@ -530,14 +530,14 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         return inferredReturnType # return type of unary operation
 
     def visitCallExpr(self, ast : CallExpr, param : Tuple[Envi, ExprParam]):
-        #print("Call Expr: ",ast, param[1])
+        ##print"Call Expr: ",ast, param[1])
 
         (envi, exprParam) = param
 
         self.visit(ast.name, (envi, ExprParam( True, True)))
         functionSymbol : FunctionSymbol = self.getSymbol(ast.name, False, envi)
 
-        print("Call Expr:", len(ast.args), functionSymbol)
+        #print"Call Expr:", len(ast.args), functionSymbol)
         for i in range(len(ast.args)):
             symbolParamType = functionSymbol.param[i].varType
             callParamType = self.visit(ast.args[i], (envi, ExprParam(True, True, symbolParamType)))
@@ -554,7 +554,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         return functionSymbol.methodType.rettype
     
     def visitId(self, ast : Id, param : Tuple[Envi, ExprParam]):
-        #print("Visit Id: " , ast, param)
+        ##print"Visit Id: " , ast, param)
         (envi, exprParam) = param
         if type(exprParam) == ExprParam:
             if exprParam.isRHS:
@@ -589,13 +589,13 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
 
     def visitArrayCell(self, ast : ArrayCell, param : Tuple[Envi, ExprParam]):
-        #print("Array Cell: ", ast, param)
+        ##print"Array Cell: ", ast, param)
 
         (envi, exprParam) = param
 
         arrType : ArrayType = self.visit(ast.arr, (envi, ExprParam(exprParam.isRHS, exprParam.isDeclared, None))) # visit array type
         
-        #print("Array Cell Type: ", arrType, exprParam.isRHS, exprParam.isDeclared, exprParam.inferredType, len(ast.idx))
+        ##print"Array Cell Type: ", arrType, exprParam.isRHS, exprParam.isDeclared, exprParam.inferredType, len(ast.idx))
         
         innerType = ArrayType(arrType.size, arrType.eleType) # copy of array type       
         for i in range(len(ast.idx)):
@@ -607,7 +607,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
             else : # inner type of the array is the element type 
                 innerType = innerType.eleType
 
-        #print("Array Cell Inner Type: ", innerType)
+        ##print"Array Cell Inner Type: ", innerType)
         return innerType # return type of array cell        
         
 
@@ -628,11 +628,11 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
         envi.pop()
         stmtStr = ', '.join(str(stmt) for stmt in stmts)
-        print("visitBlockJava: ", stmtStr)
+        #print"visitBlockJava: ", stmtStr)
         return Block(stmts) 
 
     def visitIf(self, ast : If, param : Tuple[Envi, StmtParam]):
-        #print("Visit If: ", ast)
+        ##print"Visit If: ", ast)
 
         (envi, stmtParam) = param
 
@@ -655,7 +655,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
     
     def visitFor(self, ast : For, param):
-        #print("Visit For: ", ast)
+        ##print"Visit For: ", ast)
 
         (envi, stmtParam) = param
     
@@ -682,14 +682,14 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
     
     def visitContinue(self, ast : Continue, param : Tuple[Envi, StmtParam]):
-        #print("Visit Continue: ", ast)
+        ##print"Visit Continue: ", ast)
         (envi, stmtParam) = param
 
         return ast
 
     
     def visitBreak(self, ast : Break, param):
-        #print("Visit Break: ", ast)
+        ##print"Visit Break: ", ast)
         (envi, stmtParam) = param
 
         return ast
@@ -705,7 +705,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
                 stmtParam.currentFunctionSymbol.methodType.rettype = returnType
                 stmtParam.currentFunctionSymbol.astMethodDecl.returnType = returnType # update return type of method declaration
                 
-                print("Return Type JAVA : ", returnType, stmtParam.currentFunctionSymbol)
+                #print"Return Type JAVA : ", returnType, stmtParam.currentFunctionSymbol)
             else:
                 stmtParam.currentFunctionSymbol.methodType.rettype = VoidType()
                 stmtParam.currentFunctionSymbol.astMethodDecl.returnType = VoidType() # update return type of method declaration
@@ -740,14 +740,14 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
     
     def visitCallStmt(self, ast : CallStmt, param : Tuple[Envi, StmtParam]):
-        #print("Call Stmt: ",ast, )
+        ##print"Call Stmt: ",ast, )
 
         (envi, stmtParam) = param
 
         self.visit(ast.name, (envi, ExprParam( True, True)))
         functionSymbol : FunctionSymbol = self.getSymbol(ast.name, False, envi)
         
-        print("Call Stmt: ",ast, functionSymbol, len(ast.args))
+        #print"Call Stmt: ",ast, functionSymbol, len(ast.args))
 
         for i in range(len(ast.args)):
             symbolParamType = functionSymbol.methodType.partype[i]
@@ -764,7 +764,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
     
     def visitNumberLiteral(self, ast : NumberLiteral, param):
-        #print("Number Literal: ", ast)
+        ##print"Number Literal: ", ast)
         return NumberType()
 
     
@@ -777,7 +777,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
 
     
     def visitArrayLiteral(self, ast : ArrayLiteral, param : Tuple[Envi, ExprParam]):
-        #print("Array Literal: ", ast)
+        ##print"Array Literal: ", ast)
 
         (envi, exprParam) = param
 
@@ -787,7 +787,7 @@ class AstConvertToJavaAstVisitor(BaseVisitor):
         inferredType : ArrayType = exprParam.inferredType
         if inferredType: 
              
-            #print("Array Literal Inferred Type: ", inferredType.size, len(ast.value), inferredType.eleType, len(inferredType.size) > 0, inferredType.size[0] != len(ast.value))
+            ##print"Array Literal Inferred Type: ", inferredType.size, len(ast.value), inferredType.eleType, len(inferredType.size) > 0, inferredType.size[0] != len(ast.value))
             
             # Get inner type of array
             innerType = ArrayType(inferredType.size, inferredType.eleType) # copy of array type
@@ -832,7 +832,7 @@ class CodeGenVisitor(BaseVisitor):
         self.path = path
     
     def visitClassDecl(self, ast : ClassDecl, globalEnvi : List[FunctionSymbol]):
-        print("VisitClassDecl: ",ast, globalEnvi)
+        #print"VisitClassDecl: ",ast, globalEnvi)
 
         self.className = ast.classname.name
         self.emit = Emitter(self.path+"/" + self.className + ".j")
@@ -873,7 +873,7 @@ class CodeGenVisitor(BaseVisitor):
         return globalEnvi
 
     def genMETHOD(self, consdecl : MethodDecl, o : list[Symbol], frame : Frame):
-        print("genMETHOD: ",consdecl, o, frame)
+        #print"genMETHOD: ",consdecl, o, frame)
 
         # Check if the method is a constructor or the main method
         isConstructor = consdecl.returnType is None
@@ -935,7 +935,7 @@ class CodeGenVisitor(BaseVisitor):
         frame.exitScope()
 
     def visitMethodDecl(self, ast : MethodDecl, o : SubBody):
-        print("VisitMethodDecl: ", ast)
+        #print"VisitMethodDecl: ", ast)
 
         frame = Frame(ast.name, ast.returnType)
         functionSymbol = FunctionSymbol(ast.name.name, MethodType([x.varType for x in ast.param], ast.returnType), ClassName(self.className))
@@ -945,7 +945,7 @@ class CodeGenVisitor(BaseVisitor):
         return functionSymbol
 
     def getDefaultValue(self, varType : Type):
-        print("Get Default Value: ", varType)
+        #print"Get Default Value: ", varType)
         if type(varType) == NumberType:
             return NumberLiteral(0.0)
         elif type(varType) == BoolType:
@@ -953,7 +953,7 @@ class CodeGenVisitor(BaseVisitor):
         elif type(varType) == StringType:
             return StringLiteral("")
         elif type(varType) == ArrayType:
-            print("Get Default Value Array: ", varType.size, varType.eleType)
+            #print"Get Default Value Array: ", varType.size, varType.eleType)
             if len(varType.size) == 1:
                 return ArrayLiteral([self.getDefaultValue(varType.eleType) for i in range(int(varType.size[0]))])
             else:
@@ -961,7 +961,7 @@ class CodeGenVisitor(BaseVisitor):
             
  
     def visitAttributeDecl(self, ast : AttributeDecl, o : SubBody):
-        print("visitAttributeDecl: ", ast)
+        #print"visitAttributeDecl: ", ast)
 
         isStatic = ast.isStatic
         isParam = o.isParam
@@ -998,7 +998,7 @@ class CodeGenVisitor(BaseVisitor):
 
 
     def visitBlock(self, ast : Block, o : SubBody):
-        print("VisitBlock: ",ast)
+        #print"VisitBlock: ",ast)
 
         o.frame.enterScope(False)
         self.emit.printout(self.emit.emitLABEL(o.frame.getStartLabel(), o.frame))
@@ -1020,7 +1020,7 @@ class CodeGenVisitor(BaseVisitor):
 
 
     def visitIf(self, ast : If, o : SubBody):
-        print("VisitIf: ")
+        #print"VisitIf: ")
 
         ifFalseLabel = o.frame.getNewLabel()
         endLabel = o.frame.getNewLabel()
@@ -1058,7 +1058,7 @@ class CodeGenVisitor(BaseVisitor):
 
 
     def visitFor(self, ast : For, o : SubBody):
-        print("VisitFor: ")
+        #print"VisitFor: ")
 
         o.frame.enterLoop()
 
@@ -1124,20 +1124,20 @@ class CodeGenVisitor(BaseVisitor):
 
 
     def visitContinue(self, ast : Continue, o : SubBody):
-        print("VisitContinue: ")
+        #print"VisitContinue: ")
 
         self.emit.printout(self.emit.emitGOTO(o.frame.getContinueLabel(), o.frame))
         return ast
     
 
     def visitBreak(self, ast : Break, o : SubBody):
-        print("VisitBreak: ")
+        #print"VisitBreak: ")
 
         self.emit.printout(self.emit.emitGOTO(o.frame.getBreakLabel(), o.frame))
         return ast
 
     def visitReturn(self, ast : Return, o : SubBody):
-        print("VisitReturn: ")
+        #print"VisitReturn: ")
 
         if ast.expr:
             returnEmit, returnType = self.visit(ast.expr, Access(o.frame, o.sym, False))
@@ -1161,7 +1161,7 @@ class CodeGenVisitor(BaseVisitor):
             o.frame.pop()
 
             leftEmit , leftType = self.visit(ast.lhs, Access(o.frame, o.sym, True))
-            print("visitAssign: ", ast, assignEmit, assignType, leftEmit, leftType)
+            #print"visitAssign: ", ast, assignEmit, assignType, leftEmit, leftType)
         
             innerEmit, arrEmit = leftEmit.split(EMIT_SEPARATOR)
             
@@ -1232,7 +1232,7 @@ class CodeGenVisitor(BaseVisitor):
             pass
 
     def visitCallStmt(self, ast : CallStmt, o : SubBody):
-        print("VisitCallStmt: ", ast)
+        #print"VisitCallStmt: ", ast)
         ctxt = o
         frame = ctxt.frame
         nenv = ctxt.sym
@@ -1251,13 +1251,13 @@ class CodeGenVisitor(BaseVisitor):
         
 
         self.emit.printout(in_[0])
-        print("CallStmt: ",self.emit.buff)
+        #print"CallStmt: ",self.emit.buff)
         self.emit.printout(self.emit.emitINVOKESTATIC(
             className + "/" + ast.name.name, methodType, frame))
 
     
     def visitCallExpr(self, ast : CallExpr, o : Access):
-        print("VisitCallExpr: ",ast)
+        #print"VisitCallExpr: ",ast)
         ctxt = o
         frame = ctxt.frame
         nenv = ctxt.sym
@@ -1274,7 +1274,7 @@ class CodeGenVisitor(BaseVisitor):
             str1, typ1 = self.visit(x, Access(frame, nenv, False))
             in_ = (in_[0] + str1, in_[1] + [typ1] ) # Concatenate emit string and append type
         
-        print("CallExpr: ",in_[0], self.emit.buff)
+        #print"CallExpr: ",in_[0], self.emit.buff)
             
         emitStr = in_[0] + self.emit.emitINVOKESTATIC(className + "/" + ast.name.name, methodType, frame)
         
@@ -1282,7 +1282,7 @@ class CodeGenVisitor(BaseVisitor):
 
     
     def visitId(self, ast : Id, param : Access):
-        print("VisitId: ",ast,param)
+        #print"VisitId: ",ast,param)
         
         ctxt = param
         frame = ctxt.frame
@@ -1310,7 +1310,7 @@ class CodeGenVisitor(BaseVisitor):
 
     
     def visitArrayCell(self, ast : ArrayCell, o : Access):
-        print("VisitArrayCell: ",ast)
+        #print"VisitArrayCell: ",ast)
 
         frame = o.frame
         nenv = o.sym
@@ -1373,7 +1373,7 @@ class CodeGenVisitor(BaseVisitor):
         # Calculate the number of decimal places required
         #decimal_places = abs(int(math.floor(math.log10(abs(value)))))
             # Convert the float to a string in decimal notation with the calculated number of decimal places
-        #print("VisitNumberLiteral: ",value, "{:.{}f}".format(value, decimal_places))
+        ##print"VisitNumberLiteral: ",value, "{:.{}f}".format(value, decimal_places))
         #value = "{:.{}f}".format(value, decimal_places)
         value = "{:.{}f}".format(value, 8)
         
@@ -1383,12 +1383,12 @@ class CodeGenVisitor(BaseVisitor):
         return self.emit.emitPUSHICONST(str(ast.value).lower(), o.frame), BoolType()
 
     def visitStringLiteral(self, ast : StringLiteral, o : Access):
-        print("VisitStringLiteral: ")
+        #print"VisitStringLiteral: ")
         escaped_value = ast.value.replace('"', '\\"')
         return self.emit.emitPUSHCONST(escaped_value, StringType(), o.frame), StringType()
 
     def visitArrayLiteral(self, ast : ArrayLiteral, param : Access):
-        print("VisitArrayLiteral: ",ast)
+        #print"VisitArrayLiteral: ",ast)
 
         ctxt = param
         frame = ctxt.frame
