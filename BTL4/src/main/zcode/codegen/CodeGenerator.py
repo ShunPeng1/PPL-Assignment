@@ -1375,7 +1375,7 @@ class CodeGenVisitor(BaseVisitor):
             # Convert the float to a string in decimal notation with the calculated number of decimal places
         ##print"VisitNumberLiteral: ",value, "{:.{}f}".format(value, decimal_places))
         #value = "{:.{}f}".format(value, decimal_places)
-        value = "{:.{}f}".format(value, 8)
+        
         
         return self.emit.emitPUSHFCONST(value, o.frame), NumberType()
 

@@ -12,8 +12,6 @@
 .class public Test
 .super java/lang/Object
 
-.field public static arr [I
-
 .method public <init>()V
   .limit stack 1
   .limit locals 1
@@ -23,136 +21,68 @@
   4: return
 .end method
 
-.method public static foo([ILjava/lang/String;)I
-  .limit stack 4
-  .limit locals 3
-  .line 5
-  0: iconst_0
-  1: istore_2
-Label2:
-  2: iload_2
-  3: iconst_5
-  4: if_icmpge Label21
-  .line 6
-  7: aload_0
-  8: iload_2
-  9: iload_2
-  10: iload_2
-  11: imul
-  12: iconst_5
-  13: iadd
-  14: iastore
-  .line 5
-  15: iinc 2 1
-  18: goto Label2
-Label21:
-  .line 8
-  21: iconst_m1
-  22: ireturn
-  ; append_frame (frameNumber = 0)
-  ; frame_type = 252, offset_delta = 2
-  ; frame bytes: 252 0 2 1 
-  .stack 
-    offset 2
-    locals Integer
-    .end stack
-  ; chop_frame (frameNumber = 1)
-  ; frame_type = 250, offset_delta = 18
-  ; frame bytes: 250 0 18 
-  .stack 
-    offset 21
-    .end stack
+.method public static foo([I)V
+  .limit stack 0
+  .limit locals 1
+  .line 7
+  0: return
 .end method
 
 .method public static main([Ljava/lang/String;)V
-  .limit stack 3
-  .limit locals 4
-  .line 13
-  0: ldc "mommy"
-  2: astore_1
-  .line 14
-  3: getstatic Test/arr [I
-  6: aload_1
-  7: invokestatic Test/foo([ILjava/lang/String;)I
-  10: istore_2
-  .line 15
-  11: getstatic java/lang/System/out Ljava/io/PrintStream;
-  14: iload_2
-  15: ifge Label22
-  18: iconst_1
-  19: goto Label23
-Label22:
-  22: iconst_0
-Label23:
-  23: invokevirtual java/io/PrintStream/println(Z)V
-  .line 16
-  26: iconst_0
-  27: istore_3
-Label28:
-  28: iload_3
-  29: iconst_5
-  30: if_icmpge Label50
-  .line 17
-  33: getstatic java/lang/System/out Ljava/io/PrintStream;
-  36: getstatic Test/arr [I
-  39: iload_3
-  40: iaload
-  41: invokevirtual java/io/PrintStream/println(I)V
-  .line 16
-  44: iinc 3 1
-  47: goto Label28
-Label50:
-  .line 19
-  50: return
-  ; full_frame (frameNumber = 0)
-  ; frame_type = 255, offset_delta = 22
-  ; frame bytes: 255 0 22 0 3 7 0 39 7 0 41 1 0 1 7 0 26 
-  .stack 
-    offset 22
-    locals Object [Ljava/lang/String;
-    locals Object java/lang/String
-    locals Integer
-    stack Object java/io/PrintStream
-    .end stack
-  ; full_frame (frameNumber = 1)
-  ; frame_type = 255, offset_delta = 0
-  ; frame bytes: 255 0 0 0 3 7 0 39 7 0 41 1 0 2 7 0 26 1 
-  .stack 
-    offset 23
-    locals Object [Ljava/lang/String;
-    locals Object java/lang/String
-    locals Integer
-    stack Object java/io/PrintStream
-    stack Integer
-    .end stack
-  ; append_frame (frameNumber = 2)
-  ; frame_type = 252, offset_delta = 4
-  ; frame bytes: 252 0 4 1 
-  .stack 
-    offset 28
-    locals Object [Ljava/lang/String;
-    locals Object java/lang/String
-    locals Integer
-    locals Integer
-    .end stack
-  ; chop_frame (frameNumber = 3)
-  ; frame_type = 250, offset_delta = 21
-  ; frame bytes: 250 0 21 
-  .stack 
-    offset 50
-    locals Object [Ljava/lang/String;
-    locals Object java/lang/String
-    locals Integer
-    .end stack
-.end method
-
-.method static <clinit>()V
-  .limit stack 1
-  .limit locals 0
+  .limit stack 7
+  .limit locals 3
   .line 10
-  0: iconst_5
-  1: newarray int
-  3: putstatic Test/arr [I
-  6: return
+  0: iconst_2
+  1: iconst_3
+  2: multianewarray [[I 2
+  6: astore_1
+  .line 11
+  7: iconst_2
+  8: anewarray [I
+  11: dup
+  12: iconst_0
+  13: iconst_3
+  14: newarray int
+  16: dup
+  17: iconst_0
+  18: iconst_1
+  19: iastore
+  20: dup
+  21: iconst_1
+  22: iconst_2
+  23: iastore
+  24: dup
+  25: iconst_2
+  26: iconst_3
+  27: iastore
+  28: aastore
+  29: dup
+  30: iconst_1
+  31: iconst_3
+  32: newarray int
+  34: dup
+  35: iconst_0
+  36: iconst_4
+  37: iastore
+  38: dup
+  39: iconst_1
+  40: iconst_5
+  41: iastore
+  42: dup
+  43: iconst_2
+  44: bipush 6
+  46: iastore
+  47: aastore
+  48: astore_2
+  .line 17
+  49: getstatic java/lang/System/out Ljava/io/PrintStream;
+  52: aload_1
+  53: iconst_0
+  54: aaload
+  55: iconst_0
+  56: iaload
+  57: invokevirtual java/io/PrintStream/println(I)V
+  .line 20
+  60: return
 .end method
 

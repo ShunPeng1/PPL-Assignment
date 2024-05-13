@@ -1,21 +1,22 @@
 
 public class Test {
     
-    public static int foo(int[] a, String b) {
-        for (int i = 0; i < 5; i++) {
-            a[i] = i * i + 5;
-        }
-        return -1;
-    }
-    public static int[] arr = new int[5];
-    public static void main(String[] args) {
+    public static void foo(int a[]){
         
-        String b = "mommy";
-        int t = foo(arr, b);
-        System.out.println(t < 0);
-        for (int i = 0; i < 5; i++) {
-            System.out.println(arr[i]);
-        }
+        
+    }
+
+    public static void main(String[] args) {
+        int a[][] = new int[2][3];    
+        int [][] b = {{1,2,3,4},{5,6,7}};
+        
+        
+        b[0][3] = 10;
+        b[1][3] = 20;
+        
+        System.out.println(b[0][0]);
+
+
     }
     
 }
