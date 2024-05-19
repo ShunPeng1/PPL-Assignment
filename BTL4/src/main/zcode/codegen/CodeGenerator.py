@@ -1069,12 +1069,12 @@ class CodeGenVisitor(BaseVisitor):
 
         # Declare the loop variable
         incrementIndex = o.frame.getNewIndex()
-        self.emit.printout(self.emit.emitVAR(incrementIndex, "until", NumberType(), o.frame.getStartLabel(), o.frame.getEndLabel(), o.frame))
-        untilSymbol = VariableSymbol("until", NumberType(), incrementIndex, False, None)
-        o.sym.append(untilSymbol)
+        #self.emit.printout(self.emit.emitVAR(incrementIndex, "until", NumberType(), o.frame.getStartLabel(), o.frame.getEndLabel(), o.frame))
+        #untilSymbol = VariableSymbol("until", NumberType(), incrementIndex, False, None)
+        #o.sym.append(untilSymbol)
 
-        incrementAssign = Assign(Id("until"), ast.updExpr)
-        self.visit(incrementAssign, SubBody(o.frame, o.sym))
+        #incrementAssign = Assign(Id("until"), ast.updExpr)
+        #self.visit(incrementAssign, SubBody(o.frame, o.sym))
         
 
         # Initialize the loop variable
@@ -1101,7 +1101,9 @@ class CodeGenVisitor(BaseVisitor):
         self.emit.printout(self.emit.emitLABEL(continueLabel, o.frame))
 
         # Update the loop variable
-        updateExpr = Assign(ast.name, BinaryOp("+", ast.name, Id("until")))
+        #updateExpr = Assign(ast.name, BinaryOp("+", ast.name, Id("until")))
+        updateExpr = Assign(ast.name, BinaryOp("+", ast.name,  ast.updExpr))
+        
         self.visit(updateExpr, SubBody(o.frame, o.sym))
 
         self.emit.printout(self.emit.emitGOTO(conditionLabel, o.frame))
@@ -1112,7 +1114,7 @@ class CodeGenVisitor(BaseVisitor):
         revertAssign = Assign(ast.name, Id("for"))
         self.visit(revertAssign, SubBody(o.frame, o.sym))
         o.sym.remove(forSymbol)
-        o.sym.remove(untilSymbol)
+        #o.sym.remove(untilSymbol)
 
 
         # Exit the loop

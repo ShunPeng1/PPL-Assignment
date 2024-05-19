@@ -29,60 +29,25 @@
 .end method
 
 .method public static main([Ljava/lang/String;)V
-  .limit stack 7
-  .limit locals 3
-  .line 10
-  0: iconst_2
-  1: iconst_3
-  2: multianewarray [[I 2
-  6: astore_1
+  .limit stack 2
+  .limit locals 5
   .line 11
-  7: iconst_2
-  8: anewarray [I
-  11: dup
-  12: iconst_0
-  13: iconst_3
-  14: newarray int
-  16: dup
-  17: iconst_0
-  18: iconst_1
-  19: iastore
-  20: dup
-  21: iconst_1
-  22: iconst_2
-  23: iastore
-  24: dup
-  25: iconst_2
-  26: iconst_3
-  27: iastore
-  28: aastore
-  29: dup
-  30: iconst_1
-  31: iconst_3
-  32: newarray int
-  34: dup
-  35: iconst_0
-  36: iconst_4
-  37: iastore
-  38: dup
-  39: iconst_1
-  40: iconst_5
-  41: iastore
-  42: dup
-  43: iconst_2
-  44: bipush 6
-  46: iastore
-  47: aastore
-  48: astore_2
-  .line 17
-  49: getstatic java/lang/System/out Ljava/io/PrintStream;
-  52: aload_1
-  53: iconst_0
-  54: aaload
-  55: iconst_0
-  56: iaload
-  57: invokevirtual java/io/PrintStream/println(I)V
-  .line 20
-  60: return
+  0: fconst_1
+  1: fstore_1
+  .line 12
+  2: fconst_2
+  3: fstore_2
+  .line 13
+  4: ldc 3.0
+  6: fstore_3
+  .line 15
+  7: fload_1
+  8: fload_2
+  9: fmul
+  10: fload_3
+  11: fsub
+  12: fstore 4
+  .line 18
+  14: return
 .end method
 

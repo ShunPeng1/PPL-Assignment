@@ -52,7 +52,7 @@ public class io {
     /** return a floating-point value read from the standard input
      *	@return float the floating-point value
      */
-    public static float readFloat()  {   
+    public static float readNumber()  {   
     	String tmp ="";
         try {
             tmp = input.readLine();
@@ -66,11 +66,11 @@ public class io {
         }
         return 0.0F;
 	}
-
+	
     /** print out the value of the float f to the standard output
      *	@param f the floating-point value is printed out
      */
-    public static void writeFloat(float f)  {
+    public static void writeNumber(float f)  {
     	System.out.print(f+"");
     }
     
@@ -84,7 +84,7 @@ public class io {
 	/** reads and returns a boolean value from the standard input
 	 *	@return int a boolean value read from standard input
 	 */
-	public static boolean readBoolean() {
+	public static boolean readBool() {
         String tmp = "";
 		try {
             tmp = input.readLine();
@@ -102,14 +102,14 @@ public class io {
     /** print out the value of the boolean b to the standard output
      *	@param b the boolean value is printed out
      */
-    public static void writeBoolean(boolean b)  {
+    public static void writeBool(boolean b)  {
     	System.out.print(b+"");
     }
     
     /** same as putBoolLn except that it also prints a new line
      *	@param b the boolean value is printed out
      */
-    public static void writeBooleanLn(boolean b) {
+    public static void writeBoolLn(boolean b) {
     	System.out.println(b+"");
     }
     /** reads and returns a boolean value from the standard input
@@ -129,7 +129,7 @@ public class io {
     /** prints the value of the string to the standard output
      *	@param a the string is printed out
      */
-     public static String readStr() {
+     public static String readString() {
     	 String tmp ="";
         try {
             tmp = input.readLine();
@@ -147,7 +147,7 @@ public class io {
     /** same as putString except that it also prints a new line
      *	@param a the string is printed out
      */
-    public static void writeStr(String a)  {
+    public static void writeString(String a)  {
     	System.out.print(a);
     }
     /** print out an empty line
@@ -164,35 +164,4 @@ public class io {
 		}
     }
 
-    /** 
-     * Thuan Code
-     * 
-    */
-
-    public static boolean readBool() {
-        return readBoolean();
-    }
-
-    public static void writeBool(boolean b) {
-        writeBooleanLn(b);
-    }
-    
-    public static float readNumber() {
-        return readFloat();
-    }
-
-    public static void writeNumber(float f) {
-        writeFloatLn(f);
-    }
-	
-    public static String readString() {
-        return readStr();
-    }
-
-    public static void writeString(String a) {
-        writeStrLn(a);
-    }
-
-    
 }
-

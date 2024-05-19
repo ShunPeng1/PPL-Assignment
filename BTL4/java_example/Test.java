@@ -1,20 +1,24 @@
 
 public class Test {
     
-    public static void foo(int a[]){
+    public static int foo(int c, int[] b) {
+        long z = 1;
+        int[][] a = new int[5][3];
         
+        a[b[2]][1] = a[3][1] + 1;
         
+        return c; // return some value
     }
+  
+
 
     public static void main(String[] args) {
-        int a[][] = new int[2][3];    
-        int [][] b = {{1,2,3,4},{5,6,7}};
         
-        
-        b[0][3] = 10;
-        b[1][3] = 20;
-        
-        System.out.println(b[0][0]);
+        float a = 1.0f;
+        float b = 2.0f;
+        float c = 3.0f;
+
+        float d = a * b - c;
 
 
     }
